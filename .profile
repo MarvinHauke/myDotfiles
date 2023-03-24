@@ -8,26 +8,25 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 # if running bash
-
+echo hello from .profile
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
+        . "$HOME/.bashrc"
     fi
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
+if [ -d "$HOME/bin" ]; then
     PATH="$HOME/bin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-# This Function is for using my HOME direktory as a git bare repo for dotfiles.
-# It makes the managing way easier.
-function dtf{
-	git --git-dir="$HOME\.dotfiles" --work-tree="$HOME" @Args
-}
+# this exports my development directory for the my dotfiles and repos
+#TODO: ask the user for the path to the ../Development/ directory and store it
+DEV="/mnt/c/Users/Marvi/Development"
+export DEV
