@@ -2,7 +2,7 @@
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias cdd='cd /mnt/c/Users/Marvi/Development'
+alias cdd='cd $DEV'
 alias cdl='cd /mnt/c/Users/Marvi/Downloads'
 
 # Add an "alert" alias for long running commands.  Use like so:
