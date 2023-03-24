@@ -8,7 +8,7 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 # if running bash
-echo hello from .profile
+
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
@@ -27,6 +27,6 @@ if [ -d "$HOME/.local/bin" ]; then
 fi
 
 # this exports my development directory for the my dotfiles and repos
-#TODO: ask the user for the path to the ../Development/ directory and store it
+#TODO: ask the user for the path to the ../dev/myDotfiles/ directory
 DEV="/mnt/c/Users/Marvi/Development"
 export DEV

@@ -1,4 +1,3 @@
-
 " @version      
 " @since        
 " @last-update  
@@ -25,26 +24,3 @@ set foldmethod=marker                " Set default fold method
 set foldlevelstart=1                 " all tabs are closed on file load
 set foldnestmax=5                    " 5 nested fold max
 " }}}
-
-" Search Configs:
-filetype on
-filetype plugin on
-filetype indent on
-
-" Syntax Highlighting:
-syntax on
-
-" Prompt appearance:
-set cursorline
-
-" Number Settings:
-set number
-set relativenumber
-
-" Typing and Completion Settings:
-set ignorecase
-set smartcase
-set showmatch
-
-" Color Scheme:
-colorscheme slate
