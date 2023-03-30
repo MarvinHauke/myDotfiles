@@ -28,5 +28,5 @@ fi
 
 # this exports my development directory for the my dotfiles and repos
 #TODO: ask the user for the path to the ../dev/myDotfiles/ directory
-DEV="/mnt/c/Users/Marvi/Development"
+DEV="/mnt/c/Users/Marvi*/Development"
 export DEV
