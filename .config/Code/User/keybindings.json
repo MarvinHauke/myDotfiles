@@ -94,14 +94,4 @@
         "command": "-editor.action.commentLine",
         "when": "editorTextFocus && !editorReadonly"
     },
-    {
-        "key": "alt+h",
-        "command": "-testing.toggleTestingPeekHistory",
-        "when": "testing.isPeekVisible"
-    },
-    {
-        "key": "alt+h",
-        "command": "-gitlens.showQuickFileHistory",
-        "when": "!gitlens:disabled && config.gitlens.keymap == 'alternate'"
-    }
 ]
