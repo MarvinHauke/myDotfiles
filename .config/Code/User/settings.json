@@ -112,21 +112,49 @@
             "before": [
                 "J"
             ],
-            "after": [
-                "5",
-                "j"
+            "commands": [
+                ":tabprev"
             ]
         },
         {
             "before": [
                 "K"
             ],
+            "commands": [
+                ":tabnext"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "L"
+            ],
             "after": [
-                "5",
-                "k"
+                "<C-w>",
+                "v"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "H"
+            ],
+            "after": [
+                "<C-w>",
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "K"
+            ],
+            "commands": [
+                ":tabnext"
             ]
         },
         //Easy switch between Splits
+        // uncomment the following lines for horizontal split move
+        // and comment tabmove functions
         {
             "before": [
                 "<leader>",
