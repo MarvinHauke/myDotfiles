@@ -4,6 +4,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias cdd='cd $HOME/Development'
 alias cdl='cd /mnt/c/Users/Marvi/Downloads'
+alias activate='source .venv/bin/activate'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert

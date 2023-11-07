@@ -152,9 +152,6 @@
                 ":tabnext"
             ]
         },
-        //Easy switch between Splits
-        // uncomment the following lines for horizontal split move
-        // and comment tabmove functions
         {
             "before": [
                 "<leader>",
