@@ -32,7 +32,8 @@
     },
     "remote.SSH.remotePlatform": {
         "192.168.178.147": "linux",
-        "10.8.0.70": "linux"
+        "10.8.0.70": "linux",
+        "10.8.4.14": "linux"
     },
     "svelte.plugin.svelte.note-new-transformation": false,
     "workbench.colorTheme": "One Dark Pro Darker",
@@ -216,7 +217,8 @@
     "vim.sneak": true,
     "vim.sneakUseIgnorecaseAndSmartcase": true,
     "[powershell]": {
-        "editor.defaultFormatter": "ms-vscode.powershell"
+        "editor.defaultFormatter": "ms-vscode.powershell",
     },
-    "powershell.powerShellDefaultVersion": "Windows PowerShell (x64)"
+    "powershell.powerShellDefaultVersion": "Windows PowerShell (x64)",
+    "powershell.scriptAnalysis.settingsPath": "C:\\Users\\MarvinHauke\\Documents\\PowerShell\\ScriptAnalyzerSettings.psd1"
 }
