@@ -1,1 +1,4 @@
 set bell-style none
+set editing-mode vi
+set show-mode-in-prompt
+set keymap vi-command

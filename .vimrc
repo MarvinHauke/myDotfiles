@@ -52,7 +52,7 @@ set wildignore=*.docx,*.jpg,*.png "ignore wildmenu in this files
 " PS = 6 -> steady bar.
 let &t_SI = "\e[5 q"
 let &t_EI = "\e[1 q"
-set ttimeoutlen=5 "<- this setting sets the timeout between esc sequences for example switching between normal and insert
+set ttimeoutlen=-1 "<- this setting sets the timeout between esc sequences for example switching between normal and insert (default is -1)
 
 "Set number appearence:
 set nu
