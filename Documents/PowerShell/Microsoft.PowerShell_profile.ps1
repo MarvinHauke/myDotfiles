@@ -137,3 +137,4 @@ function cfg {
 }
 
 Set-Alias -Name config -Value cfg
+Import-Module posh-git

@@ -13,8 +13,6 @@
 	"editor.formatOnPaste": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.guides.bracketPairs": true,
-	//Not ordered
-	"window.zoomLevel": 1,
 	"explorer.confirmDelete": false,
 	"vsicons.dontShowNewVersionMessage": true,
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
@@ -142,6 +140,7 @@
 	],
 	//Vim-Settings
 	"vim.neovimPath": "C:\\Program Files\\Neovim\\bin",
+	"vim.foldfix": true,
 	"vim.leader": "<Space>",
 	"vim.enableNeovim": true,
 	"vim.easymotion": true,
@@ -275,4 +274,5 @@
 			]
 		}
 	],
+	"window.zoomLevel": 1,
 }
