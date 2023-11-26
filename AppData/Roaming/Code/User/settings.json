@@ -1,9 +1,5 @@
 {
 	//General editor settings
-	"settingsSync.ignoredSettings": [
-		"-shellcheck.executablePath",
-		"-python.formatting.blackPath"
-	],
 	"editor.lineNumbers": "relative",
 	"editor.inlineSuggest.enabled": true,
 	"editor.suggestSelection": "first",
@@ -13,16 +9,20 @@
 	"editor.formatOnPaste": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.guides.bracketPairs": true,
-	//Not ordered
 	"window.zoomLevel": 1,
-	"explorer.confirmDelete": false,
 	"vsicons.dontShowNewVersionMessage": true,
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
 	"redhat.telemetry.enabled": false,
 	"security.workspace.trust.untrustedFiles": "open",
+	"settingsSync.ignoredSettings": [
+		"-shellcheck.executablePath",
+		"-python.formatting.blackPath"
+	],
 	"[ignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
+	//Explorer 
+	"explorer.confirmDelete": false,
 	//Workbench
 	"workbench.iconTheme": "vscode-icons",
 	"workbench.colorTheme": "One Dark Pro Darker",
@@ -140,7 +140,7 @@
 	"cSpell.userWords": [
 		"rtmidi"
 	],
-	//Vim-Settings
+	//Vim
 	"vim.neovimPath": "C:\\Program Files\\Neovim\\bin",
 	"vim.leader": "<Space>",
 	"vim.enableNeovim": true,
@@ -275,4 +275,8 @@
 			]
 		}
 	],
+	"files.associations": {
+		".vimrc": "viml"
+	},
+	"[viml]": {},
 }
