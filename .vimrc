@@ -1,5 +1,11 @@
 colorscheme slate
 
+if has("termguicolors") == 1
+    set termguicolors
+    hi ColorColumn ctermbg=NONE guibg=#42413c 
+else
+    hi ColorColumn ctermbg=235 guibg=NONE
+endif
 "Set leaderkey
 let mapleader=" "
 
@@ -57,6 +63,7 @@ set ttimeoutlen=-1 "<- this setting sets the timeout between esc sequences for e
 "Set number appearence:
 set nu
 set rnu
+set colorcolumn=80
 
 "Set Stausbar bottom
 "type ":help statusline" for more information
