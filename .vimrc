@@ -1,3 +1,6 @@
+"Disable compatiblity with vi
+set nocompatible
+
 "Define all Funktions
 function! Windows()
     set runtimepath+=~/.vim "sets the default folder to ~/.vim under windows
@@ -29,8 +32,6 @@ nnoremap <leader>e :NERDTreeToggle<cr>
 "Insertmode Remaps
 inoremap <C-S-E> <ESC>:NERDTreeToggle<cr>
 
-"Disable compatiblity with vi
-set nocompatible
 
 "Enable type File detection
 filetype on
@@ -84,7 +85,7 @@ set ttimeoutlen=5 "<- this setting sets the timeout between esc sequences for
 "Column appearence:
 set nu
 set rnu
-set colorcolumn=79
+set colorcolumn=80
 
 "Stausbar bottom
 "type ":help statusline" for more information

@@ -137,12 +137,12 @@ function cfg {
 
 Set-Alias -Name config -Value cfg
 
-function _set_vim {
-    if ((Get-Command nvim -ErrorAction Ignore)) {
-        Set-Alias -Name vim -Value nvim
-    }
+if ((Get-Command nvim -ErrorAction Ignore)) {
+    Set-Alias -Name vim -Value nvim
+    echo "vim is now nvim"
+}
+else {
+    echo "Nvim is not installed!"
 }
 
-#_set_vim
-Set-Alias -Name vim -Value nvim
 Import-Module posh-git
