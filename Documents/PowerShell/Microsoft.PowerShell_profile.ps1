@@ -1,10 +1,8 @@
-Set-PSReadlineOption -PredictionViewStyle ListView #add jk selection for suggestions
+Set-PSReadlineOption -PredictionViewStyle ListView #TODO: add jk selection for suggestions
 Set-PSReadLineKeyHandler -Key 'ctrl+k' -Function BackwardWord
-# Set-PSReadlineKeyHandler -Key -Function MenuCompleteBackward
 Set-PSReadlineOption -EditMode Vi
 
 # This example emits a cursor change VT escape in response to a Vi mode change.
-
 function OnViModeChange {
     if ($args[0] -eq 'Command') {
         # Set the cursor to a blinking block.
@@ -141,14 +139,10 @@ Set-Alias -Name config -Value cfg
 
 function _set_vim {
     if ((Get-Command nvim -ErrorAction Ignore)) {
-        if (-not (Get-Command vim -ErrorAction Ignore)) {
-            Set-Alias -Name vim -Value nvim
-        }
-        if (-not (Get-Command vi -ErrorAction Ignore)) {
-            Set-Alias -Name vi -Value vim
-        }
+        Set-Alias -Name vim -Value nvim
     }
 }
 
-_set_vim
+#_set_vim
+Set-Alias -Name vim -Value nvim
 Import-Module posh-git

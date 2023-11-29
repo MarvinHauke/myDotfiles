@@ -1,3 +1,13 @@
+"Define all Funktions
+function! Windows()
+    set runtimepath+=~/.vim "sets the default folder to ~/.vim under windows
+    if empty(glob('~/.vim/autoload/plug.vim'))
+        iwr -useb https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim |`
+        ni $HOME/.vim/autoload/plug.vim -Force
+        finish
+    endif
+endfunction
+
 "Colorsettings
 colorscheme slate
 
@@ -5,8 +15,19 @@ if has("termguicolors") == 1
     set termguicolors
 endif
 
+
 "Set leaderkey
-let mapleader="\<Space>"
+let mapleader = "\<Space>"
+
+"Normalmode Remaps
+nnoremap <leader>vc :vsp $MYVIMRC<cr>
+nnoremap <leader>bc :vsp ~/.bashrc<cr>
+nnoremap <leader>w :wincmd w<cr>
+nnoremap <leader>nh :noh<cr> 
+nnoremap <leader>e :NERDTreeToggle<cr>
+
+"Insertmode Remaps
+inoremap <C-S-E> <ESC>:NERDTreeToggle<cr>
 
 "Disable compatiblity with vi
 set nocompatible
@@ -35,7 +56,7 @@ set ignorecase
 set smartcase
 set showmatch
 set hlsearch "highlight searchresults
-set incsearch "automaticly jump to the next search result
+"set incsearch "automaticly jump to the next search result
 
 "Set mode moddifications
 set showmode "shows the actual mode you are in
@@ -63,79 +84,27 @@ set ttimeoutlen=5 "<- this setting sets the timeout between esc sequences for
 "Column appearence:
 set nu
 set rnu
-set colorcolumn=80
+set colorcolumn=79
 
 "Stausbar bottom
 "type ":help statusline" for more information
 set laststatus=2
 
-
+"Statusline settings
 set statusline=%<%f\ %h%m%r%=%b\[%l,%v]\ %{&filetype}
 
-
-
-"Plugins
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '
-    \.data_dir.'/autoload/plug.vim --create-dirs 
-    \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+"Check Systemtype
+if has('win32') || has('win64')
+   call Windows() 
 endif
 
-" Install vim-plug if not found
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs 
-    \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 
-" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif
+" NERD tree will be loaded on the first invocation of NERDTreeToggle command
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 
-call plug#begin()
-" The default plugin directory will be as follows:
-"   - Vim (Linux/macOS): '~/.vim/plugged'
-"   - Vim (Windows): '~/vimfiles/plugged'
-"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
-" You can specify a custom plugin directory by passing it as the argument
-"   - e.g. `call plug#begin('~/.vim/plugged')`
-"   - Avoid using standard Vim directory names like 'plugin'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
-" Make sure you use single quotes
-
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-" Plug 'junegunn/vim-easy-align'
-
-" Any valid git URL is allowed
-"Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
-" Multiple Plug commands can be written in a single line using | separators
-"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
-" On-demand loading
-"Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-"Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-
-" Using a non-default branch
-"Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-"Plug 'fatih/vim-go', { 'tag': '*' }
-
-" Plugin options
-"Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-
-" Plugin outside ~/.vim/plugged with post-update hook
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
-" Unmanaged plugin (manually installed and updated)
-"$Plug '~/my-prototype-plugin'
-
-" Initialize plugin system
-" - Automatically executes `filetype plugin indent on` and `syntax enable`.
 call plug#end()
 " You can revert the settings after the call like so:
 "   filetype indent off   " Disable file-type-specific indentation
