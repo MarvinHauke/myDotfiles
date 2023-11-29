@@ -1,4 +1,2 @@
-"Make nvim use ~/.vimrc as configfile
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath=&runtimepath
-source $HOME/.vimrc
+"Make nvim use ~/.config/nvim/init.vim 
+source ~/.config/nvim/init.vim
