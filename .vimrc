@@ -29,9 +29,33 @@ nnoremap <leader>w :wincmd w<cr>
 nnoremap <leader>nh :noh<cr> 
 nnoremap <leader>e :NERDTreeToggle<cr>
 
+
 "Insertmode Remaps
 inoremap <C-S-E> <ESC>:NERDTreeToggle<cr>
 
+"Visualmode Remaps
+"vnoremap K :m '<-2<CR>gv=gv
+vnoremap J :<C-U>call MoveVisualLines('down')<CR>
+vnoremap K :<C-U>call MoveVisualLines('up')<CR>
+
+" Function to move visual lines up or down
+function! MoveVisualLines(direction)
+  let l:start_line = line("'<")
+  let l:end_line = line("'>")
+
+  if a:direction == 'down'
+    let l:destination_line = l:end_line + 1
+  elseif a:direction == 'up' && l:start_line > 1
+    let l:destination_line = l:start_line - 1
+  else
+    return
+  endif
+
+  let line_range = start_line . ',' . end_line
+  let destination = a:direction == 'down' ? destination_line : destination_line - 1
+  execute line_range . 'm ' . destination
+  normal! gv
+endfunction
 
 "Enable type File detection
 filetype on
@@ -99,7 +123,8 @@ if has('win32') || has('win64')
    call Windows() 
 endif
 
-call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+"call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+call plug#begin('~/.vim/plugged')
 
 " NERD tree will be loaded on the first invocation of NERDTreeToggle command
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
