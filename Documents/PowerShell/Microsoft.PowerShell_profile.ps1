@@ -100,6 +100,30 @@ Register-ArgumentCompleter -CommandName 'cdd' -ParameterName 'Path' -ScriptBlock
 	Test-MyTestFunction -Verbose
 	Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
 #>
+<#
+
+function cfg {
+  param(
+      [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
+      [String[]]$AdditionalArgs
+      )
+
+  $gitCommand = "git --git-dir=`$HOME/.cfg/ --work-tree=`$HOME"
+
+  if ($AdditionalArgs[1] -eq '-m') {
+    $commitMessage = $AdditionalArgs[2]
+      $command = "$gitCommand commit -m `"$commitMessage`""
+  }
+  else {
+    $arguments = $AdditionalArgs -join ' '
+      $command = "$gitCommand --% $arguments"
+  }
+
+Invoke-Expression $command
+}
+
+#>
+
 function cfg {
     param(
         [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
@@ -108,8 +132,9 @@ function cfg {
 
     $gitCommand = "git --git-dir=`$HOME/.cfg/ --work-tree=`$HOME"
 
-    if ($AdditionalArgs[1] -eq '-m') {
-        $commitMessage = $AdditionalArgs[2]
+    $commitIndex = $AdditionalArgs.IndexOf('-m')
+    if ($commitIndex -ne -1) {
+        $commitMessage = $AdditionalArgs[$commitIndex + 1]
         $command = "$gitCommand commit -m `"$commitMessage`""
     }
     else {
@@ -121,6 +146,8 @@ function cfg {
 }
 
 Set-Alias -Name config -Value cfg
+
+
 
 # Set vim to nvim if installe
 if ((Get-Command nvim -ErrorAction Ignore)) {
