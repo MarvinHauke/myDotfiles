@@ -62,6 +62,13 @@ alias activate='source .venv/bin/activate'
 # sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# use nvim as vim when installed:
+if command -v nvim >/dev/null 2>&1; then
+   alias vim=nvim 
+else
+    echo "only vim is installed"
+fi
+
 # Add Config as Alias with gitcompletion
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # Add completion for config Alias
