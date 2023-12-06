@@ -10,8 +10,8 @@ require("lazy").setup({
   "nvim-treesitter/nvim-treesitter",
   "vim-test/vim-test",
   "lewis6991/gitsigns.nvim",
-  "preservim/vimux",
-  "christoomey/vim-tmux-navigator",
+-- "preservim/vimux",
+-- "christoomey/vim-tmux-navigator",
   "tpope/vim-fugitive",
   "tpope/vim-surround",
   "stevearc/oil.nvim",
@@ -25,6 +25,18 @@ require("lazy").setup({
   "williamboman/mason.nvim", --needs to come before mason-lspconfig!!! 
   "williamboman/mason-lspconfig.nvim",--needs to come before nvim-lspconfig!!! 
   "neovim/nvim-lspconfig",
+  {
+    "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("chatgpt").setup()
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
+  },
   {
     "vinnymeller/swagger-preview.nvim",
     run = "npm install -g swagger-ui-watcher",

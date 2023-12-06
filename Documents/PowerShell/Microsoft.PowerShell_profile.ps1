@@ -15,22 +15,24 @@ function OnViModeChange {
 }
 Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
 
+
+# Add some common Bash commadns:
+
 # Simple function to start a new elevated process. If arguments are supplied then 
 # a single command is started with admin rights; if not then a new admin instance
 # of PowerShell is started.
 function admin {
-    if ($args.Count -gt 0) {   
-        $argList = "& '" + $args + "'"
-        Start-Process "$psHome\pwsh.exe" -Verb runAs -ArgumentList $argList
-    }
-    else {
-        Start-Process "$psHome\pwsh.exe" -Verb runAs
-    }
+  if ($args.Count -gt 0) {   
+    $argList = "& '" + $args + "'"
+      Start-Process "$psHome\pwsh.exe" -Verb runAs -ArgumentList $argList
+  }
+  else {
+    Start-Process "$psHome\pwsh.exe" -Verb runAs
+  }
 }
 Set-Alias -Name su -Value admin
 Set-Alias -Name sudo -Value admin
 
-# Add some common Bash commadns:
 function which($name) {
     Get-Command $name | Select-Object -ExpandProperty Definition
 }
@@ -50,7 +52,7 @@ function grep($regex, $dir) {
     $input | select-string $regex
 }
 
-
+# Add path to your Development Directory
 function go_to_dev {
     [CmdletBinding()]
     param (
@@ -68,17 +70,6 @@ function go_to_dev {
     }
 }
 
-
-# Define your PowerShell function
-# function My-Function {
-#     param(
-#         [string]$Path
-#     )
-
-#     # Your function logic here
-#     Write-Host "Path: $Path"
-# }
-
 # Define a custom argument completer for the 'Path' parameter
 $CompletePath = {
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
@@ -92,15 +83,9 @@ $CompletePath = {
         }
     }
 }
-
 # Register the argument completer for the 'Path' parameter of your function
-
 Set-Alias -Name 'cdd' -Value go_to_dev
 Register-ArgumentCompleter -CommandName 'cdd' -ParameterName 'Path' -ScriptBlock $CompletePath
-
-
-
-
 
 <#
 .SYNOPSIS
@@ -137,6 +122,7 @@ function cfg {
 
 Set-Alias -Name config -Value cfg
 
+# Set vim to nvim if installe
 if ((Get-Command nvim -ErrorAction Ignore)) {
     Set-Alias -Name vim -Value nvim
     echo "vim is now nvim"
@@ -145,4 +131,5 @@ else {
     echo "Nvim is not installed!"
 }
 
+# import several Modules
 Import-Module posh-git
