@@ -1,29 +1,52 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+local opt = vim.opt
 
-vim.opt.backspace = '2'
-vim.opt.showcmd = true
-vim.opt.laststatus = 2
-vim.opt.autowrite = true
-vim.opt.cursorline = true
-vim.opt.autoread = true
+-- Session Management
+opt.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
--- Use spaces for tabs and whatnot
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.shiftround = true
-vim.opt.expandtab = true
+-- Line Numbers
+opt.relativenumber = true
+opt.number = true
 
-vim.cmd [[ set noswapfile ]]
-vim.cmd [[ set termguicolors ]]
+-- Tabs & Indentation
+opt.tabstop = 2
+opt.shiftwidth = 2
+opt.expandtab = true
+opt.autoindent = true
+vim.bo.softtabstop = 2
 
---This goes to "~/.vim/undodir"
-vim.opt.undodir = vim.fn.stdpath('config') .. '\\undodir'
-vim.opt.undofile = true
+-- Line Wrapping
+opt.wrap = false
 
---Line numbers
-vim.wo.number = true
-vim.opt.relativenumber = true
-vim.opt.colorcolumn = "80"
-vim.opt.scrolloff = 8
-vim.opt.wrap = false
+-- Search Settings
+opt.ignorecase = true
+opt.smartcase = true
+
+-- Cursor Line
+opt.cursorline = true
+
+-- Appearance
+opt.termguicolors = true
+opt.background = "dark"
+opt.signcolumn = "yes"
+
+-- Backspace
+opt.backspace = "indent,eol,start"
+
+-- Clipboard
+opt.clipboard:append("unnamedplus")
+
+-- Split Windows
+opt.splitright = true
+opt.splitbelow = true
+
+-- Consider - as part of keyword
+opt.iskeyword:append("-")
+
+-- Disable the mouse while in nvim
+opt.mouse = ""
+
+-- Folding
+opt.foldlevel = 20
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()" -- Utilize Treesitter folds
+
