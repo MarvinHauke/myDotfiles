@@ -24,9 +24,9 @@ return {
     require('mason-lspconfig').setup({
       -- Update this list to the language servers you need installed
       ensure_installed = {
-        -- "bashls", # requires npm to be installed
-        -- "cssls", # requires npm to be installed
-        -- "html", # requires npm to be installed
+        "bashls", -- requires npm to be installed
+        -- "cssls", -- requires npm to be installed
+        -- "html", -- requires npm to be installed
         "gradle_ls",
         "groovyls",
         "lua_ls",

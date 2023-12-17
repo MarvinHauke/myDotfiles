@@ -3,12 +3,35 @@ vim.g.mapleader = " "
 
 local keymap = vim.keymap
 
+-- Copy to clipboard
+keymap.set("n", "<leader>y", "\"*yy")
+keymap.set("v", "<leader>y", "\"*y")
+
+-- Paste from clipboard
+keymap.set("n", "<leader>p", "\"*p")
+keymap.set("v", "<leader>p", "\"*p")
+
 -- General keymaps
-keymap.set("i", "jk", "<ESC>") -- exit insert mode with jk 
-keymap.set("i", "ii", "<ESC>") -- exit insert mode with ii
 keymap.set("n", "<leader>wq", ":wq<CR>") -- save and quit
 keymap.set("n", "<leader>qq", ":q!<CR>") -- quit without saving
 keymap.set("n", "<leader>ww", ":w<CR>") -- save
+
+-- Navigate vim panes better
+keymap.set('n', '<c-k>', ':wincmd k<CR>')
+keymap.set('n', '<c-j>', ':wincmd j<CR>')
+keymap.set('n', '<c-h>', ':wincmd h<CR>')
+keymap.set('n', '<c-l>', ':wincmd l<CR>')
+
+-- Lets your Cursor stay in Place while "J"
+keymap.set("n", "J", "mzJ`z")
+
+-- Delete to void Register
+keymap.set("n", "<leader>d", "\"_dd")
+keymap.set("v", "<leader>d", "\"_d")
+
+-- Move lines in Visual Mode
+keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Split window management
 keymap.set("n", "<leader>sv", "<C-w>v") -- split window vertically

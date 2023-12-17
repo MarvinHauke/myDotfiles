@@ -6,6 +6,7 @@ opt.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,term
 -- Line Numbers
 opt.relativenumber = true
 opt.number = true
+opt.scrolloff = 8
 
 -- Tabs & Indentation
 opt.tabstop = 2
@@ -50,3 +51,6 @@ opt.foldlevel = 20
 opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()" -- Utilize Treesitter folds
 
+--This goes to "~/.vim/undodir"
+vim.opt.undodir = vim.fn.stdpath('config') .. '\\undodir'
+vim.opt.undofile = true
