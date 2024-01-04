@@ -30,7 +30,7 @@ function SetProfilesettingsJSON {
       nvim_path = $nvim_path
     }
     userkeys = @{
-      chatgpt_key = "another key"
+      chatgpt_key = "[ChatCPT_Key]"
     }
   }
   $jsonOutput = $profileSettingsData | ConvertTo-Json
@@ -44,11 +44,11 @@ if (-not (Test-Path -Path $profileSettingsPath)) {
     Write-Host "There is no file for your profilesettings yet"
     
     # Prompt the user to create a pathfile containing system settings
-    $input = Read-Host `
+    $answer = Read-Host `
     "Do you want to create a .profilesettings.json?
     (Enter 'yes' to continue)"
     # Convert the input to lowercase
-    $inputToLower = $input.ToLower()
+    $inputToLower = $answer.ToLower()
     if ($inputToLower -eq "yes" -or $inputToLower -eq "y") {
       SetProfilesettingsJSON
     }
@@ -70,8 +70,8 @@ if ($profileSettingsData.PSObject.Properties['userpaths']) {
     }
 
     # Output the array to the console
-    $userPathsString = $userPathsArray -join ", `n" # This prints every value in a new line
-    Write-Host "There are following userPaths:`n$userPathsString" 
+    # $userPathsString = $userPathsArray -join ", `n" # This prints every value in a new line
+    # Write-Host "There are following userPaths:`n$userPathsString" 
 } else {
     Write-Host "'userpaths' not found in the JSON data."
     SetProfilesettingsJSON
@@ -184,11 +184,12 @@ Set-Alias -Name config -Value cfg
 # Set vim to nvim if installe
 if ((Get-Command nvim -ErrorAction Ignore)) {
     Set-Alias -Name vim -Value nvim
-    echo "vim is now nvim"
+    Write-Host "vim is now nvim"
 }
 else {
-    echo "Nvim is not installed!"
+    Write-Host "Nvim is not installed!"
 }
 
 # import several Modules
 Import-Module posh-git
+ # IMport-Module PSScriptAnalyzer

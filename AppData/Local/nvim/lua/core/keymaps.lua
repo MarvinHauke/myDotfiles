@@ -59,7 +59,11 @@ keymap.set("v", "<leader>p", "\"*p")
 keymap.set('n', '<leader>h', ':nohlsearch<CR>')
 
 -- Lets your Cursor stay in Place while "J"
-keymap.set("n", "J", "mzJ`z")
+-- keymap.set("n", "J", "mzJ`z")
+
+-- Bufferline
+keymap.set("n", "J", ":BufferLineCyclePrev<CR>")
+keymap.set("n", "K", ":BufferLineCycleNext<CR>")
 
 -- Quickfix keymaps
 keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
