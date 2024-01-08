@@ -2,7 +2,6 @@ return {
   'jackMort/ChatGPT.nvim',
   event = 'VeryLazy',
   config = function()
-    local home = vim.fn.expand("$HOME")
     require("chatgpt").setup({
       api_key_cmd = "$env:OPENAI_API_KEY"
     })

@@ -33,10 +33,10 @@ if [ ! -f "$HOME/.dyn_path" ]; then
     echo "Do you want to creat a pathfile containing your System Settings?"
     read -r -p "Enter 'yes' to continue:" answer
 
-    #Convert Anser to lowercase
+    #Convert $answer to lowercase
     #answer_to_lower=$(echo "$answer" | tr '[:upper]' '[:lower:]')
     if [ "${answer,,}" == "y" ] || [ "${answer,,}" == "yes" ]; then
-        #Set Dev folder 
+        #Set Dev directory Path
         read -r -ep "Please enter your Development Folder Path: " -e dev_path
         if [ -d "$dev_path" ]; then
             echo "cdd path was set to $dev_path"
@@ -46,5 +46,7 @@ if [ ! -f "$HOME/.dyn_path" ]; then
             echo "Invalid Path $dev_path does not exist"
             exit 1
         fi 
+    else
+      echo "no DEV directory set"
     fi
 fi 

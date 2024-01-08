@@ -15,6 +15,78 @@ function OnViModeChange {
 }
 Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
 
+# This script parses the .profileSettings.json at your Home Directory
+# Check if the dyn_path file exists in the user's home directory
+function SetProfilesettingsJSON {
+  $dev_path = Read-Host "Please enter your Development Folder Path"
+  $dow_path = Read-Host "Please enter your Downloads Folder Path"
+  $nvim_path = Read-Host "Please enter your Nvim_config Folder Path"
+
+# Generate a json File structure
+  $profileSettingsData = @{
+    userpaths = @{
+      dev_path = $dev_path
+      dow_path = $dow_path
+      nvim_path = $nvim_path
+    }
+    userkeys = @{
+      chatgpt_key = "[ChatCPT_Key]"
+    }
+  }
+  $jsonOutput = $profileSettingsData | ConvertTo-Json
+
+  # Write the updated JSON content back to the file
+  $jsonOutput | Set-Content -Path $profileSettingsPath
+}
+
+$profileSettingsPath = Join-Path $HOME ".profileSettings.json"
+if (-not (Test-Path -Path $profileSettingsPath)) {
+    Write-Host "There is no file for your profilesettings yet"
+    
+    # Prompt the user to create a pathfile containing system settings
+    $answer = Read-Host `
+    "Do you want to create a .profilesettings.json?
+    (Enter 'yes' to continue)"
+    # Convert the input to lowercase
+    $inputToLower = $answer.ToLower()
+    if ($inputToLower -eq "yes" -or $inputToLower -eq "y") {
+      SetProfilesettingsJSON
+    }
+}
+
+
+# Read existing Data from .profileSettings.json back in
+$profileSettingsData = Get-Content $profileSettingsPath | ConvertFrom-JSON 
+
+# Check if 'userpaths' is present in the JSON data
+if ($profileSettingsData.PSObject.Properties['userpaths']) {
+    # Initialize an array to store values
+    $userPathsArray = @()
+
+    # Iterate through each property in 'userpaths'
+    foreach ($property in $profileSettingsData.userpaths.PSObject.Properties) {
+        # Add the value of each property to the array
+        $userPathsArray += $property.Value
+    }
+
+    # Output the array to the console
+    # $userPathsString = $userPathsArray -join ", `n" # This prints every value in a new line
+    # Write-Host "There are following userPaths:`n$userPathsString" 
+} else {
+    Write-Host "'userpaths' not found in the JSON data."
+    SetProfilesettingsJSON
+}
+
+foreach ($path in $userPathsArray) {
+  if (Test-Path -Path $path -PathType Container) { 
+    # Add a function for valid paths
+  } else {
+    Write-Host "Invalid Path: $path does not exist"
+    SetProfilesettingsJSON
+  }
+}
+
+
 
 # Add some common Bash commadns:
 
@@ -112,11 +184,12 @@ Set-Alias -Name config -Value cfg
 # Set vim to nvim if installe
 if ((Get-Command nvim -ErrorAction Ignore)) {
     Set-Alias -Name vim -Value nvim
-    echo "vim is now nvim"
+    Write-Host "vim is now nvim"
 }
 else {
-    echo "Nvim is not installed!"
+    Write-Host "Nvim is not installed!"
 }
 
 # import several Modules
 Import-Module posh-git
+ # IMport-Module PSScriptAnalyzer
