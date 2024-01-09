@@ -1,4 +1,3 @@
--- LSP Support
 return {
   -- LSP Configuration
   -- https://github.com/neovim/nvim-lspconfig
@@ -8,42 +7,45 @@ return {
     -- LSP Management
     -- https://github.com/williamboman/mason.nvim
     { 'williamboman/mason.nvim' },
+
     -- https://github.com/williamboman/mason-lspconfig.nvim
     { 'williamboman/mason-lspconfig.nvim' },
 
     -- Useful status updates for LSP
     -- https://github.com/j-hui/fidget.nvim
-    { 'j-hui/fidget.nvim', opts = {} },
+    { 'j-hui/fidget.nvim' },
 
     -- Additional lua configuration, makes nvim stuff amazing!
     -- https://github.com/folke/neodev.nvim
-    {'folke/neodev.nvim' },
+    { 'folke/neodev.nvim' },
   },
-  config = function ()
+  config = function()
     require('mason').setup()
     require('mason-lspconfig').setup({
       -- Update this list to the language servers you need installed
       ensure_installed = {
-        -- "bashls", # requires npm to be installed
-        -- "cssls", # requires npm to be installed
-        -- "html", # requires npm to be installed
-        "gradle_ls",
-        "groovyls",
+        "bashls",
+        "cssls",
+        "tailwindcss",
+        "html",
+        "svelte",
         "lua_ls",
-        -- "intelephense", # requires npm to be installed
-        -- "jsonls", # requires npm to be installed
+        "jsonls",
         "lemminx",
         "marksman",
         "quick_lint_js",
-        -- "tsserver", # requires npm to be installed
-        -- "yamlls", # requires npm to be installed
-      }
+        "powershell_es",
+        "tsserver",
+        "pyright"
+      },
+      automatic_installation = true,
     })
 
     local lspconfig = require('lspconfig')
     local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
     local lsp_attach = function(client, bufnr)
-      -- Create your keybindings here...
+      -- Create your attached keybindings here..
     end
 
     -- Call setup on each LSP server
@@ -57,16 +59,46 @@ return {
     })
 
     -- Lua LSP settings
-    lspconfig.lua_ls.setup {
-      settings = {
+    lspconfig.lua_ls.setup({
+      capabilities = lsp_capabilities,
+      on_attach = lsp_attach,
+      settings = { -- custom settings for lua
         Lua = {
+          -- make language server recognize the `vim` global
           diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = {'vim'},
+            globals = { 'vim' },
+          },
+          workspace = {
+            -- make language server aware of runtime files
+            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+            [vim.fn.stdpath("config") .. "/lua"] = true,
           },
         },
       },
-    }
+    })
+
+    -- Bash LSP settings
+    lspconfig.bashls.setup({
+      capabilities = lsp_capabilities,
+      on_attach = lsp_attach
+    })
+
+    -- PowerShell LSP settings
+    lspconfig.powershell_es.setup({
+      capabilities = lsp_capabilities,
+      on_attach = lsp_attach
+    })
+
+    -- JS LSP settings
+    lspconfig.tsserver.setup({
+      capabilities = lsp_capabilities,
+      on_attach = lsp_attach
+    })
+
+    -- Python LSP settings
+    lspconfig.pyright.setup({
+      capabilities = lsp_capabilities,
+      on_attach = lsp_attach
+    })
   end
 }
-

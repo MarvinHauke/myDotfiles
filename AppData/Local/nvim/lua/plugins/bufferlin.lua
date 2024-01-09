@@ -1,4 +1,4 @@
-return{
+return {
   'akinsho/bufferline.nvim',
   version = "*",
   dependencies = {
@@ -15,9 +15,9 @@ return{
         }
       },
       hover = {
-            enabled = true,
-            delay = 150,
-            reveal = {'close'}
+        enabled = true,
+        delay = 150,
+        reveal = { 'close' }
       },
     },
   },

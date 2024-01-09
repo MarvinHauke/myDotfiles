@@ -10,7 +10,7 @@ return {
   },
   opts = {
     options = {
-      theme = 'nightfly', -- lualine theme
+      theme = 'dracula', -- lualine theme
     },
     sections = {
       lualine_c = {
