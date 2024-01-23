@@ -2,6 +2,10 @@ Set-PSReadlineOption -PredictionViewStyle ListView #TODO: add jk selection for s
 Set-PSReadLineKeyHandler -Key 'ctrl+k' -Function NextHistory
 Set-PSReadLineKeyHandler -Key 'ctrl+j' -Function PreviousHistory
 Set-PSReadlineOption -EditMode Vi
+# import several Modules
+Import-Module posh-git
+Import-Module PSScriptAnalyzer
+
 
 # This example emits a cursor change VT escape in response to a Vi mode change.
 function OnViModeChange {
@@ -21,6 +25,7 @@ function SetProfilesettingsJSON {
   $dev_path = Read-Host "Please enter your Development Folder Path"
   $dow_path = Read-Host "Please enter your Downloads Folder Path"
   $nvim_path = Read-Host "Please enter your Nvim_config Folder Path"
+  $chatgpt_key = Read-Host "Please enter your chatgpt_key"
 
   # Generate a json File structure
   $profileSettingsData = @{
@@ -30,7 +35,7 @@ function SetProfilesettingsJSON {
       nvim_path = $nvim_path
     }
     userkeys = @{
-      chatgpt_key = "[ChatCPT_Key]"
+      chatgpt_key = $chatgpt_key
     }
   }
   $jsonOutput = $profileSettingsData | ConvertTo-Json
@@ -85,6 +90,18 @@ foreach ($path in $userPathsArray) {
   }
 }
 
+
+# Add OPENAI_API_KEY as $Env
+$key_path = 'C:/users/MarvinHauke/.env'
+Write-Host $key_path
+if (Test-Path -Path $key_path)
+{
+  $env:OPENAI_API_KEY = (Get-Content $key_path)
+
+}
+else {
+  Write-Host "There is no .env file yet"
+}
 # Add some common Bash commadns:
 
 # Simple function to start a new elevated process. If arguments are supplied then 
@@ -183,7 +200,13 @@ if ((Get-Command nvim -ErrorAction Ignore)) {
   Write-Host "Nvim is not installed!"
 }
 
-# import several Modules
-Import-Module posh-git
-# Import-Module PSScriptAnalyzer
-Import-Module PSScriptAnalyzer
+
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}

@@ -112,5 +112,10 @@ return {
       capabilities = lsp_capabilities,
       on_attach = lsp_attach,
     })
+
+    lspconfig.clangd.setup({
+      capabilities = lsp_capabilities,
+      on_attach = lsp_attach
+    })
   end
 }
