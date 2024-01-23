@@ -31,7 +31,7 @@ return {
     local parser_config = require 'nvim-treesitter.parsers'.get_parser_configs()
     parser_config.powershell = {
       install_info = {
-        url = "C:/Users/Marvi/Development/Github/tree-sitter-PowerShell",
+        url = "C:/Users/MarvinHauke/Development/Github/tree-sitter-PowerShell",
         files = { "src/parser.c", "src/scanner.c" },
         branch = "main",
         generate_requires_npm = false,
