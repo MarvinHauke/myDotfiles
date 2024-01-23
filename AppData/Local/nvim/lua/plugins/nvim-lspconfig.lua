@@ -86,19 +86,31 @@ return {
     -- PowerShell LSP settings
     lspconfig.powershell_es.setup({
       capabilities = lsp_capabilities,
-      on_attach = lsp_attach
+      on_attach = lsp_attach,
+      settings = { -- custom settings for powershell
+        powershell = {
+          codeFormatting = {
+            Preset = 'OTBS' },
+        },
+      },
+    })
+
+    -- C++ LSP settings
+    lspconfig.clangd.setup({
+      capabilities = lsp_capabilities,
+      on_attach = lsp_attach,
     })
 
     -- JS LSP settings
     lspconfig.tsserver.setup({
       capabilities = lsp_capabilities,
-      on_attach = lsp_attach
+      on_attach = lsp_attach,
     })
 
     -- Python LSP settings
     lspconfig.pyright.setup({
       capabilities = lsp_capabilities,
-      on_attach = lsp_attach
+      on_attach = lsp_attach,
     })
   end
 }
