@@ -213,10 +213,22 @@ function cfg
     $arguments = $AdditionalArgs -join ' '
     $command = "$gitCommand --% $arguments"
   }
-
   Invoke-Expression $command
 }
+
+function LazyGitFunc{
+ $lazyGitCommand = "lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME"
+  if (Get-Command lazygit -ErrorAction SilentlyContinue) {
+    Invoke-Expression $lazyGitCommand
+  }
+  else{
+    Write-Host "LazyGit not installed"
+  }
+}
+
 Set-Alias -Name config -Value cfg
+Set-Alias -Name lzconf -Value lazyGitFunc
+
 
 # Set vim to nvim if installe
 if ((Get-Command nvim -ErrorAction Ignore))
