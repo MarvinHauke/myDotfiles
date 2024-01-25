@@ -92,14 +92,10 @@ foreach ($path in $userPathsArray) {
 
 
 # Add OPENAI_API_KEY as $Env
-$key_path = 'C:/users/MarvinHauke/.env'
-Write-Host $key_path
-if (Test-Path -Path $key_path)
-{
+$key_path = 'C:/users/Marvi/.env'
+if (Test-Path -Path $key_path) {
   $env:OPENAI_API_KEY = (Get-Content $key_path)
-
-}
-else {
+} else {
   Write-Host "There is no .env file yet"
 }
 # Add some common Bash commadns:
