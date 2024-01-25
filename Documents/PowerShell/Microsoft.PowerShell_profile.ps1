@@ -92,12 +92,13 @@ foreach ($path in $userPathsArray) {
 
 
 # Add OPENAI_API_KEY as $Env
-$key_path = 'C:/users/Marvi/.env'
+$key_path = 'C:/users/MarvinHauke/.env'
 if (Test-Path -Path $key_path) {
   $env:OPENAI_API_KEY = (Get-Content $key_path)
 } else {
   Write-Host "There is no .env file yet"
 }
+
 # Add some common Bash commadns:
 
 # Simple function to start a new elevated process. If arguments are supplied then 
@@ -183,10 +184,19 @@ function cfg {
     $arguments = $AdditionalArgs -join ' '
     $command = "$gitCommand --% $arguments"
   }
-
   Invoke-Expression $command
 }
 Set-Alias -Name config -Value cfg
+
+function LazyGitFunc{
+  $lazyGitCommand = "lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME"
+  if (Get-Command lazygit -ErrorAction SilentlyContinue) {
+    Invoke-Expression $lazyGitCommand
+  } else{
+    Write-Host "LazyGit not installed"
+  }
+}
+Set-Alias -Name lzconf -Value lazyGitFunc
 
 # Set vim to nvim if installe
 if ((Get-Command nvim -ErrorAction Ignore)) {
