@@ -206,6 +206,14 @@ if ((Get-Command nvim -ErrorAction Ignore)) {
   Write-Host "Nvim is not installed!"
 }
 
+function NvimConfigFunc{
+  $nvim_config_path = "$HOME/AppData/Local/nvim/"
+  if (Test-Path -Path $nvim_config_path -PathType Container){
+    $nvconfCommand =  "nvim " + $nvim_config_path
+    Invoke-Expression $nvconfCommand
+  }
+}
+Set-Alias -Name nvc -Value NvimConfigFunc
 
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
