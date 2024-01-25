@@ -36,7 +36,7 @@ return {
         "quick_lint_js",
         "powershell_es",
         "tsserver",
-        "pyright"
+        "pyright",
       },
       automatic_installation = true,
     })
@@ -85,6 +85,7 @@ return {
 
     -- PowerShell LSP settings
     lspconfig.powershell_es.setup({
+      -- bundle_path = "C:\\Users\\MarvinHauke\\Development\\Github\\PowerShellEditorServices",
       capabilities = lsp_capabilities,
       on_attach = lsp_attach
     })
