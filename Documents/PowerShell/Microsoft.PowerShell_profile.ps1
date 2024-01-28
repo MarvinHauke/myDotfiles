@@ -92,7 +92,7 @@ foreach ($path in $userPathsArray) {
 
 
 # Add OPENAI_API_KEY as $Env
-$key_path = 'C:/users/MarvinHauke/.env'
+$key_path = "$HOME/.env"
 if (Test-Path -Path $key_path) {
   $env:OPENAI_API_KEY = (Get-Content $key_path)
 } else {

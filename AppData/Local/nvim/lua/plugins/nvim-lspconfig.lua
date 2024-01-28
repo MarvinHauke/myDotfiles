@@ -1,30 +1,24 @@
 return {
 	-- LSP Configuration
-	-- https://github.com/neovim/nvim-lspconfig
-	"neovim/nvim-lspconfig",
+	"neovim/nvim-lspconfig", -- https://github.com/neovim/nvim-lspconfig
 	event = "VeryLazy",
 	dependencies = {
 		-- LSP Management
-		-- https://github.com/williamboman/mason.nvim
-		"williamboman/mason.nvim",
-
+		"williamboman/mason.nvim", -- https://github.com/williamboman/mason.nvim
+		"williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		-- https://github.com/williamboman/mason-lspconfig.nvim
-		"williamboman/mason-lspconfig.nvim",
 
 		-- Useful status updates for LSP
-		-- https://github.com/j-hui/fidget.nvim
-		"j-hui/fidget.nvim",
+		"j-hui/fidget.nvim", -- https://github.com/j-hui/fidget.nvim
 
 		-- Additional lua configuration, makes nvim stuff amazing!
-		-- https://github.com/folke/neodev.nvim
-		"folke/neodev.nvim",
+		"folke/neodev.nvim", -- https://github.com/folke/neodev.nvim
 	},
 	config = function()
 		require("mason").setup()
 		require("mason-lspconfig").setup({
-			-- Update this list to the language servers you need installed
 			ensure_installed = {
+				-- Update this list to the language servers you need installed
 				"bashls",
 				"cssls",
 				"tailwindcss",
