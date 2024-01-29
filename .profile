@@ -21,30 +21,25 @@ if [ -d "$HOME/bin" ]; then
     PATH="$HOME/bin:$PATH"
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ]; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
 # this exports my development directory for the my dotfiles and repos
-if [ ! -f "$HOME/.dyn_path" ]; then
-    #look for .dyn_path and set the specific paths for your system 
-    echo "There is no file to your system settings yet"
-    echo "Do you want to creat a pathfile containing your System Settings?"
-    read -r -p "Enter 'yes' to continue:" answer
-
-    #Convert Anser to lowercase
-    #answer_to_lower=$(echo "$answer" | tr '[:upper]' '[:lower:]')
-    if [ "${answer,,}" == "y" ] || [ "${answer,,}" == "yes" ]; then
-        #Set Dev folder 
-        read -r -ep "Please enter your Development Folder Path: " -e dev_path
-        if [ -d "$dev_path" ]; then
-            echo "cdd path was set to $dev_path"
-            DEV="$dev_path"
-            export DEV
-        else
-            echo "Invalid Path $dev_path does not exist"
-            exit 1
-        fi 
-    fi
-fi 
+#if [ ! -f "$HOME/.dyn_path" ]; then
+#    #look for .dyn_path and set the specific paths for your system 
+#    echo "There is no file to your system settings yet"
+#    echo "Do you want to creat a pathfile containing your System Settings?"
+#    read -r -p "Enter 'yes' to continue:" answer
+#
+#    #Convert Anser to lowercase
+#    #answer_to_lower=$(echo "$answer" | tr '[:upper]' '[:lower:]')
+#    if [ "${answer,,}" == "y" ] || [ "${answer,,}" == "yes" ]; then
+#        #Set Dev folder 
+#        read -r -ep "Please enter your Development Folder Path: " -e dev_path
+#        if [ -d "$dev_path" ]; then
+#            echo "cdd path was set to $dev_path"
+#            DEV="$dev_path"
+#            export DEV
+#        else
+#            echo "Invalid Path $dev_path does not exist"
+#            exit 1
+#        fi 
+#    fi
+#fi 

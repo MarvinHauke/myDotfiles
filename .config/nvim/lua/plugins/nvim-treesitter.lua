@@ -18,7 +18,8 @@ return {
       'lua',
       'vim',
       'c',
-      'html'
+      'html',
+      'python',
     },
   },
   config = function (_, opts)

@@ -57,12 +57,14 @@ alias l='ls -CF'
 alias cdd=_cdd_function
 alias cdl=_cdl_function
 alias activate='source .venv/bin/activate'
-
 # Add an "alert" alias for long running commands.  Use like so:
 # sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# export for Tree-sitter cli, etc.
+export PATH=$PATH:~/.cargo/bin/
 # use nvim as vim when installed:
+export PATH=$PATH:~/nvim-linux64/bin
 if command -v nvim >/dev/null 2>&1; then
    alias vim=nvim 
 else
