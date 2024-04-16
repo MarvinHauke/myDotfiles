@@ -224,3 +224,22 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
+Import-Module PSReadLine
+Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
+$scriptblock = {
+    param($wordToComplete, $commandAst, $cursorPosition)
+    $Env:_TYPER_COMPLETE = "complete_powershell"
+    $Env:_TYPER_COMPLETE_ARGS = $commandAst.ToString()
+    $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = $wordToComplete
+    typer | ForEach-Object {
+        $commandArray = $_ -Split ":::"
+        $command = $commandArray[0]
+        $helpString = $commandArray[1]
+        [System.Management.Automation.CompletionResult]::new(
+            $command, $command, 'ParameterValue', $helpString)
+    }
+    $Env:_TYPER_COMPLETE = ""
+    $Env:_TYPER_COMPLETE_ARGS = ""
+    $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = ""
+}
+Register-ArgumentCompleter -Native -CommandName typer -ScriptBlock $scriptblock

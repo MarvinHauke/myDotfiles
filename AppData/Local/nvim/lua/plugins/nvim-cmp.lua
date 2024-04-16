@@ -5,17 +5,20 @@ return {
 	event = "InsertEnter",
 	dependencies = {
 
+		"williamboman/mason.nvim",
+		"williamboman/mason-lspconfig",
+
 		-- Snippet engine & associated nvim-cmp source
 		"L3MON4D3/LuaSnip", -- https://github.com/L3MON4D3/LuaSnip
 
 		-- https://github.com/saadparwaiz1/cmp_luasnip
 		"saadparwaiz1/cmp_luasnip", -- for autocompletion
 
-		-- https://github.com/hrsh7th/cmp-nvim-lsp
-		"hrsh7th/cmp-nvim-lsp", -- LSP completion capabilities
-
 		-- https://github.com/rafamadriz/friendly-snippets
 		"rafamadriz/friendly-snippets", --useful snippets
+
+		-- https://github.com/hrsh7th/cmp-nvim-lsp
+		"hrsh7th/cmp-nvim-lsp", -- LSP completion capabilities
 
 		-- https://github.com/hrsh7th/cmp-buffer
 		"hrsh7th/cmp-buffer", -- source for text in buffer

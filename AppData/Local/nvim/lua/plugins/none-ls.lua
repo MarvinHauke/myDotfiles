@@ -4,7 +4,6 @@ return {
 	dependencies = {
 		"jay-babu/mason-null-ls.nvim",
 	},
-
 	config = function()
 		local mason_null_ls = require("mason-null-ls")
 		local null_ls = require("null-ls")
@@ -35,11 +34,18 @@ return {
 			root_dir = null_ls_utils.root_pattern(".null-ls-root", "Makefile", ".git", "package.json"),
 
 			source = {
+				-- formatting
 				formatting.stylua,
 				formatting.prettier,
 				formatting.eslint_d,
 				formatting.black,
 				formatting.shellcheck,
+
+				-- completion
+				completion.shellcheck,
+				completion.pylint,
+
+				-- diagnostics
 				diagnostics.shellcheck,
 				diagnostics.black,
 				diagnostics.eslint_d.with({ -- js/ts linter

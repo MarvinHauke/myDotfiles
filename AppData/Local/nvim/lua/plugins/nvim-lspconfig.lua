@@ -33,11 +33,13 @@ return {
 				"tsserver",
 				"pyright",
 			},
+
 			automatic_installation = true,
 		})
 		local lspconfig = require("lspconfig")
-		local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+		local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities() -- INFO Search for difference between default_capabilities and normal capabilities
 		local mason_tool_installer = require("mason-tool-installer")
+		require("fidget").setup({})
 
 		local lsp_attach = function(client, bufnr)
 			-- Create your attached keybindings here..
