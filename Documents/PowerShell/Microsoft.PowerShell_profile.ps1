@@ -215,6 +215,16 @@ function NvimConfigFunc{
 }
 Set-Alias -Name nvc -Value NvimConfigFunc
 
+function go_to_nvim{
+  $nvim_config_path = "$HOME/AppData/Local/nvim/"
+  if (Test-Path -Path $nvim_config_path -PathType Container){
+    $nvconfCommand =  "cd " + $nvim_config_path
+    Invoke-Expression $nvconfCommand
+  }
+}
+Set-Alias -Name cdn -Value go_to_nvim
+
+
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
 # Be aware that if you are missing these lines from your profile, tab completion
@@ -224,3 +234,22 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
+Import-Module PSReadLine
+Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
+$scriptblock = {
+  param($wordToComplete, $commandAst, $cursorPosition)
+  $Env:_TYPER_COMPLETE = "complete_powershell"
+  $Env:_TYPER_COMPLETE_ARGS = $commandAst.ToString()
+  $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = $wordToComplete
+  typer | ForEach-Object {
+    $commandArray = $_ -Split ":::"
+    $command = $commandArray[0]
+    $helpString = $commandArray[1]
+    [System.Management.Automation.CompletionResult]::new(
+      $command, $command, 'ParameterValue', $helpString)
+  }
+  $Env:_TYPER_COMPLETE = ""
+  $Env:_TYPER_COMPLETE_ARGS = ""
+  $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = ""
+}
+Register-ArgumentCompleter -Native -CommandName typer -ScriptBlock $scriptblock

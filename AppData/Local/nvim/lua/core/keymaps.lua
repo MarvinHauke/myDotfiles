@@ -42,6 +42,9 @@ keymap.set("n", "<C-Down>", ":resize -2<CR>")
 keymap.set("n", "<C-Left>", ":vertical resize +2<CR>")
 keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
 
+-- Open URL under Cursor
+keymap.set("n", "gx", ":URLOpenUnderCursor<CR>")
+
 -- Diff keymaps
 keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
 keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
