@@ -2,6 +2,7 @@ Set-PSReadlineOption -PredictionViewStyle ListView #TODO: add jk selection for s
 Set-PSReadLineKeyHandler -Key 'ctrl+k' -Function NextHistory
 Set-PSReadLineKeyHandler -Key 'ctrl+j' -Function PreviousHistory
 Set-PSReadlineOption -EditMode Vi
+
 # import several Modules
 Import-Module posh-git
 Import-Module PSScriptAnalyzer
@@ -19,91 +20,6 @@ function OnViModeChange {
 }
 Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
 
-# This script parses the .profileSettings.json at your Home Directory
-# Check if the dyn_path file exists in the user's home directory
-function SetProfilesettingsJSON {
-  $dev_path = Read-Host "Please enter your Development Folder Path"
-  $dow_path = Read-Host "Please enter your Downloads Folder Path"
-  $nvim_path = Read-Host "Please enter your Nvim_config Folder Path"
-  $chatgpt_key = Read-Host "Please enter your chatgpt_key"
-
-  # Generate a json File structure
-  $profileSettingsData = @{
-    userpaths = @{
-      dev_path = $dev_path
-      dow_path = $dow_path
-      nvim_path = $nvim_path
-    }
-    userkeys = @{
-      chatgpt_key = $chatgpt_key
-    }
-  }
-  $jsonOutput = $profileSettingsData | ConvertTo-Json
-
-  # Write the updated JSON content back to the file
-  $jsonOutput | Set-Content -Path $profileSettingsPath
-}
-
-$profileSettingsPath = Join-Path $HOME ".profileSettings.json"
-if (-not (Test-Path -Path $profileSettingsPath)) {
-  Write-Host "There is no file for your profilesettings yet"
-    
-  # Prompt the user to create a pathfile containing system settings
-  $answer = Read-Host `
-    "Do you want to create a .profilesettings.json?
-    (Enter 'yes' to continue)"
-  # Convert the input to lowercase
-  $inputToLower = $answer.ToLower()
-  if ($inputToLower -eq "yes" -or $inputToLower -eq "y") {
-    SetProfilesettingsJSON
-  }
-}
-
-# Read existing Data from .profileSettings.json back in
-$profileSettingsData = Get-Content $profileSettingsPath | ConvertFrom-JSON 
-
-# Check if 'userpaths' is present in the JSON data
-if ($profileSettingsData.PSObject.Properties['userpaths']) {
-  # Initialize an array to store values
-  $userPathsArray = @()
-
-  # Iterate through each property in 'userpaths'
-  foreach ($property in $profileSettingsData.userpaths.PSObject.Properties) {
-    # Add the value of each property to the array
-    $userPathsArray += $property.Value
-  }
-
-  # Output the array to the console
-  # $userPathsString = $userPathsArray -join ", `n" # This prints every value in a new line
-  # Write-Host "There are following userPaths:`n$userPathsString" 
-} else {
-  Write-Host "'userpaths' not found in the JSON data."
-  SetProfilesettingsJSON
-}
-
-foreach ($path in $userPathsArray) {
-  if (Test-Path -Path $path -PathType Container) { 
-    # Add a function for valid paths
-  } else {
-    Write-Host "Invalid Path: $path does not exist"
-    SetProfilesettingsJSON
-  }
-}
-
-
-# Add OPENAI_API_KEY as $Env
-$key_path = "$HOME/.env"
-if (Test-Path -Path $key_path) {
-  $env:OPENAI_API_KEY = (Get-Content $key_path)
-} else {
-  Write-Host "There is no .env file yet"
-}
-
-# Add some common Bash commadns:
-
-# Simple function to start a new elevated process. If arguments are supplied then 
-# a single command is started with admin rights; if not then a new admin instance
-# of PowerShell is started.
 function admin {
   if ($args.Count -gt 0) {   
     $argList = "& '" + $args + "'"
@@ -188,6 +104,12 @@ function cfg {
 }
 Set-Alias -Name config -Value cfg
 
+
+# Show all tracked files from config
+function showConfigFiles{
+  git --git-dir=$HOME/.cfg/ ls-tree -r master --name-only
+}
+
 function LazyGitFunc{
   $lazyGitCommand = "lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME"
   if (Get-Command lazygit -ErrorAction SilentlyContinue) {
@@ -198,7 +120,7 @@ function LazyGitFunc{
 }
 Set-Alias -Name lzconf -Value lazyGitFunc
 
-# Set vim to nvim if installe
+# Set vim to nvim if installed
 if ((Get-Command nvim -ErrorAction Ignore)) {
   Set-Alias -Name vim -Value nvim
   Write-Host "vim is now nvim"
@@ -206,24 +128,38 @@ if ((Get-Command nvim -ErrorAction Ignore)) {
   Write-Host "Nvim is not installed!"
 }
 
+
 function NvimConfigFunc{
   $nvim_config_path = "$HOME/AppData/Local/nvim/"
   if (Test-Path -Path $nvim_config_path -PathType Container){
-    $nvconfCommand =  "nvim " + $nvim_config_path
+    $nvconfCommand =  "vim " + $nvim_config_path
     Invoke-Expression $nvconfCommand
   }
 }
 Set-Alias -Name nvc -Value NvimConfigFunc
 
-function go_to_nvim{
+function NvimConfigFolder{
   $nvim_config_path = "$HOME/AppData/Local/nvim/"
   if (Test-Path -Path $nvim_config_path -PathType Container){
     $nvconfCommand =  "cd " + $nvim_config_path
     Invoke-Expression $nvconfCommand
   }
 }
-Set-Alias -Name cdn -Value go_to_nvim
+Set-Alias -Name cdn -Value NvimConfigFolder
 
+function NotesFolder{
+  $notesPath = "$HOME\OneDrive - Pikes GmbH\Dokumente\Notizen\"
+  if (Test-Path -Path $notesPath -PathType Container){
+    Set-Location "$notesPath"
+  }
+}
+Set-Alias -Name notes -Value NotesFolder
+
+
+function ProfileConfigFunc{
+  vim $HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+}
+Set-Alias -Name nvp -Value ProfileConfigFunc
 
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
@@ -234,22 +170,3 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
-Import-Module PSReadLine
-Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
-$scriptblock = {
-  param($wordToComplete, $commandAst, $cursorPosition)
-  $Env:_TYPER_COMPLETE = "complete_powershell"
-  $Env:_TYPER_COMPLETE_ARGS = $commandAst.ToString()
-  $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = $wordToComplete
-  typer | ForEach-Object {
-    $commandArray = $_ -Split ":::"
-    $command = $commandArray[0]
-    $helpString = $commandArray[1]
-    [System.Management.Automation.CompletionResult]::new(
-      $command, $command, 'ParameterValue', $helpString)
-  }
-  $Env:_TYPER_COMPLETE = ""
-  $Env:_TYPER_COMPLETE_ARGS = ""
-  $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = ""
-}
-Register-ArgumentCompleter -Native -CommandName typer -ScriptBlock $scriptblock
