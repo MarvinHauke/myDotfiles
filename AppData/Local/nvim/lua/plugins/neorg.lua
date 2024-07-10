@@ -6,7 +6,10 @@ return {
   },
   {
     "nvim-neorg/neorg",
-    dependencies = { "luarocks.nvim" },
+    dependencies = {
+      "luarocks.nvim",
+      "nvim-lua/plenary.nvim"
+    },
     version = "*",
     config = function()
       require("neorg").setup {
@@ -27,7 +30,6 @@ return {
             },
           },
           ["core.integrations.treesitter"] = {},
-          ["core.itero"] = {},
           ["core.export"] = {
             config = {
               extensions = { "all" },
@@ -49,8 +51,8 @@ return {
             },
           },
         },
+        ["core.ui"] = {},
         ["core.ui.calendar"] = {},
-        dependencies = { "nvim-lua/plenary.nvim" },
       }
       vim.wo.foldlevel = 99
       vim.wo.conceallevel = 2
