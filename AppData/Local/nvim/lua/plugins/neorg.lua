@@ -12,11 +12,24 @@ return {
       require("neorg").setup {
         load = {
           ["core.defaults"] = {},
-          ["core.concealer"] = {},
+          ["core.concealer"] = {
+            config = {
+              icons = {
+                todo = {
+                  on_hold = {
+                    icon = ""
+                  },
+                  uncertain = {
+                    icon = ""
+                  },
+                },
+              },
+            },
+          },
           ["core.dirman"] = {
             config = {
               workspaces = {
-                notes = "~/OneDrive - Pikes GmbH/Dokumente/Notizen",
+                notes = "~/Documents/Notizen",
               },
               default_workspace = "notes",
             },
