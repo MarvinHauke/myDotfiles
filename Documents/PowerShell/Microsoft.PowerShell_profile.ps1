@@ -155,7 +155,6 @@ function NotesFolder{
 }
 Set-Alias -Name notes -Value NotesFolder
 
-
 function ProfileConfigFunc{
   vim $HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 }
