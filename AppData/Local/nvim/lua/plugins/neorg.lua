@@ -13,6 +13,14 @@ return {
         load = {
           ["core.defaults"] = {},
           ["core.concealer"] = {},
+          ["core.integrations.treesitter"] = {},
+          ["core.itero"] = {},
+          ["core.export"] = {
+            config = {
+              extensions = { "all" },
+            },
+          },
+          ["core.export.markdown"] = {},
           ["core.dirman"] = {
             config = {
               workspaces = {
@@ -21,7 +29,17 @@ return {
               default_workspace = "notes",
             },
           },
+          ["core.dirman.utils"] = {},
+          ["core.completion"] = {
+            config = {
+              engine = "nvim-cmp",
+            },
+          },
         },
+        ["core.ui.calendar"] = {},
+        dependencies = { "nvim-lua/plenary.nvim" },
+
+
       }
 
       vim.wo.foldlevel = 99
