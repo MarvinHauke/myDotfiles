@@ -6,15 +6,31 @@ return {
   },
   {
     "nvim-neorg/neorg",
-    dependencies = { "luarocks.nvim" },
+    build = ":Neorg sync-parsers",
+    dependencies = {
+      "luarocks.nvim",
+      "nvim-lua/plenary.nvim"
+    },
     version = "*",
     config = function()
       require("neorg").setup {
         load = {
           ["core.defaults"] = {},
-          ["core.concealer"] = {},
+          ["core.concealer"] = {
+            config = {
+              icons = {
+                todo = {
+                  on_hold = {
+                    icon = ""
+                  },
+                  uncertain = {
+                    icon = ""
+                  },
+                },
+              },
+            },
+          },
           ["core.integrations.treesitter"] = {},
-          ["core.itero"] = {},
           ["core.export"] = {},
           ["core.export.markdown"] = {
             config = {
@@ -24,7 +40,7 @@ return {
           ["core.dirman"] = {
             config = {
               workspaces = {
-                notes = "~/OneDrive - Pikes GmbH/Dokumente/Notizen",
+                notes = "~/Documents/Notizen",
               },
               default_workspace = "notes",
             },
@@ -36,10 +52,9 @@ return {
             },
           },
         },
+        ["core.ui"] = {},
         ["core.ui.calendar"] = {},
-        -- dependencies = { "nvim-lua/plenary.nvim" },
       }
-
       vim.wo.foldlevel = 99
       vim.wo.conceallevel = 2
     end,
