@@ -15,12 +15,12 @@ return {
           ["core.concealer"] = {},
           ["core.integrations.treesitter"] = {},
           ["core.itero"] = {},
-          ["core.export"] = {
+          ["core.export"] = {},
+          ["core.export.markdown"] = {
             config = {
-              extensions = { "all" },
-            },
+              extensions = "all"
+            }
           },
-          ["core.export.markdown"] = {},
           ["core.dirman"] = {
             config = {
               workspaces = {
@@ -37,9 +37,7 @@ return {
           },
         },
         ["core.ui.calendar"] = {},
-        dependencies = { "nvim-lua/plenary.nvim" },
-
-
+        -- dependencies = { "nvim-lua/plenary.nvim" },
       }
 
       vim.wo.foldlevel = 99
