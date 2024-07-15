@@ -6,6 +6,7 @@ Set-PSReadlineOption -EditMode Vi
 # import several Modules
 Import-Module posh-git
 Import-Module PSScriptAnalyzer
+Import-Module PSReadLine
 
 
 # This example emits a cursor change VT escape in response to a Vi mode change.
@@ -19,7 +20,27 @@ function OnViModeChange {
   }
 }
 Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
+# Set Autopair quotes 
+Set-PSReadLineKeyHandler -Chord '"',"'" `
+  -BriefDescription SmartInsertQuote `
+  -LongDescription "Insert paired quotes if not already on a quote" `
+  -ScriptBlock {
+  param($key, $arg)
 
+  $line = $null
+  $cursor = $null
+  [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+
+  if ($line.Length -gt $cursor -and $line[$cursor] -eq $key.KeyChar) {
+    # Just move the cursor
+    [Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($cursor + 1)
+  } else {
+    # Insert matching quotes, move cursor to be in between the quotes
+    [Microsoft.PowerShell.PSConsoleReadLine]::Insert("$($key.KeyChar)" * 2)
+    [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+    [Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($cursor - 1)
+  }
+}
 function admin {
   if ($args.Count -gt 0) {   
     $argList = "& '" + $args + "'"
