@@ -73,7 +73,8 @@ keymap.set("n", "<leader>p", '"*p')
 keymap.set("v", "<leader>p", '"*p')
 
 -- Clear seach highlighting
-keymap.set("n", "<leader>h", ":nohlsearch<CR>")
+keymap.set("n", "<leader>h", ":nohlsearch<CR>")           -- clear search highlight
+keymap.set("n", "<leader>tp", ":Precognition toggle<CR>") -- toggle Precognition
 
 -- Lets your Cursor stay in Place while "J"
 -- keymap.set("n", "J", "mzJ`z")
@@ -143,19 +144,21 @@ end)
 -- Vim REST Console
 keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Run REST query
 
--- Completion
-keymap.set("i", "<C-k>", require("cmp").select_prev_item)   -- previous suggestion
-keymap.set("i", "<S-Tab>", require("cmp").select_prev_item) -- previous suggestion
-keymap.set("i", "<C-j>", require("cmp").select_next_item)   -- previous suggestion
-keymap.set("i", "<Tab>", require("cmp").select_next_item)   -- previous suggestion
--- keymap.set("i", "<C-Space>", require("cmp").complete) --show completion suggestions
-keymap.set("i", "<C-Space>", "v:lua.require'cmp'.complete()", { expr = true })
-keymap.set("i", "<C-e>", require("cmp").abort) --clear completion window
+-- -- Completion
+-- keymap.set("i", "<C-k>", require("cmp").select_prev_item)   -- previous suggestion
+-- keymap.set("i", "<S-Tab>", require("cmp").select_prev_item) -- previous suggestion
+-- keymap.set("i", "<C-j>", require("cmp").select_next_item)   -- previous suggestion
+-- keymap.set("i", "<Tab>", require("cmp").select_next_item)   -- previous suggestion
+-- -- keymap.set("i", "<C-Space>", require("cmp").complete) --show completion suggestions
+-- keymap.set("i", "<C-Space>", "v:lua.require'cmp'.complete()", { expr = true })
+-- keymap.set("i", "<C-e>", require("cmp").abort) --clear completion window
+-- keymap.set("i", "<CR>", require("cmp").confirm({ select = false }))
 
--- confirm selection
-keymap.set("i", "<CR>", function()
-  require("cmp").confirm({ select = false })
-end)
+-- -- confirm selection
+-- keymap.set("i", "<CR>", function()
+--   require("cmp").confirm({ select = false })
+-- end)
+--
 -- scroll docs backward
 keymap.set("i", "<C-b>", function()
   require("cmp").scroll_docs(-4)
