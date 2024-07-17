@@ -169,7 +169,7 @@ function NvimConfigFolder{
 Set-Alias -Name cdn -Value NvimConfigFolder
 
 function NotesFolder{
-  $notesPath = "$HOME\OneDrive - Pikes GmbH\Dokumente\Notizen"
+  $notesPath = "$HOME\Documents\Notizen"
   if (Test-Path -Path $notesPath -PathType Container){
     Set-Location "$notesPath"
   }
