@@ -33,7 +33,6 @@ return {
         "tsserver",
         "pyright",
       },
-
       automatic_installation = true,
     })
     local lspconfig = require("lspconfig")

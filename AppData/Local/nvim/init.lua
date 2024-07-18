@@ -1,4 +1,5 @@
 -- This has to be set before initializing lazy
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 -- Bootstrap lazy
@@ -27,3 +28,4 @@ require("lazy").setup("plugins", {
 -- These modules are not loaded by lazy
 require("core.options")
 require("core.keymaps")
+require("snippets.my_snippets")
