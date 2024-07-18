@@ -19,7 +19,7 @@ keymap.set("n", "<leader>qq", ":q!<CR>", { desc = "quit without saving" }) -- qu
 keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                 -- save
 
 -- Split window management
-keymap.set("n", "<leader>sv", "<C-w>v", { desc = "split window vertically" })        -- split window vertically
+keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })        -- split window vertically
 keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })      -- split window horizontally
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" }) -- make split windows equal width
 keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" }) -- close split window
