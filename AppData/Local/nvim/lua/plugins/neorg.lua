@@ -18,19 +18,15 @@ return {
           ["core.defaults"] = {},
           ["core.concealer"] = {
             config = {
-              icons = {
-                todo = {
-                  on_hold = {
-                    icon = ""
-                  },
-                  uncertain = {
-                    icon = ""
-                  },
-                },
-              },
+              folds = false,
+              icon_preset = "diamond",
             },
           },
-          ["core.integrations.treesitter"] = {},
+          ["core.integrations.treesitter"] = {
+            config = {
+              install_parsers = true
+            },
+          },
           ["core.export"] = {},
           ["core.export.markdown"] = {
             config = {

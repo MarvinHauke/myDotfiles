@@ -14,21 +14,21 @@ local keymap = vim.keymap
 --   command_mode = "c",
 
 -- General keymaps
-keymap.set("n", "<leader>wq", ":wq<CR>") -- save and quit
-keymap.set("n", "<leader>qq", ":q!<CR>") -- quit without saving
-keymap.set("n", "<leader>ww", ":w<CR>")  -- save
+keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })       -- save and quit
+keymap.set("n", "<leader>qq", ":q!<CR>", { desc = "quit without saving" }) -- quit without saving
+keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                 -- save
 
 -- Split window management
-keymap.set("n", "<leader>sv", "<C-w>v")     -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s")     -- split window horizontally
-keymap.set("n", "<leader>se", "<C-w>=")     -- make split windows equal width
-keymap.set("n", "<leader>sx", ":close<CR>") -- close split window
+keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })        -- split window vertically
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })      -- split window horizontally
+keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" }) -- make split windows equal width
+keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" }) -- close split window
 
 -- Better window navigation
-keymap.set("n", "<c-k>", ":wincmd k<CR>")
-keymap.set("n", "<c-j>", ":wincmd j<CR>")
-keymap.set("n", "<c-h>", ":wincmd h<CR>")
-keymap.set("n", "<c-l>", ":wincmd l<CR>")
+keymap.set("n", "<c-k>", ":wincmd k<CR>") -- lower window
+keymap.set("n", "<c-j>", ":wincmd j<CR>") -- upper window
+keymap.set("n", "<c-h>", ":wincmd h<CR>") -- left window
+keymap.set("n", "<c-l>", ":wincmd l<CR>") -- right window
 
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open a new tab
@@ -96,7 +96,8 @@ keymap.set("n", "<leader>er", ":NvimTreeFocus<CR>")    -- toggle focus to file e
 keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file explorer
 
 -- Telescope
-keymap.set("n", "<leader>ff", require("telescope.builtin").find_files, {})
+local telescope = require("telescope.builtin")
+keymap.set("n", "<leader>ff", telescope.find_files, {})
 keymap.set("n", "<leader>fg", require("telescope.builtin").live_grep, {})
 keymap.set("n", "<leader>fb", require("telescope.builtin").buffers, {})
 keymap.set("n", "<leader>fh", require("telescope.builtin").help_tags, {})
@@ -143,30 +144,6 @@ end)
 
 -- Vim REST Console
 keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Run REST query
-
--- -- Completion
--- keymap.set("i", "<C-k>", require("cmp").select_prev_item)   -- previous suggestion
--- keymap.set("i", "<S-Tab>", require("cmp").select_prev_item) -- previous suggestion
--- keymap.set("i", "<C-j>", require("cmp").select_next_item)   -- previous suggestion
--- keymap.set("i", "<Tab>", require("cmp").select_next_item)   -- previous suggestion
--- -- keymap.set("i", "<C-Space>", require("cmp").complete) --show completion suggestions
--- keymap.set("i", "<C-Space>", "v:lua.require'cmp'.complete()", { expr = true })
--- keymap.set("i", "<C-e>", require("cmp").abort) --clear completion window
--- keymap.set("i", "<CR>", require("cmp").confirm({ select = false }))
-
--- -- confirm selection
--- keymap.set("i", "<CR>", function()
---   require("cmp").confirm({ select = false })
--- end)
---
--- scroll docs backward
-keymap.set("i", "<C-b>", function()
-  require("cmp").scroll_docs(-4)
-end)
--- scroll docs forward
-keymap.set("i", "<C-f>", function()
-  require("cmp").scroll_docs(4)
-end)
 
 -- LSP
 keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.hover()<CR>")
