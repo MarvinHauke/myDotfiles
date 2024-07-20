@@ -31,10 +31,10 @@ keymap.set("n", "<c-h>", ":wincmd h<CR>") -- left window
 keymap.set("n", "<c-l>", ":wincmd l<CR>") -- right window
 
 -- Tab management
-keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open a new tab
-keymap.set("n", "<leader>tx", ":tabclose<CR>") -- close a tab
-keymap.set("n", "<leader>tn", ":tabn<CR>")     -- next tab
-keymap.set("n", "<leader>tp", ":tabp<CR>")     -- previous tab
+keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab
+keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "close tab" })  -- close a tab
+keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" })       -- next tab
+keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" })   -- previous tab
 
 -- Resize with arrows
 keymap.set("n", "<C-Up>", ":resize +2<CR>")
@@ -43,7 +43,7 @@ keymap.set("n", "<C-Left>", ":vertical resize +2<CR>")
 keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
 
 -- Open URL under Cursor
-keymap.set("n", "gx", ":URLOpenUnderCursor<CR>")
+-- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
 
 -- Diff keymaps
 keymap.set("n", "<leader>cc", ":diffput<CR>")   -- put diff from current to other during diff
@@ -53,8 +53,8 @@ keymap.set("n", "<leader>cn", "]c")             -- next diff hunk
 keymap.set("n", "<leader>cp", "[c")             -- previous diff hunk
 
 -- Delete to void Register
-keymap.set("n", "<leader>d", '"_dd')
-keymap.set("v", "<leader>d", '"_d')
+-- keymap.set("n", "<leader>d", '"_dd')
+-- keymap.set("v", "<leader>d", '"_d')
 
 -- Move lines in Visual Mode
 keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -79,9 +79,6 @@ keymap.set("n", "<leader>h", ":nohlsearch<CR>") -- clear search highlight
 -- keymap.set("n", "J", "mzJ`z")
 keymap.set("n", "J", "<NOP>", opts) -- remove J from normal mode
 
--- Bufferline
-keymap.set("n", "J", ":BufferLineCyclePrev<CR>")
-keymap.set("n", "K", ":BufferLineCycleNext<CR>")
 
 -- Quickfix keymaps
 keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
@@ -97,6 +94,10 @@ keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file expl
 
 -- Git-blame
 keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>") -- toggle git blame
+
+-- Bufferline
+keymap.set("n", "J", ":BufferLineCyclePrev<CR>")
+keymap.set("n", "K", ":BufferLineCycleNext<CR>")
 
 -- Harpoon
 keymap.set("n", "<leader>ha", require("harpoon.mark").add_file)

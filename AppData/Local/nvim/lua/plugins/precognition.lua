@@ -27,4 +27,13 @@ return {
     --     "startify",
     -- },
   },
+  keys = {
+    {
+      "<leader>ht",
+      function()
+        require("precognition").toggle()
+      end,
+      desc = "Precognition",
+    },
+  },
 }
