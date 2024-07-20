@@ -73,11 +73,11 @@ keymap.set("n", "<leader>p", '"*p')
 keymap.set("v", "<leader>p", '"*p')
 
 -- Clear seach highlighting
-keymap.set("n", "<leader>h", ":nohlsearch<CR>")           -- clear search highlight
-keymap.set("n", "<leader>tp", ":Precognition toggle<CR>") -- toggle Precognition
+keymap.set("n", "<leader>h", ":nohlsearch<CR>") -- clear search highlight
 
 -- Lets your Cursor stay in Place while "J"
 -- keymap.set("n", "J", "mzJ`z")
+keymap.set("n", "J", "<NOP>", opts) -- remove J from normal mode
 
 -- Bufferline
 keymap.set("n", "J", ":BufferLineCyclePrev<CR>")
@@ -94,19 +94,6 @@ keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle maximize tab
 keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>")   -- toggle file explorer
 keymap.set("n", "<leader>er", ":NvimTreeFocus<CR>")    -- toggle focus to file explorer
 keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file explorer
-
--- Telescope
-local telescope = require("telescope.builtin")
-keymap.set("n", "<leader>ff", telescope.find_files, {})
-keymap.set("n", "<leader>fg", require("telescope.builtin").live_grep, {})
-keymap.set("n", "<leader>fb", require("telescope.builtin").buffers, {})
-keymap.set("n", "<leader>fh", require("telescope.builtin").help_tags, {})
-keymap.set("n", "<leader>fs", require("telescope.builtin").current_buffer_fuzzy_find, {})
-keymap.set("n", "<leader>fo", require("telescope.builtin").lsp_document_symbols, {})
-keymap.set("n", "<leader>fi", require("telescope.builtin").lsp_incoming_calls, {})
-keymap.set("n", "<leader>fm", function()
-  require("telescope.builtin").treesitter({ default_text = ":method:" })
-end)
 
 -- Git-blame
 keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>") -- toggle git blame

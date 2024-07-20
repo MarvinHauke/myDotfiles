@@ -25,5 +25,18 @@ return {
         }
       }
     }
+  },
+  keys = {
+    { "<leader>ff", ":Telescope find_files<cr>" },
+    { "<leader>fg", ":Telescope live_grep<cr>" },
+    { "<leader>fb", ":Telescope buffers<cr>" },
+    { "<leader>fh", ":Telescope help_tags<cr>" },
+    { "<leader>fs", ":Telescope current_buffer_fuzzy_find<cr>" },
+    { "<leader>fo", ":Telescope lsp_document_symbols<cr>" },
+    { "<leader>fi", ":Telescope lsp_incoming_calls<cr>" },
+
+    vim.keymap.set("n", "<leader>fm", function()
+      require("telescope.builtin").treesitter({ default_text = ":method:" })
+    end)
   }
 }
