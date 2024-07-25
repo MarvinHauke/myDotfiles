@@ -12,7 +12,6 @@ end
 
 ls.add_snippets("norg", {
   s("header", {
-    t({ "*" }), i(1), t({ "", "" }),             --Title placeholder
-    t({ "Date: " }), f(date, {}), t({ "", "" }), --Date placeholder
+    t({ "* Daily" }), i(1), ({ "Date: " }), f(date, {}), t({ "", "" }),
   }),
 })

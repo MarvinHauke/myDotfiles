@@ -17,6 +17,8 @@ local keymap = vim.keymap
 keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })       -- save and quit
 keymap.set("n", "<leader>qq", ":q!<CR>", { desc = "quit without saving" }) -- quit without saving
 keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                 -- save
+keymap.set("n", "<leader>x", ":bd<CR>", { desc = "close buffer" })         -- close buffer
+keymap.set("n", "<leader>xx", ":bd!<CR>", { desc = "force close buffer" }) -- close buffer
 
 -- Split window management
 keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })        -- split window vertically
