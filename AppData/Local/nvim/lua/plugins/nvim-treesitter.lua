@@ -26,6 +26,7 @@ return {
       'javascript',
       'vim',
       'html',
+      'norg'
     },
   },
   config = function(_, opts)
