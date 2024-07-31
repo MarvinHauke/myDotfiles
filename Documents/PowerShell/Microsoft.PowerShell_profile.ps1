@@ -169,6 +169,15 @@ function NotesFolder {
   }
 }
 Set-Alias -Name notes -Value NotesFolder
+function NotesFolderPikes {
+  $pikesNotesPath = "C:\Users\MarvinHauke\OneDrive - Pikes GmbH\Dokumente\Notizen"
+  if (Test-Path -Path $pikesNotesPath -PathType Container) {
+    Set-Location $pikesNotesPath
+  } else{
+    Write-Host "Pikes Notes directory not found!" -ForegroundColor Red
+  }
+}
+Set-Alias -Name pNotes -Value NotesFolderPikes
 
 # Edit profile configuration function
 function ProfileConfigFunc {
