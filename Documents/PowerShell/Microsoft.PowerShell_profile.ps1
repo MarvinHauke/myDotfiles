@@ -4,6 +4,7 @@ Set-PSReadlineOption -PredictionViewStyle ListView
 Set-PSReadLineKeyHandler -Key 'ctrl+k' -Function NextHistory
 Set-PSReadLineKeyHandler -Key 'ctrl+j' -Function PreviousHistory
 Set-PSReadlineOption -EditMode Vi
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r' #use PSFzf as search Tool
 
 # Import necessary modules
 Import-Module posh-git
