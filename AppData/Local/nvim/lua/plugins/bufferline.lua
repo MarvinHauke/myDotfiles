@@ -6,6 +6,7 @@ return {
   },
   opts = {
     options = {
+      mode = "buffers",
       offsets = {
         {
           filetype = "NvimTree",

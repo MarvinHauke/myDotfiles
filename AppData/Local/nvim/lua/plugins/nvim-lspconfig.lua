@@ -30,8 +30,9 @@ return {
         "marksman",
         "quick_lint_js",
         "powershell_es",
-        "tsserver",
         "pyright",
+        "lemminx",
+        "clangd",
       },
       automatic_installation = true,
     })
@@ -61,6 +62,7 @@ return {
         "isort",    -- python formatter
         "black",    -- python formatter
         "pylint",   -- python linter
+        "prittier", -- js formatter
         "eslint_d", -- js linter
       },
     })
@@ -109,11 +111,6 @@ return {
       on_attach = lsp_attach,
     })
 
-    -- JS LSP settings
-    lspconfig.tsserver.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
 
     -- Python LSP settings
     lspconfig.pyright.setup({

@@ -1,9 +1,9 @@
-
 # Enable ListView for PSReadline and set vi mode
 Set-PSReadlineOption -PredictionViewStyle ListView
 Set-PSReadLineKeyHandler -Key 'ctrl+k' -Function NextHistory
 Set-PSReadLineKeyHandler -Key 'ctrl+j' -Function PreviousHistory
 Set-PSReadlineOption -EditMode Vi
+Set-PSFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 # Import necessary modules
 Import-Module posh-git
@@ -185,8 +185,31 @@ function ProfileConfigFunc {
 }
 Set-Alias -Name nvp -Value ProfileConfigFunc
 
+# Open files with fzf
+function Open-With-Fzf {
+  param (
+    [string]$Path = "."
+  )
+  Get-ChildItem -Path $Path -Recurse -ErrorAction SilentlyContinue | fzf --bind 'enter:execute(nvim {+})'
+}
+
+# Create an alias for the function
+Set-Alias -Name vfzf -Value Open-With-Fzf
+
+# Check if Lemonade is already running
+$lemonadeProcess = Get-Process -Name "lemonade" -ErrorAction SilentlyContinue
+
+if (-not $lemonadeProcess) {
+  # If Lemonade is not running, start it
+  Start-Process "C:\Program Files\lemonade\lemonade.exe" -ArgumentList "server" -WindowStyle Hidden
+  Write-Host "Lemonade server started."
+} else {
+  Write-Host "Lemonade server is already running."
+}
+
 # Import Chocolatey profile for tab completion
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path $ChocolateyProfile) {
   Import-Module $ChocolateyProfile
 }
+

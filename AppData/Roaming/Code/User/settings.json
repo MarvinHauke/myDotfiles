@@ -1,282 +1,212 @@
 {
-	//General editor settings
-	"editor.lineNumbers": "relative",
-	"editor.inlineSuggest.enabled": true,
-	"editor.suggestSelection": "first",
-	"editor.fontFamily": "'JetBrains Mono'",
-	"editor.fontLigatures": true,
-	"editor.formatOnSave": true,
-	"editor.formatOnPaste": true,
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.guides.bracketPairs": true,
-	"explorer.confirmDelete": false,
-	"vsicons.dontShowNewVersionMessage": true,
-	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-	"redhat.telemetry.enabled": false,
-	"security.workspace.trust.untrustedFiles": "open",
-	"settingsSync.ignoredSettings": [
-		"-shellcheck.executablePath",
-		"-python.formatting.blackPath"
-	],
-	"[ignore]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
-	},
-	//Explorer 
-	"explorer.confirmDelete": false,
-	//Workbench
-	"workbench.iconTheme": "vscode-icons",
-	"workbench.colorTheme": "One Dark Pro Darker",
-	//Terminal
-	"terminal.integrated.defaultProfile.windows": "PowerShell",
-	"terminal.integrated.cursorStyle": "line",
-	"terminal.integrated.cursorBlinking": true,
-	"terminal.integrated.profiles.windows": {
-		"PowerShell": {
-			"source": "PowerShell",
-			"icon": "terminal-powershell"
-		},
-		"Command Prompt": {
-			"path": [
-				"${env:windir}\\Sysnative\\cmd.exe",
-				"${env:windir}\\System32\\cmd.exe"
-			],
-			"args": [],
-			"icon": "terminal-cmd"
-		},
-		"Git Bash": {
-			"source": "Git Bash"
-		},
-		"WSL": {
-			"path": [
-				"C:\\WINDOWS\\System32\\wsl.exe"
-			],
-			"args": [],
-			"icon": "terminal-ubuntu-wsl"
-		}
-	},
-	//jupiter Notebooks
-	"workbench.editorAssociations": {
-		"*.ipynb": "jupyter-notebook"
-	},
-	"notebook.cellToolbarLocation": {
-		"default": "right",
-		"jupyter-notebook": "left"
-	},
-	//SQL
-	"[sql]": {
-		"editor.defaultFormatter": "inferrinizzard.prettier-sql-vscode"
-	},
-	//Docker
-	"[dockerfile]": {
-		"editor.defaultFormatter": "ms-azuretools.vscode-docker"
-	},
-	//React
-	"react-native-tools.showUserTips": false,
-	//HTML
-	"[html]": {
-		"editor.defaultFormatter": "vscode.html-language-features"
-	},
-	//Svelte
-	"svelte.enable-ts-plugin": true,
-	"[svelte]": {
-		"editor.defaultFormatter": "svelte.svelte-vscode"
-	},
-	//Typescript
-	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	//Json
-	"[json]": {
-		"editor.tabSize": 4,
-		"editor.insertSpaces": true,
-		"editor.defaultFormatter": "vscode.json-language-features",
-	},
-	//Json with Comments
-	"[jsonc]": {
-		"editor.tabSize": 4,
-		"editor.insertSpaces": true,
-		"editor.defaultFormatter": "vscode.json-language-features"
-	},
-	//Remote SSH
-	"remote.SSH.remotePlatform": {
-		"192.168.178.147": "linux",
-		"10.8.0.70": "linux",
-		"10.8.4.14": "linux"
-	},
-	//Shell
-	"[shellscript]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
-	},
-	//PowerShell
-	"[powershell]": {
-		"editor.defaultFormatter": "ms-vscode.powershell"
-	},
-	"powershell.powerShellAdditionalExePaths": {
-		"PS7": "\\Program Files\\PowerShell\\7\\pwsh.exe",
-		"PS5.1": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
-	},
-	"powershell.powerShellDefaultVersion": "PS7",
-	"powershell.codeFormatting.preset": "Stroustrup",
-	"powershell.startAutomatically": true,
-	"powershell.integratedConsole.showOnStartup": false,
-	"powershell.integratedConsole.focusConsoleOnExecute": true,
-	"powershell.scriptAnalysis.settingsPath": "C:\\Users\\Marvi\\Documents\\PowerShell\\Modules\\PSScriptAnalyzer\\1.21.0\\PSScriptAnalyzer.psd1",
-	//Python
-	"python.languageServer": "Pylance",
-	"python.analysis.autoImportCompletions": true,
-	"[python]": {
-		"editor.defaultFormatter": "ms-python.black-formatter",
-		"editor.formatOnType": true
-	},
-	//Platformio
-	"platformio-ide.disablePIOHomeStartup": true,
-	//Cmake
-	"cmake.configureOnOpen": true,
-	//C++
-	"C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
-	"[cpp]": {
-		"editor.defaultFormatter": "ms-vscode.cpptools"
-	},
-	"cSpell.userWords": [
-		"rtmidi"
-	],
-	//Vim
-	"vim.neovimPath": "C:\\Program Files\\Neovim\\bin",
-	"vim.foldfix": true,
-	"vim.leader": "<Space>",
-	"vim.enableNeovim": true,
-	"vim.easymotion": true,
-	"vim.sneakReplacesF": true,
-	"vim.sneak": true,
-	"vim.sneakUseIgnorecaseAndSmartcase": true,
-	"vim.surround": true,
-	"vim.normalModeKeyBindings": [],
-	"vim.normalModeKeyBindingsNonRecursive": [
-		{
-			"before": [
-				"J"
-			],
-			"commands": [
-				":tabprev"
-			]
-		},
-		{
-			"before": [
-				"K"
-			],
-			"commands": [
-				":tabnext"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"L"
-			],
-			"after": [
-				"<C-w>",
-				"v"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"H"
-			],
-			"after": [
-				"<C-w>",
-				"s"
-			]
-		},
-		{
-			"before": [
-				"K"
-			],
-			"commands": [
-				":tabnext"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"j"
-			],
-			"after": [
-				"<C-w>",
-				"j"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"k"
-			],
-			"after": [
-				"<C-w>",
-				"k"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"h"
-			],
-			"after": [
-				"<C-w>",
-				"h"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"l"
-			],
-			"after": [
-				"<C-w>",
-				"l"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"f"
-			],
-			"commands": [
-				"explorer.newFile"
-			]
-		},
-		{
-			"before": [
-				"<leader>",
-				"d"
-			],
-			"commands": [
-				"explorer.newFolder"
-			]
-		}
-	],
-	"vim.visualModeKeyBindingsNonRecursive": [
-		//Move faster through files:
-		{
-			"before": [
-				"J"
-			],
-			"after": [
-				"5",
-				"j"
-			]
-		},
-		{
-			"before": [
-				"K"
-			],
-			"after": [
-				"5",
-				"k"
-			]
-		}
-	],
-	"files.associations": {
-		".vimrc": "viml"
-	},
+  //General editor settings
+  "editor.lineNumbers": "relative",
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggestSelection": "first",
+  "editor.fontFamily": "'JetBrains Mono'",
+  "editor.fontLigatures": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.guides.bracketPairs": true,
+  "explorer.confirmDelete": false,
+  "vsicons.dontShowNewVersionMessage": true,
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "redhat.telemetry.enabled": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "settingsSync.ignoredSettings": [
+    "-shellcheck.executablePath",
+    "-python.formatting.blackPath"
+  ],
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  //Explorer
+  "explorer.confirmDelete": false,
+  //Workbench
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "One Dark Pro Darker",
+  //Terminal
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell"
+    },
+    "Command Prompt": {
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe"
+      ],
+      "args": [],
+      "icon": "terminal-cmd"
+    },
+    "Git Bash": {
+      "source": "Git Bash"
+    },
+    "WSL": {
+      "path": ["C:\\WINDOWS\\System32\\wsl.exe"],
+      "args": [],
+      "icon": "terminal-ubuntu-wsl"
+    }
+  },
+  //jupiter Notebooks
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  },
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  //SQL
+  "[sql]": {
+    "editor.defaultFormatter": "inferrinizzard.prettier-sql-vscode"
+  },
+  //Docker
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  //React
+  "react-native-tools.showUserTips": false,
+  //HTML
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  //Svelte
+  "svelte.enable-ts-plugin": true,
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  //Typescript
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  //Json
+  "[json]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  //Json with Comments
+  "[jsonc]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  //Remote SSH
+  "remote.SSH.remotePlatform": {
+    "192.168.178.147": "linux",
+    "10.8.0.70": "linux",
+    "10.8.4.14": "linux"
+  },
+  //Shell
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  //PowerShell
+  "[powershell]": {
+    "editor.defaultFormatter": "ms-vscode.powershell"
+  },
+  "powershell.powerShellAdditionalExePaths": {
+    "PS7": "\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "PS5.1": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+  },
+  "powershell.powerShellDefaultVersion": "PS7",
+  "powershell.codeFormatting.preset": "Stroustrup",
+  "powershell.startAutomatically": true,
+  "powershell.integratedConsole.showOnStartup": false,
+  "powershell.integratedConsole.focusConsoleOnExecute": true,
+  "powershell.scriptAnalysis.settingsPath": "C:\\Users\\Marvi\\Documents\\PowerShell\\Modules\\PSScriptAnalyzer\\1.21.0\\PSScriptAnalyzer.psd1",
+  //Python
+  "python.languageServer": "Pylance",
+  "python.analysis.autoImportCompletions": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnType": true
+  },
+  //Platformio
+  "platformio-ide.disablePIOHomeStartup": true,
+  //Cmake
+  "cmake.configureOnOpen": true,
+  //C++
+  "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "cSpell.userWords": ["rtmidi"],
+  //Vim
+  "vim.neovimPath": "C:\\Program Files\\Neovim\\bin",
+  "vim.foldfix": true,
+  "vim.leader": "<Space>",
+  "vim.enableNeovim": true,
+  "vim.easymotion": true,
+  "vim.sneakReplacesF": true,
+  "vim.sneak": true,
+  "vim.sneakUseIgnorecaseAndSmartcase": true,
+  "vim.surround": true,
+  "vim.normalModeKeyBindings": [],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["J"],
+      "commands": [":tabprev"]
+    },
+    {
+      "before": ["K"],
+      "commands": [":tabnext"]
+    },
+    {
+      "before": ["<leader>", "L"],
+      "after": ["<C-w>", "v"]
+    },
+    {
+      "before": ["<leader>", "H"],
+      "after": ["<C-w>", "s"]
+    },
+    {
+      "before": ["K"],
+      "commands": [":tabnext"]
+    },
+    {
+      "before": ["<leader>", "j"],
+      "after": ["<C-w>", "j"]
+    },
+    {
+      "before": ["<leader>", "k"],
+      "after": ["<C-w>", "k"]
+    },
+    {
+      "before": ["<leader>", "h"],
+      "after": ["<C-w>", "h"]
+    },
+    {
+      "before": ["<leader>", "l"],
+      "after": ["<C-w>", "l"]
+    },
+    {
+      "before": ["<leader>", "f"],
+      "commands": ["explorer.newFile"]
+    },
+    {
+      "before": ["<leader>", "d"],
+      "commands": ["explorer.newFolder"]
+    }
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    //Move faster through files:
+    {
+      "before": ["J"],
+      "after": ["5", "j"]
+    },
+    {
+      "before": ["K"],
+      "after": ["5", "k"]
+    }
+  ],
+  "files.associations": {
+    ".vimrc": "viml"
+  },
+  "mcuxpresso.sdks": []
 }
+
