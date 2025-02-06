@@ -14,11 +14,11 @@ local keymap = vim.keymap
 --   command_mode = "c",
 
 -- General keymaps
+keymap.set("n", "<leader>q", ":bd<CR>", { desc = "close buffer" })         -- close buffer
 keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })       -- save and quit
 keymap.set("n", "<leader>qq", ":q!<CR>", { desc = "quit without saving" }) -- quit without saving
 keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                 -- save
-keymap.set("n", "<leader>x", ":bd<CR>", { desc = "close buffer" })         -- close buffer
-keymap.set("n", "<leader>xx", ":bd!<CR>", { desc = "force close buffer" }) -- close buffer
+
 
 -- Split window management
 keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })        -- split window vertically
@@ -46,6 +46,9 @@ keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
 
 -- Open URL under Cursor
 -- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
+
+-- Oil
+vim.keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
 
 -- Diff keymaps
 keymap.set("n", "<leader>cc", ":diffput<CR>")   -- put diff from current to other during diff
@@ -88,11 +91,6 @@ keymap.set("n", "<leader>qp", ":cprev<CR>") -- jump to prev quickfix list item
 
 -- Vim-maximizer
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle maximize tab
-
--- Nvim-tree
-keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>")   -- toggle file explorer
-keymap.set("n", "<leader>er", ":NvimTreeFocus<CR>")    -- toggle focus to file explorer
-keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>") -- find file in file explorer
 
 -- Git-blame
 keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>") -- toggle git blame
@@ -142,16 +140,20 @@ keymap.set("n", "<leader>dc", "<cmd>lua require'dap'.continue()<cr>")
 keymap.set("n", "<leader>dj", "<cmd>lua require'dap'.step_over()<cr>")
 keymap.set("n", "<leader>dk", "<cmd>lua require'dap'.step_into()<cr>")
 keymap.set("n", "<leader>do", "<cmd>lua require'dap'.step_out()<cr>")
+
 keymap.set("n", "<leader>dd", function()
   require("dap").disconnect()
   require("dapui").close()
 end)
+
 keymap.set("n", "<leader>dt", function()
   require("dap").terminate()
   require("dapui").close()
 end)
+
 keymap.set("n", "<leader>dr", "<cmd>lua require'dap'.repl.toggle()<cr>")
 keymap.set("n", "<leader>dl", "<cmd>lua require'dap'.run_last()<cr>")
+
 keymap.set("n", "<leader>di", function()
   require("dap.ui.widgets").hover()
 end)
@@ -159,6 +161,7 @@ keymap.set("n", "<leader>d?", function()
   local widgets = require("dap.ui.widgets")
   widgets.centered_float(widgets.scopes)
 end)
+
 keymap.set("n", "<leader>df", "<cmd>Telescope dap frames<cr>")
 keymap.set("n", "<leader>dh", "<cmd>Telescope dap commands<cr>")
 keymap.set("n", "<leader>de", function()

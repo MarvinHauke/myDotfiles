@@ -7,19 +7,14 @@ return {
   opts = {
     options = {
       mode = "buffers",
-      offsets = {
-        {
-          filetype = "NvimTree",
-          text = "File Explorer",
-          highlight = "Directory",
-          seperator = true,
-        }
-      },
       hover = {
         enabled = true,
         delay = 150,
         reveal = { 'close' }
       },
+      indicator = {
+        style = 'underline'
+      }
     },
   },
 }
