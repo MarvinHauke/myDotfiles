@@ -1,15 +1,15 @@
 return {
-  -- LSP Configuration
-  "neovim/nvim-lspconfig", -- https://github.com/neovim/nvim-lspconfig
-  event = "VeryLazy",
-  dependencies = {
-    -- LSP Management
-    "williamboman/mason.nvim",           -- https://github.com/williamboman/mason.nvim
-    "williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
+	-- LSP Configuration
+	"neovim/nvim-lspconfig", -- https://github.com/neovim/nvim-lspconfig
+	event = "VeryLazy",
+	dependencies = {
+		-- LSP Management
+		"williamboman/mason.nvim", -- https://github.com/williamboman/mason.nvim
+		"williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
 
-    -- Useful status updates for LSP
-    "j-hui/fidget.nvim", -- https://github.com/j-hui/fidget.nvim
+		-- Useful status updates for LSP
+		"j-hui/fidget.nvim", -- https://github.com/j-hui/fidget.nvim
 
     -- Additional lua configuration, makes nvim stuff amazing!
     "folke/neodev.nvim", -- https://github.com/folke/neodev.nvim
@@ -41,19 +41,19 @@ return {
     local mason_tool_installer = require("mason-tool-installer")
     require("fidget").setup({})
 
-    local lsp_attach = function(client, bufnr)
-      -- Create your attached keybindings here..
-    end
+		local lsp_attach = function(client, bufnr)
+			-- Create your attached keybindings here..
+		end
 
-    -- Call setup on each LSP server
-    require("mason-lspconfig").setup_handlers({
-      function(server_name)
-        lspconfig[server_name].setup({
-          on_attach = lsp_attach,
-          capabilities = lsp_capabilities,
-        })
-      end,
-    })
+		-- Call setup on each LSP server
+		require("mason-lspconfig").setup_handlers({
+			function(server_name)
+				lspconfig[server_name].setup({
+					on_attach = lsp_attach,
+					capabilities = lsp_capabilities,
+				})
+			end,
+		})
 
     mason_tool_installer.setup({
       ensure_installed = {
@@ -67,60 +67,65 @@ return {
       },
     })
 
-    -- Lua LSP settings
-    lspconfig.lua_ls.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-      settings = { -- custom settings for lua
-        Lua = {
-          -- make language server recognize the `vim` global
-          diagnostics = {
-            globals = { "vim" },
-          },
-          workspace = {
-            -- make language server aware of runtime files
-            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-            [vim.fn.stdpath("config") .. "/lua"] = true,
-          },
-        },
-      },
-    })
+		-- Lua LSP settings
+		lspconfig.lua_ls.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+			settings = { -- custom settings for lua
+				Lua = {
+					-- make language server recognize the `vim` global
+					diagnostics = {
+						globals = { "vim" },
+					},
+					workspace = {
+						-- make language server aware of runtime files
+						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+						[vim.fn.stdpath("config") .. "/lua"] = true,
+					},
+				},
+			},
+		})
 
-    -- Bash LSP settings
-    lspconfig.bashls.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
+		-- Bash LSP settings
+		lspconfig.bashls.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
 
-    -- PowerShell LSP settings
-    lspconfig.powershell_es.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-      settings = { -- custom settings for powershell
-        powershell = {
-          codeFormatting = {
-            Preset = "OTBS",
-          },
-        },
-      },
-    })
+		-- PowerShell LSP settings
+		lspconfig.powershell_es.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+			settings = { -- custom settings for powershell
+				powershell = {
+					codeFormatting = {
+						Preset = "OTBS",
+					},
+				},
+			},
+		})
 
-    -- C++ LSP settings
-    lspconfig.clangd.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
+		-- C++ LSP settings
+		lspconfig.clangd.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
 
+		-- JS LSP settings
+		lspconfig.ts_ls.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
 
-    -- Python LSP settings
-    lspconfig.pyright.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
+		-- Python LSP settings
+		lspconfig.pyright.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
 
-    lspconfig.clangd.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
-  end,
+		lspconfig.clangd.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
+	end,
 }
