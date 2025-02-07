@@ -14,7 +14,7 @@ local keymap = vim.keymap
 --   command_mode = "c",
 
 -- General keymaps
-keymap.set("n", "<leader>q", ":BufDel<CR>", opts, { desc = "close buffer" })        -- close buffer
+keymap.set("n", "<leader>bd", ":BufDel<CR>", opts, { desc = "close buffer" })       -- close buffer
 keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })                -- save and quit
 keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" }) -- quit all open buffers
 keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                          -- save

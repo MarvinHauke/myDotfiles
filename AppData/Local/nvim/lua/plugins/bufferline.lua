@@ -3,6 +3,7 @@ return {
   version = "*",
   dependencies = {
     'nvim-tree/nvim-web-devicons',
+    'ojroques/nvim-bufdel'
   },
   opts = {
     options = {
