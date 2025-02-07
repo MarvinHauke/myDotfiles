@@ -14,7 +14,7 @@ return {
       },
       indicator = {
         style = 'underline'
-      }
-    },
-  },
+      },
+    }
+  }
 }

@@ -14,11 +14,10 @@ local keymap = vim.keymap
 --   command_mode = "c",
 
 -- General keymaps
-keymap.set("n", "<leader>q", ":bd<CR>", { desc = "close buffer" })         -- close buffer
-keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })       -- save and quit
-keymap.set("n", "<leader>qq", ":q!<CR>", { desc = "quit without saving" }) -- quit without saving
-keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                 -- save
-
+keymap.set("n", "<leader>q", ":BufDel<CR>", opts, { desc = "close buffer" })        -- close buffer
+keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })                -- save and quit
+keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" }) -- quit all open buffers
+keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                          -- save
 
 -- Split window management
 keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })        -- split window vertically
@@ -48,7 +47,7 @@ keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
 -- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
 
 -- Oil
-vim.keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
+keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" }) -- open Oil orOil or parent directory
 
 -- Diff keymaps
 keymap.set("n", "<leader>cc", ":diffput<CR>")   -- put diff from current to other during diff
@@ -94,6 +93,8 @@ keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle maximize tab
 
 -- Git-blame
 keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>") -- toggle git blame
+
+--Bufferdelete
 
 -- Bufferline
 keymap.set("n", "J", ":BufferLineCyclePrev<CR>")
