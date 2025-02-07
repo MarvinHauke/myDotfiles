@@ -3,7 +3,7 @@ return {
   version = "*",
   dependencies = {
     'nvim-tree/nvim-web-devicons',
-    'ojroques/nvim-bufdel'
+    'ojroques/nvim-bufdel' --for deleting buffers without changing the layout
   },
   opts = {
     options = {
