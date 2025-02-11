@@ -104,7 +104,22 @@ function cfg {
     [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
     [String[]]$AdditionalArgs
   )
+
   $gitCommand = "git --git-dir=`$HOME/.cfg/ --work-tree=`$HOME"
+
+  # Run just 'git status' if no arguments are provided
+  if ($AdditionalArgs.count -eq0){
+    Invoke-Expression "$gitCommand status"
+    return
+  }
+
+  # If fetching, handle it properly
+  if ($AdditionalArgs[0] -eq "fetch") {
+    Invoke-Expression "$gitCommand fetch --all"
+    return
+  }
+
+  # Handle commit messages separetely
   $commitIndex = $AdditionalArgs.IndexOf('-m')
   if ($commitIndex -ne -1) {
     $commitMessage = $AdditionalArgs[$commitIndex + 1]
