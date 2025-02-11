@@ -3,6 +3,8 @@ return {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
     dependencies = { 'hrsh7th/nvim-cmp' },
+    enabled = true,
+    -- Options go here
     config = function()
       require('nvim-autopairs').setup {}
       -- If you want to automatically add `(` after selecting a function or method

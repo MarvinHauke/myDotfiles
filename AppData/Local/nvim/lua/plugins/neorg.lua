@@ -15,11 +15,11 @@ return {
     config = function()
       require("neorg").setup {
         load = {
-          ["core.defaults"] = {},
-          ["core.concealer"] = {
+          ["core.defaults"] = {}, -- Load all the default plugins
+          ["core.concealer"] = {  -- Adds pretty icons to your documents
             config = {
               folds = false,
-              icon_preset = "diamond",
+              icon_preset = "basic",
             },
           },
           ["core.integrations.treesitter"] = {
@@ -33,7 +33,7 @@ return {
               extensions = "all"
             }
           },
-          ["core.dirman"] = {
+          ["core.dirman"] = { -- Manages Neorg workspaces
             config = {
               workspaces = {
                 notes = "~/Documents/Notizen",
