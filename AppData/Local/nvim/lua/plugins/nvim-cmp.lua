@@ -61,10 +61,11 @@ return {
       }),
       sources = cmp.config.sources({
         --        { name = "nvim_lsp" }, -- lsp
-        { name = "luasnip" }, -- snippets
-        { name = "buffer" },  -- text within current buffer
-        { name = "path" },    -- file system paths
-        { name = "neorg" },   -- neorg
+        { name = "luasnip" },         -- snippets
+        { name = "buffer" },          -- text within current buffer
+        { name = "path" },            -- file system paths
+        { name = "neorg" },           -- neorg
+        { name = "render-markdown" }, -- markdown and Obsidian
       }),
     })
   end,
