@@ -179,6 +179,7 @@ function NotesFolder {
   $notesPath = "$HOME\Documents\Notizen"
   if (Test-Path -Path $notesPath -PathType Container) {
     Set-Location $notesPath
+    $env:NOTES = $notesPath
   } else {
     Write-Host "Notes directory not found!" -ForegroundColor Red
   }
