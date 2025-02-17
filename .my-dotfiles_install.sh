@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Clone the bare repo
 git clone --bare git@github.com:MarvinHauke/myDotfiles.git $HOME/.cfg
