@@ -1,16 +1,6 @@
 "Disable compatiblity with vi
 set nocompatible
 
-"Define all Funktions
-function! Windows()
-    set runtimepath+=~/.vim "sets the default folder to ~/.vim under windows
-    if empty(glob('~/.vim/autoload/plug.vim'))
-        iwr -useb https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim |`
-        ni $HOME/.vim/autoload/plug.vim -Force
-        finish
-    endif
-endfunction
-
 "Colorsettings
 colorscheme slate
 
