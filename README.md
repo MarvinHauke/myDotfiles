@@ -1,30 +1,50 @@
 # myDotfiles
 
-## this is a repository for my personel confgfiles.
+## Overview
+It is configuered as a git bare repo to make it easier to move to new machines.
+For details how to clone this Repo to your machine take a look at the following artikel: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the artikel")
 
-### It is configuered as a git bare repo to make it easier to move to new machines.
-### For details how to clone this Repo to your machine take a look at the following artikel: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the artikel")
+## install
 
-Bash:
+```bash
+chmod +x .config/my-dotfiles_install.sh
+. ./.config/my-dotfiles_install.sh
+```
+this will run the install script for my dotfiles
 
-- .bashrc
-- .bash_profile
-- .zshrc
-- .bash_aliases
 
-Vim:
+### Vim:
+you can find all related vim files in the following directory
 
-- .nvimrc
-- .vimrc
+```bash
+~/.config/nvim/
 
-Snipets:
+```
+it contains:
+- init.lua for loading Lazy and initializing nvim
+- lua/Plugins with the plugins I use
+- ftplugins for filetype plugin configuration
 
-It also contains some basic concepts for shellscripting aswell, like if statements and for loops.
 
-Misc:
+### Zsh:
+```bash
+~/.zshrc
+```
 
-- README.md
+it contains:
+- aliases I use for often use paths
+- functions I use for often use commands
 
-## Technologies
 
-Bash
+### Starship:
+```Bash
+~/.config/starship/starship.toml
+```
+this contains my configured prompt
+
+
+### Ghostty:
+```Bash
+~/.config/ghostty/conf
+```
+this contains my configured ghostty
