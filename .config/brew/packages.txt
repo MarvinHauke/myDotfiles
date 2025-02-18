@@ -1,0 +1,5 @@
+nvim
+starship
+tmux
+rg
+fzf
