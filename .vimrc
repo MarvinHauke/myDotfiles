@@ -8,20 +8,11 @@ if has("termguicolors") == 1
     set termguicolors
 endif
 
-
-"Set leaderkey
-let mapleader = "\<Space>"
-
 "Normalmode Remaps
 nnoremap <leader>vc :vsp $MYVIMRC<cr>
 nnoremap <leader>bc :vsp ~/.bashrc<cr>
 nnoremap <leader>w :wincmd w<cr>
 nnoremap <leader>nh :noh<cr> 
-nnoremap <leader>e :NERDTreeToggle<cr>
-
-
-"Insertmode Remaps
-inoremap <C-S-E> <ESC>:NERDTreeToggle<cr>
 
 "Visualmode Remaps
 "vnoremap K :m '<-2<CR>gv=gv
@@ -113,15 +104,6 @@ if has('win32') || has('win64')
    call Windows() 
 endif
 
-"call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
-call plug#begin('~/.vim/plugged')
+"Set leaderkey
+let mapleader = "\<Space>"
 
-" NERD tree will be loaded on the first invocation of NERDTreeToggle command
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-
-call plug#end()
-" You can revert the settings after the call like so:
-"   filetype indent off   " Disable file-type-specific indentation
-"   syntax off            " Disable syntax highlighting
