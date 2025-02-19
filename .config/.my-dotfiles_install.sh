@@ -36,3 +36,19 @@ fi
 # Checkout and pull the branch using 'git' directly instead of 'config'
 git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout "$branch" || echo "Branch $branch does not exist."
 git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull origin "$branch"
+
+# Install Homebrew packages
+if [[ -f "$HOME/.config/brew/packages.txt" ]]; then
+    echo "Installing Brew packages..."
+    xargs brew install < "$HOME/.config/brew/packages.txt"
+else
+    echo "No package list found at ~/.config/brew/packages.txt"
+fi
+
+# Install Homebrew cask packages
+if [[ -f "$HOME/.config/brew/cask-packages.txt" ]]; then
+    echo "Installing Brew Cask packages..."
+    xargs brew install --cask < "$HOME/.config/brew/cask-packages.txt"
+else
+    echo "No cask package list found at ~/.config/brew/cask-packages.txt"
+fi

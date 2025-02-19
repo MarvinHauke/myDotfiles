@@ -1,5 +1,9 @@
+bash-completion
 nvim
 starship
 tmux
 rg
 fzf
+alt-tab
+karabiner-elements
+rust

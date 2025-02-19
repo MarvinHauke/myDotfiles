@@ -1,3 +1,6 @@
+# set zsh config path
+export ZSH="$HOME/.zshrc"
+
 # set Ghostty config path
 export XDG_CONFIG_HOME="$HOME/.config/"
 
@@ -16,12 +19,16 @@ alias cdn='cd $XDG_CONFIG_HOME/nvim'
 alias src='source $HOME/.zshrc'
 alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
 
+# Define the config alias
+alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+
+cbp() {
+  pbpaste > "$@"
+}
+
 # Add an "alert" alias for long running commands.  Use like so:
 # sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Set config Alias
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 # this is for Node-Version-Manager not for Nvim. Dont touch it!!!
 export NVM_DIR="$HOME/.nvm"
