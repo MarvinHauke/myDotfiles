@@ -6,31 +6,19 @@ return {
   dependencies = {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig",
-
-    -- Snippet engine & associated nvim-cmp source
-    "L3MON4D3/LuaSnip", -- https://github.com/L3MON4D3/LuaSnip
-
-    -- https://github.com/saadparwaiz1/cmp_luasnip
-    "saadparwaiz1/cmp_luasnip", -- for autocompletion
-
-    -- https://github.com/rafamadriz/friendly-snippets
-    "rafamadriz/friendly-snippets", --useful snippets
-
-    -- https://github.com/hrsh7th/cmp-nvim-lsp
+    "hrsh7th/cmp-buffer",   -- source for text in buffer
+    "hrsh7th/cmp-path",     -- source for file system paths
     "hrsh7th/cmp-nvim-lsp", -- LSP completion capabilities
-
-    -- https://github.com/hrsh7th/cmp-buffer
-    "hrsh7th/cmp-buffer", -- source for text in buffer
-
-    -- https://github.com/hrsh7th/cmp-path
-    "hrsh7th/cmp-path", -- source for file system paths
-
-    -- https://github.com/hrsh7th/cmp-cmdline
     "hrsh7th/cmp-cmdline",
+    "L3MON4D3/LuaSnip",
+    "saadparwaiz1/cmp_luasnip",     -- for autocompletion
+    "rafamadriz/friendly-snippets", --useful snippets
+    "onsails/lspkind.nvim",         -- vs-code like pictograms
   },
   config = function()
     local cmp = require("cmp")
     local luasnip = require("luasnip")
+    local lspkind = require("lspkind")
 
     -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
     require("luasnip.loaders.from_vscode").lazy_load()
@@ -60,12 +48,25 @@ return {
         ["<CR>"] = cmp.mapping.confirm({ select = false }), -- confirm selection
       }),
       sources = cmp.config.sources({
-        --        { name = "nvim_lsp" }, -- lsp
-        { name = "luasnip" }, -- snippets
-        { name = "buffer" },  -- text within current buffer
-        { name = "path" },    -- file system paths
-        { name = "neorg" },   -- neorg
+        { name = "nvim_lsp" }, -- lsp
+        { name = "luasnip" },  -- snippets
+        { name = "buffer" },   -- text within current buffer
+        { name = "path" },     -- file system paths
+        { name = "neorg" },    -- neorg
       }),
+      -- configure lspkind for vs-code like pictograms
+      formatting = {
+        format = lspkind.cmp_format({
+          mode = "symbol_text",
+          menu = ({
+            buffer = "[Buffer]",
+            nvim_lsp = "[LSP]",
+            luasnip = "[LuaSnip]",
+            neorg = "[Neorg]",
+            path = "[Path]",
+          }),
+        }),
+      },
     })
   end,
 }

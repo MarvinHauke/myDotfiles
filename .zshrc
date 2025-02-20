@@ -1,3 +1,4 @@
+#!/bin/zsh
 # set zsh config path
 export ZSH="$HOME/.zshrc"
 
@@ -18,12 +19,13 @@ alias vim='nvim'
 alias cdn='cd $XDG_CONFIG_HOME/nvim'
 alias src='source $HOME/.zshrc'
 alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
+alias notes='nvim $HOME/Notizen'
 
 # Define the config alias
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 cbp() {
-  pbpaste > "$@"
+  pbpaste >"$@"
 }
 
 # Add an "alert" alias for long running commands.  Use like so:
@@ -32,5 +34,5 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 # this is for Node-Version-Manager not for Nvim. Dont touch it!!!
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion

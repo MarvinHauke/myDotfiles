@@ -21,6 +21,9 @@ return {
         lua = { "stylua" },
         python = { "isort", "black" },
         xml = { "xmlformatter", "xmllint" },
+        zsh = { "shfmt", "shellharden" },
+        sh = { "shfmt", "shellharden" },
+        bash = { "shfmt", "shellharden" },
       },
       format_on_save = {
         lsp_fallback = true,

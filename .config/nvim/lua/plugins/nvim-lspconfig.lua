@@ -64,6 +64,9 @@ return {
         "pylint",   -- python linter
         "prittier", -- js formatter
         "eslint_d", -- js linter
+        "shellharden",
+        "shfmt",
+        "shellcheck",
       },
     })
 
@@ -90,6 +93,12 @@ return {
     lspconfig.bashls.setup({
       capabilities = lsp_capabilities,
       on_attach = lsp_attach,
+      settings = { -- custom settings for bash
+        bash = {
+          -- make language server recognize the `vim` global
+          filetypes = { "sh", "zsh" },
+        },
+      },
     })
 
     -- PowerShell LSP settings

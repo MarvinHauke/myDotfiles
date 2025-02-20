@@ -131,6 +131,12 @@ keymap.set({ "n", "v" }, "<leader>mp", function()
   })
 end, { desc = "Format file or range (in visual mode)" })
 
+
+-- Linting
+keymap.set({ "n", "v" }, "<leader>l", function()
+  require("lint").try_lint()
+end, { desc = "Trigger linting for current file" })
+
 -- Nvim-dap
 keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
 keymap.set("n", "<leader>bc", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>")
