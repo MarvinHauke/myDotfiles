@@ -1,8 +1,6 @@
 "Disable compatiblity with vi
 set nocompatible
 
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-
 "Colorsettings
 colorscheme slate
 

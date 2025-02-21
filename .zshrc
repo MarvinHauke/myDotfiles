@@ -1,5 +1,5 @@
 #!/bin/zsh
-# set zsh config path
+# zsh config dir
 export ZSH="$HOME/.zshrc"
 
 # set Ghostty config path
@@ -17,7 +17,8 @@ alias cdd='cd $HOME/Development'
 alias cdl='cd $HOME/Downloads'
 alias vim='nvim'
 alias cdn='cd $XDG_CONFIG_HOME/nvim'
-alias src='source $HOME/.zshrc'
+alias src='source $ZSH'
+alias nvz='nvim $ZSH'
 alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
 alias notes='nvim $HOME/Notizen'
 
@@ -32,6 +33,8 @@ cbp() {
 # sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# Add zsh-autosuggestions
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # this is for Node-Version-Manager not for Nvim. Dont touch it!!!
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
