@@ -1,4 +1,5 @@
 #!/bin/zsh
+[ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"
 # zsh config dir
 export ZSH="$HOME/.zshrc"
 
@@ -33,8 +34,12 @@ cbp() {
 # sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# Add zsh-autosuggestions
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+plug "zap-zsh/zsh-syntax-highlighting"
+plug "zap-zsh/zsh-autosuggestions"
+plug "zap-zsh/vim"
+plug "zap-zsh/fzf"
+plug "zsh-users/zsh-history-substring-search"
+
 # this is for Node-Version-Manager not for Nvim. Dont touch it!!!
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
