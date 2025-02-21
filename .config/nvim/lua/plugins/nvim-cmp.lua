@@ -1,4 +1,5 @@
--- Auto-completion / Snippets
+-- Auto-completion / Snippets generated with the following video
+-- https://www.youtube.com/watch?v=y1WWOaLCNyI
 return {
 
   "hrsh7th/nvim-cmp", -- https://github.com/hrsh7th/nvim-cmp

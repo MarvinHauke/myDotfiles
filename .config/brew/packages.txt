@@ -1,4 +1,5 @@
 bash-completion
+zsh-completion
 nvim
 starship
 tmux
