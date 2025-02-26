@@ -8,3 +8,4 @@ fzf
 alt-tab
 karabiner-elements
 rust
+lsd
