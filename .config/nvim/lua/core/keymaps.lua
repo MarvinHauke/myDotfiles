@@ -1,4 +1,7 @@
--- Set leader key to space
+-- This File contains all keymaps, which are not related to specific buffers.
+-- They can be used from every where at any time in vim.
+
+-- Set leader key to space (done in init.lua)
 -- vim.g.mapleader = " "
 
 local opts = { noremap = true, silent = true }
@@ -14,7 +17,7 @@ local keymap = vim.keymap
 --   command_mode = "c",
 
 -- General keymaps
-keymap.set("n", "<leader>bd", ":BufDel<CR>", opts, { desc = "close buffer" }) -- close buffer
+keymap.set("n", "<leader>bd", ":BufDel<CR>", { desc = "close buffer" }) -- close buffer
 keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" }) -- save and quit
 keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" }) -- quit all open buffers
 keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" }) -- save
@@ -45,9 +48,6 @@ keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
 
 -- Open URL under Cursor
 -- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
-
--- Oil
-keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" }) -- open Oil orOil or parent directory
 
 -- Diff keymaps
 keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
@@ -167,8 +167,12 @@ keymap.set("n", "<leader>d?", function()
 	widgets.centered_float(widgets.scopes)
 end)
 
+-- Telescope dap
 keymap.set("n", "<leader>df", "<cmd>Telescope dap frames<cr>")
 keymap.set("n", "<leader>dh", "<cmd>Telescope dap commands<cr>")
 keymap.set("n", "<leader>de", function()
 	require("telescope.builtin").diagnostics({ default_text = ":E:" })
 end)
+
+-- Nvim-Tree
+keymap.set("n", "-", "<cmd>NvimTreeToggle<CR>", { desc = "toggle nvim tree" })
