@@ -28,11 +28,11 @@ keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" }) 
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" }) -- make split windows equal width
 keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" }) -- close split window
 
--- Better window navigation
-keymap.set("n", "<c-k>", ":wincmd k<CR>") -- lower window
-keymap.set("n", "<c-j>", ":wincmd j<CR>") -- upper window
-keymap.set("n", "<c-h>", ":wincmd h<CR>") -- left window
-keymap.set("n", "<c-l>", ":wincmd l<CR>") -- right window
+-- Better window navigation (deprecated thanks to vim-tmux-navigator)
+-- keymap.set("n", "<c-k>", ":wincmd k<CR>") -- lower window
+-- keymap.set("n", "<c-j>", ":wincmd j<CR>") -- upper window
+-- keymap.set("n", "<c-h>", ":wincmd h<CR>") -- left window
+-- keymap.set("n", "<c-l>", ":wincmd l<CR>") -- right window
 
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab
