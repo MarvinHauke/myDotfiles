@@ -1,4 +1,18 @@
 return {
-	"normen/vim-pio",
-	event = "VeryLazy", -- or remove event if you want it loaded immediately
+	"anurag3301/nvim-platformio.lua",
+	enabled = true,
+	dependencies = {
+		{ "akinsho/nvim-toggleterm.lua" },
+		{ "nvim-telescope/telescope.nvim" },
+		{ "nvim-lua/plenary.nvim" },
+	},
+	cmd = {
+		"Pioinit",
+		"Piorun",
+		"Piocmd",
+		"Piolib",
+		"Piomon",
+		"Piodebug",
+		"Piodb",
+	},
 }

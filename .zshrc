@@ -37,6 +37,7 @@ alias src='source $ZSH'
 alias nvz='nvim $ZSH'
 alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
 alias notes='nvim $HOME/Notizen'
+alias lsusb='cyme'
 
 # Define the config alias
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
