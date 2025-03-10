@@ -130,19 +130,19 @@ return {
 		-- When the arduino server starts in these directories, use the provided FQBN.
 		-- Note that the server needs to start exactly in these directories.
 		-- This example would require some extra modification to support applying the FQBN on subdirectories!
+		local util = require("lspconfig.util")
 
+		-- Define FQBN mappings for different projects
 		local my_arduino_fqbn = {
-			-- Add other project-specific FQBNs here
-			["/home/pforsten/Development/arduino/blink"] = "arduino:avr:nano",
-			["/home/pforsten/Development/arduino/mbed"] = "arduino:mbed:nanorp2040connect",
-			["/Users/pforsten/Development/arduino/stm32"] = "STMicroelectronics:stm32:BlackPill_F411CE",
-			["/Users/pforsten/Development/arduino/teensy"] = "teensy:avr:teensy41",
-			["/Users/pforsten/Development/arduino/esp32"] = "esp32:esp32:esp32",
+			["teensy31"] = "teensy:avr:teensy31",
+			["teensy41"] = "teensy:avr:teensy41",
+			["esp32dev"] = "esp32:esp32:esp32",
 		}
 
-		-- Set default board to Arduino Nano
+		-- Default to Arduino Nano if no board is detected
 		local DEFAULT_FQBN = "arduino:avr:nano"
 
+		-- Function to get the board from platformio.ini
 		local function get_fqbn_from_pio()
 			local ini_file = io.open("platformio.ini", "r")
 			if not ini_file then
@@ -161,13 +161,11 @@ return {
 			return DEFAULT_FQBN
 		end
 
+		-- LSP Setup for Arduino
 		lspconfig.arduino_language_server.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
-			filetypes = { "c", "cpp", "ino" },
-			root_dir = function(fname)
-				return lspconfig.util.root_pattern("CMakeLists.txt", ".git", "platformio.ini")(fname) or vim.fn.getcwd() -- Fallback to the current working directory
-			end,
+
 			on_new_config = function(config, root_dir)
 				local fqbn = get_fqbn_from_pio()
 				vim.notify(("Using FQBN: %q for project in %q"):format(fqbn, root_dir))
@@ -183,6 +181,12 @@ return {
 					"-fqbn",
 					fqbn,
 				}
+			end,
+
+			filetypes = { "ino" },
+
+			root_dir = function(fname)
+				return util.root_pattern("*.ino", "CMakeLists.txt", ".git", "platformio.ini")(fname) or vim.fn.getcwd() -- Fallback to the current working directory
 			end,
 		})
 
