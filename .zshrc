@@ -17,7 +17,7 @@ export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 plug "zap-zsh/zsh-syntax-highlighting" # adds syntax-highlighting to shell commands
 plug "zap-zsh/zsh-autosuggestions"     # adds autosuggestions to shell commands
 plug "zap-zsh/vim"                     # adds vim keybindings
-#plug "jeffreytse/zsh-vi-mode" # adds vi mode
+# plug "jeffreytse/zsh-vi-mode" # adds vi mode
 plug "zap-zsh/fzf" # adds fzf keybindings
 plug "zsh-users/zsh-history-substring-search"
 plug "zsh-users/zsh-completions"
