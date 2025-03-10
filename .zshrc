@@ -7,7 +7,7 @@
 export ZSH="$HOME/.zshrc"
 
 # set Ghostty config path
-export XDG_CONFIG_HOME="$HOME/.config/"
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # set Starship config path
 eval "$(starship init zsh)"
@@ -33,11 +33,12 @@ alias cdd='cd $HOME/Development'
 alias cdl='cd $HOME/Downloads'
 alias vim='nvim'
 alias cdn='cd $XDG_CONFIG_HOME/nvim'
+alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
 alias src='source $ZSH'
 alias nvz='nvim $ZSH'
-alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
 alias notes='nvim $HOME/Notizen'
 alias lsusb='cyme'
+alias :q='exit'
 
 # Define the config alias
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
