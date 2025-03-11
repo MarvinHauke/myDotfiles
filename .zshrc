@@ -23,8 +23,8 @@ plug "zsh-zsh/supercharge"                    # adds color to ls https://github.
 plug "wintermi/zsh-lsd"                       # makes everything colorfull https://github.com/wintermi/zsh-lsd
 plug "MichaelAquilina/zsh-you-should-use"     # shows aliases you should use instead
 plug "kutsan/zsh-system-clipboard"            # https://github.com/kutsan/zsh-system-clipboard
-plug
-# TODO: ADD FZF completion for TAB-Key!!!
+plug "aloxaf/fzf-tab"                         # Use fzf for tab completion https://github.com/aloxaf/zsh-fzf-tab
+plug "Freed-Wu/fzf-tab-source"                # Additional sources for fzf-tab https://github.com/Fred-Wu/fzf-tab-source
 
 # some more ls aliases
 alias ll='ls -alF'
