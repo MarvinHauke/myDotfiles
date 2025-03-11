@@ -16,12 +16,15 @@ export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 # load plugins with zap
 plug "zap-zsh/zsh-syntax-highlighting"        # adds syntax-highlighting to shell commands
 plug "zap-zsh/zsh-autosuggestions"            # adds autosuggestions to shell commands
+plug "zap-zsh/vim"                            # simple vi-mode for zsh https://github.com/zap-zsh/vim
 plug "zsh-users/zsh-history-substring-search" # fish style substring search https://github.com/zsh-users/zsh-history-substring-search
 plug "zsh-users/zsh-completions"              # https://github.com/zsh-users/zsh-completions
 plug "zsh-zsh/supercharge"                    # adds color to ls https://github.com/zap-zsh/supercharge
 plug "wintermi/zsh-lsd"                       # makes everything colorfull https://github.com/wintermi/zsh-lsd
 plug "MichaelAquilina/zsh-you-should-use"     # shows aliases you should use instead
 plug "kutsan/zsh-system-clipboard"            # https://github.com/kutsan/zsh-system-clipboard
+plug
+# TODO: ADD FZF completion for TAB-Key!!!
 
 # some more ls aliases
 alias ll='ls -alF'
