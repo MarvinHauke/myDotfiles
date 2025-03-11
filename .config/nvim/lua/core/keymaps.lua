@@ -1,4 +1,7 @@
--- Set leader key to space
+-- This File contains all keymaps, which are not related to specific buffers.
+-- They can be used from every where at any time in vim.
+
+-- Set leader key to space (done in init.lua)
 -- vim.g.mapleader = " "
 
 local opts = { noremap = true, silent = true }
@@ -14,28 +17,28 @@ local keymap = vim.keymap
 --   command_mode = "c",
 
 -- General keymaps
-keymap.set("n", "<leader>bd", ":BufDel<CR>", opts, { desc = "close buffer" })       -- close buffer
-keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })                -- save and quit
+keymap.set("n", "<leader>bd", ":BufDel<CR>", { desc = "close buffer" }) -- close buffer
+keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" }) -- save and quit
 keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" }) -- quit all open buffers
-keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })                          -- save
+keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" }) -- save
 
 -- Split window management
-keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })        -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })      -- split window horizontally
+keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" }) -- split window vertically
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" }) -- split window horizontally
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" }) -- make split windows equal width
 keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" }) -- close split window
 
--- Better window navigation
-keymap.set("n", "<c-k>", ":wincmd k<CR>") -- lower window
-keymap.set("n", "<c-j>", ":wincmd j<CR>") -- upper window
-keymap.set("n", "<c-h>", ":wincmd h<CR>") -- left window
-keymap.set("n", "<c-l>", ":wincmd l<CR>") -- right window
+-- Better window navigation (deprecated thanks to vim-tmux-navigator)
+-- keymap.set("n", "<c-k>", ":wincmd k<CR>") -- lower window
+-- keymap.set("n", "<c-j>", ":wincmd j<CR>") -- upper window
+-- keymap.set("n", "<c-h>", ":wincmd h<CR>") -- left window
+-- keymap.set("n", "<c-l>", ":wincmd l<CR>") -- right window
 
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab
-keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "close tab" })  -- close a tab
-keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" })       -- next tab
-keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" })   -- previous tab
+keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "close tab" }) -- close a tab
+keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" }) -- next tab
+keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" }) -- previous tab
 
 -- Resize with arrows
 keymap.set("n", "<C-Up>", ":resize +2<CR>")
@@ -46,15 +49,12 @@ keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
 -- Open URL under Cursor
 -- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
 
--- Oil
-keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" }) -- open Oil orOil or parent directory
-
 -- Diff keymaps
-keymap.set("n", "<leader>cc", ":diffput<CR>")   -- put diff from current to other during diff
+keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
 keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
 keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
-keymap.set("n", "<leader>cn", "]c")             -- next diff hunk
-keymap.set("n", "<leader>cp", "[c")             -- previous diff hunk
+keymap.set("n", "<leader>cn", "]c") -- next diff hunk
+keymap.set("n", "<leader>cp", "[c") -- previous diff hunk
 
 -- Delete to void Register
 -- keymap.set("n", "<leader>d", '"_dd')
@@ -82,7 +82,6 @@ keymap.set("n", "<leader>h", ":nohlsearch<CR>") -- clear search highlight
 -- Lets your Cursor stay in Place while "J"
 -- keymap.set("n", "J", "mzJ`z")
 keymap.set("n", "J", "<NOP>", opts) -- remove J from normal mode
-
 
 -- Quickfix keymaps
 keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
@@ -124,12 +123,17 @@ keymap.set("i", "<C-Space>", "<cmd>lua vim.lsp.buf.completion()<CR>")
 
 -- Conform
 keymap.set({ "n", "v" }, "<leader>mp", function()
-  require("conform").format({
-    lsp_fallback = true,
-    async = false,
-    timeout_ms = 1000,
-  })
+	require("conform").format({
+		lsp_fallback = true,
+		async = false,
+		timeout_ms = 1000,
+	})
 end, { desc = "Format file or range (in visual mode)" })
+
+-- Linting
+keymap.set({ "n", "v" }, "<leader>l", function()
+	require("lint").try_lint()
+end, { desc = "Trigger linting for current file" })
 
 -- Nvim-dap
 keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
@@ -143,28 +147,32 @@ keymap.set("n", "<leader>dk", "<cmd>lua require'dap'.step_into()<cr>")
 keymap.set("n", "<leader>do", "<cmd>lua require'dap'.step_out()<cr>")
 
 keymap.set("n", "<leader>dd", function()
-  require("dap").disconnect()
-  require("dapui").close()
+	require("dap").disconnect()
+	require("dapui").close()
 end)
 
 keymap.set("n", "<leader>dt", function()
-  require("dap").terminate()
-  require("dapui").close()
+	require("dap").terminate()
+	require("dapui").close()
 end)
 
 keymap.set("n", "<leader>dr", "<cmd>lua require'dap'.repl.toggle()<cr>")
 keymap.set("n", "<leader>dl", "<cmd>lua require'dap'.run_last()<cr>")
 
 keymap.set("n", "<leader>di", function()
-  require("dap.ui.widgets").hover()
+	require("dap.ui.widgets").hover()
 end)
 keymap.set("n", "<leader>d?", function()
-  local widgets = require("dap.ui.widgets")
-  widgets.centered_float(widgets.scopes)
+	local widgets = require("dap.ui.widgets")
+	widgets.centered_float(widgets.scopes)
 end)
 
+-- Telescope dap
 keymap.set("n", "<leader>df", "<cmd>Telescope dap frames<cr>")
 keymap.set("n", "<leader>dh", "<cmd>Telescope dap commands<cr>")
 keymap.set("n", "<leader>de", function()
-  require("telescope.builtin").diagnostics({ default_text = ":E:" })
+	require("telescope.builtin").diagnostics({ default_text = ":E:" })
 end)
+
+-- Nvim-Tree
+keymap.set("n", "-", "<cmd>NvimTreeToggle<CR>", { desc = "toggle nvim tree" })

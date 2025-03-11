@@ -6,12 +6,15 @@ local r = require("luasnip.extras").rep
 local f = ls.function_node
 
 local function date()
-  return os.date("%d-%m-%y")
+	return os.date("%d-%m-%y")
 end
 
-
 ls.add_snippets("norg", {
-  s("header", {
-    t({ "* Daily" }), i(1), ({ "Date: " }), f(date, {}), t({ "", "" }),
-  }),
+	s("header", {
+		t({ "* Daily" }),
+		i(1),
+		{ "Date: " },
+		f(date, {}),
+		t({ "", "" }),
+	}),
 })
