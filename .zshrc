@@ -16,12 +16,15 @@ export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 # load plugins with zap
 plug "zap-zsh/zsh-syntax-highlighting"        # adds syntax-highlighting to shell commands
 plug "zap-zsh/zsh-autosuggestions"            # adds autosuggestions to shell commands
+plug "zap-zsh/vim"                            # simple vi-mode for zsh https://github.com/zap-zsh/vim
 plug "zsh-users/zsh-history-substring-search" # fish style substring search https://github.com/zsh-users/zsh-history-substring-search
 plug "zsh-users/zsh-completions"              # https://github.com/zsh-users/zsh-completions
 plug "zsh-zsh/supercharge"                    # adds color to ls https://github.com/zap-zsh/supercharge
 plug "wintermi/zsh-lsd"                       # makes everything colorfull https://github.com/wintermi/zsh-lsd
 plug "MichaelAquilina/zsh-you-should-use"     # shows aliases you should use instead
 plug "kutsan/zsh-system-clipboard"            # https://github.com/kutsan/zsh-system-clipboard
+plug "aloxaf/fzf-tab"                         # Use fzf for tab completion https://github.com/aloxaf/zsh-fzf-tab
+plug "Freed-Wu/fzf-tab-source"                # Additional sources for fzf-tab https://github.com/Fred-Wu/fzf-tab-source
 
 # some more ls aliases
 alias ll='ls -alF'
@@ -45,6 +48,24 @@ alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # Add an "alert" alias for long running commands.  Use like so:
 # sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Tmux
+# Always work in a tmux session if Tmux is installed
+if which tmux >/dev/null 2>&1; then
+  # Check if the current environment is suitable for tmux
+  if [[ -z "$TMUX" &&
+    $TERM != "screen-256color" &&
+    $TERM != "screen" &&
+    -z "$VSCODE_INJECTION" &&
+    -z "$INSIDE_EMACS" &&
+    -z "$EMACS" &&
+    -z "$VIM" &&
+    -z "$INTELLIJ_ENVIRONMENT_READER" ]]; then
+    # Try to attach to the default tmux session, or create a new one if it doesn't exist
+    tmux attach -t default >/dev/null 2>&1 || tmux new -s default
+    exit
+  fi
+fi
 
 # Setup Zoxide for easy "cd anywhere"
 eval "$(zoxide init --cmd cd zsh)"
