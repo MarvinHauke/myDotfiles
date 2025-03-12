@@ -6,7 +6,7 @@ return {
 		-- LSP Management
 		"williamboman/mason.nvim", -- https://github.com/williamboman/mason.nvim
 		"williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		"WhoIsSethDaniel/mason-tool-installer.nvim", -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
 
 		-- Useful status updates for LSP
 		"j-hui/fidget.nvim", -- https://github.com/j-hui/fidget.nvim
