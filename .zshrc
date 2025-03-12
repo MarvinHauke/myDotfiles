@@ -49,6 +49,24 @@ alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# Tmux
+# Always work in a tmux session if Tmux is installed
+if which tmux >/dev/null 2>&1; then
+  # Check if the current environment is suitable for tmux
+  if [[ -z "$TMUX" &&
+    $TERM != "screen-256color" &&
+    $TERM != "screen" &&
+    -z "$VSCODE_INJECTION" &&
+    -z "$INSIDE_EMACS" &&
+    -z "$EMACS" &&
+    -z "$VIM" &&
+    -z "$INTELLIJ_ENVIRONMENT_READER" ]]; then
+    # Try to attach to the default tmux session, or create a new one if it doesn't exist
+    tmux attach -t default >/dev/null 2>&1 || tmux new -s default
+    exit
+  fi
+fi
+
 # Setup Zoxide for easy "cd anywhere"
 eval "$(zoxide init --cmd cd zsh)"
 
