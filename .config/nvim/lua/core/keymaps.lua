@@ -116,20 +116,6 @@ keymap.set("n", "<leader>tr", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
 keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.hover()<CR>")
 keymap.set("i", "<C-Space>", "<cmd>lua vim.lsp.buf.completion()<CR>")
 
--- Conform
-keymap.set({ "n", "v" }, "<leader>mp", function()
-	require("conform").format({
-		lsp_fallback = true,
-		async = false,
-		timeout_ms = 1000,
-	})
-end, { desc = "Format file or range (in visual mode)" })
-
--- Linting
-keymap.set({ "n", "v" }, "<leader>l", function()
-	require("lint").try_lint()
-end, { desc = "Trigger linting for current file" })
-
 -- Nvim-dap
 keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
 keymap.set("n", "<leader>bc", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>")

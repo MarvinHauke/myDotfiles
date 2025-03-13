@@ -11,3 +11,4 @@ karabiner-elements
 rust
 lsd
 tmux
+imagemagick
