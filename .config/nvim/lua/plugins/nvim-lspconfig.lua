@@ -97,12 +97,14 @@ return {
 		lspconfig.bashls.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
-			settings = { -- custom settings for bash
-				bash = {
-					-- make language server recognize the `vim` global
-					filetypes = { "sh", "zsh" },
-				},
-			},
+			filetypes = { "sh", "zsh", "bash", "dosbatch" }, -- Standard filetypes
+			root_dir = function(fname)
+				-- Match `.{foo}rc` files and attach the LSP
+				if fname:match(".*%.%w+rc$") then
+					return vim.fn.getcwd() -- Attach in current directory for dotfiles
+				end
+				return lspconfig.util.find_git_ancestor(fname) -- Otherwise, use Git root
+			end,
 		})
 
 		-- PowerShell LSP settings

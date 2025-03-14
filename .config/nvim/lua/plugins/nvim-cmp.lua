@@ -6,13 +6,14 @@ return {
 	dependencies = {
 		"hrsh7th/cmp-buffer", -- source for text in buffer
 		"hrsh7th/cmp-path", -- source for file system paths
-		"hrsh7th/cmp-cmdline", -- source for vim commandline https://github.com/hrsh7th/cmp-cmdline
-		"hrsh7th/cmp-nvim-lua", -- source for neovim lua api https://github.com/hrsh7th/cmp-nvim-lua
+		"hrsh7th/cmp-cmdline", -- source for vim commandline  https://github.com/hrsh7th/cmp-cmdline
+		"hrsh7th/cmp-nvim-lua", -- source for neovim lua api  https://github.com/hrsh7th/cmp-nvim-lua
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip", -- for autocompletion
 		"rafamadriz/friendly-snippets", --useful snippets
-		"onsails/lspkind.nvim", -- vs-code like pictograms -- https://github.com/onsails/lspkind.nvim
-		"hrsh7th/cmp-emoji", -- source for markdown emojis https://github.com/hrsh7th/cmp-emoji
+		"onsails/lspkind.nvim", -- vs-code like pictograms    https://github.com/onsails/lspkind.nvim
+		"hrsh7th/cmp-emoji", -- source for markdown emojis    https://github.com/hrsh7th/cmp-emoji
+		"tamago324/cmp-zsh", -- contains zsh completions      https://github.com/tamago324/cmp-zsh
 	},
 	config = function()
 		local cmp = require("cmp")
@@ -49,12 +50,26 @@ return {
 		-- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
 		require("luasnip.loaders.from_vscode").lazy_load()
 
-		-- TODO: cmd line completion for ":" and "/"
+		-- cmdline completion for ":"
+		-- This may contains Bugs!!!
+		cmp.setup.cmdline(":", {
+			mapping = cmp.mapping.preset.cmdline(),
+			sources = cmp.config.sources({
+				{ name = "path" },
+			}, {
+				{ name = "cmdline" },
+			}),
+			matching = { disallow_symbol_nonprefix_matching = false },
+		})
+
+		-- Normal Cmp setup
 		cmp.setup({
+
 			-- Experimental feature of nvim-cmp
 			experimental = {
 				ghost_text = true,
 			},
+
 			completion = {
 				completeopt = "menu,menuone,preview,noselect",
 			},
@@ -72,6 +87,7 @@ return {
 						nvim_lua = "[Lua]",
 						latex_symbols = "[LaTeX]",
 						codeium = "[AI]",
+						zsh = "[SHELL]",
 					})[entry.source.name]
 					return vim_item
 				end,
@@ -108,6 +124,7 @@ return {
 				{ name = "codeium" }, -- ai completion
 				{ name = "path" }, -- file system paths
 				{ name = "neorg" }, -- neorg
+				{ name = "zsh" }, -- shellcompletion
 				{ name = "emoji" }, -- fun
 			},
 		})
