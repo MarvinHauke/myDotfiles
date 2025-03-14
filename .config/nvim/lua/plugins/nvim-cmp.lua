@@ -17,7 +17,34 @@ return {
 	config = function()
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
-		local lspkind = require("lspkind")
+		local lsp_kinds = {
+			Class = " ",
+			Color = " ",
+			Constant = " ",
+			Constructor = " ",
+			Enum = " ",
+			EnumMember = " ",
+			Event = " ",
+			Field = " ",
+			File = " ",
+			Folder = " ",
+			Function = " ",
+			Interface = " ",
+			Keyword = " ",
+			Method = " ",
+			Module = " ",
+			Operator = " ",
+			Property = " ",
+			Reference = " ",
+			Snippet = " ",
+			Struct = " ",
+			Text = " ",
+			TypeParameter = " ",
+			Unit = " ",
+			Value = " ",
+			Variable = " ",
+			Codeium = "󱙺", -- my own icon added from nerdfonts TODO: color it
+		}
 
 		-- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
 		require("luasnip.loaders.from_vscode").lazy_load()
@@ -28,31 +55,31 @@ return {
 			experimental = {
 				ghost_text = true,
 			},
-
 			completion = {
 				completeopt = "menu,menuone,preview,noselect",
 			},
+
 			-- configure lspkind for vs-code like pictograms
 			formatting = {
-				format = lspkind.cmp_format({
-					mode = "symbol_text",
-					menu = {
+				format = function(entry, vim_item)
+					-- Kind icons
+					vim_item.kind = string.format("%s %s", lsp_kinds[vim_item.kind], vim_item.kind) -- This concatenates the icons with the name of the item kind
+					-- Source
+					vim_item.menu = ({
 						buffer = "[Buffer]",
-						codeium = "[AI]",
 						nvim_lsp = "[LSP]",
 						luasnip = "[LuaSnip]",
-						path = "[Path]",
-						neorg = "[Neorg]",
-					},
-				}),
+						nvim_lua = "[Lua]",
+						latex_symbols = "[LaTeX]",
+						codeium = "[AI]",
+					})[entry.source.name]
+					return vim_item
+				end,
 			},
-
+			-- Snippet function
 			snippet = {
 				expand = function(args)
 					luasnip.lsp_expand(args.body)
-					-- vim.snippet.expand(args.body)
-					-- cmp.resubscribe({ "TextChanged", "TextChangedI" })
-					-- require("cmp.configure").set_onetime({ sources = {} })
 				end,
 			},
 			-- Windows for autocompletion
@@ -78,10 +105,10 @@ return {
 				{ name = "nvim_lsp" }, -- lsp
 				{ name = "luasnip" }, -- snippets
 				{ name = "buffer" }, -- text within current buffer
-				{ name = "codeium" },
+				{ name = "codeium" }, -- ai completion
 				{ name = "path" }, -- file system paths
 				{ name = "neorg" }, -- neorg
-				{ name = "emoji" },
+				{ name = "emoji" }, -- fun
 			},
 		})
 	end,
