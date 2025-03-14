@@ -38,6 +38,7 @@ return {
 		{ "<leader>fg", ":Telescope live_grep<cr>", desc = "live grep" },
 		{ "<leader>fb", ":Telescope buffers<cr>", desc = "buffers" },
 		{ "<leader>fh", ":Telescope help_tags<cr>", desc = "help tags" },
+		{ "<leader>fk", ":Telescope keymaps<cr>", desc = "search through all keymaps" },
 		{ "<leader>fs", ":Telescope current_buffer_fuzzy_find<cr>", desc = "current buffer fuzzy find" },
 		{ "<leader>fo", ":Telescope lsp_document_symbols<cr>", desc = "lsp document symbols" },
 		{ "<leader>fi", ":Telescope lsp_incoming_calls<cr>", desc = "lsp incoming calls" },

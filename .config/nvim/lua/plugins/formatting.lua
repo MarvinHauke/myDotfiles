@@ -15,7 +15,7 @@ return {
 				svelte = { "prettier" },
 				css = { "prettier" },
 				html = { "prettier" },
-				json = { "prettier" },
+				json = { "jq", "prettier" },
 				yaml = { "prettier" },
 				markdown = { "prettier" },
 				graphql = { "prettier" },
@@ -25,7 +25,24 @@ return {
 				zsh = { "shfmt", "shellharden" },
 				sh = { "shfmt", "shellharden" },
 				bash = { "shfmt", "shellharden" },
+				cpp = { "clang-format" },
+				c = { "clang-format" },
+				cmake = { "cmake_format" },
+				rust = { "rustfmt" },
+				go = { "gofmt" },
+				arduino = { "clang-format" },
 			},
+
+			-- Keymaps for manualy formatting
+			vim.keymap.set({ "n", "v" }, "<leader>fom", function()
+				conform.format({
+					lsp_fallback = true,
+					async = true,
+					timeout_ms = 500,
+				})
+			end, { desc = "format file with conform" }),
+
+			-- Format on save
 			format_on_save = {
 				lsp_fallback = true,
 				async = false,

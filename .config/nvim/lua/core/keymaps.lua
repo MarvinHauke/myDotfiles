@@ -28,12 +28,6 @@ keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" }) 
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" }) -- make split windows equal width
 keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" }) -- close split window
 
--- Better window navigation (deprecated thanks to vim-tmux-navigator)
--- keymap.set("n", "<c-k>", ":wincmd k<CR>") -- lower window
--- keymap.set("n", "<c-j>", ":wincmd j<CR>") -- upper window
--- keymap.set("n", "<c-h>", ":wincmd h<CR>") -- left window
--- keymap.set("n", "<c-l>", ":wincmd l<CR>") -- right window
-
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab
 keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "close tab" }) -- close a tab
@@ -41,6 +35,7 @@ keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" }) -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" }) -- previous tab
 
 -- Resize with arrows
+
 keymap.set("n", "<C-Up>", ":resize +2<CR>")
 keymap.set("n", "<C-Down>", ":resize -2<CR>")
 keymap.set("n", "<C-Left>", ":vertical resize +2<CR>")
@@ -120,20 +115,6 @@ keymap.set("n", "<leader>gn", "<cmd>lua vim.diagnostic.goto_next()<CR>")
 keymap.set("n", "<leader>tr", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
 keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.hover()<CR>")
 keymap.set("i", "<C-Space>", "<cmd>lua vim.lsp.buf.completion()<CR>")
-
--- Conform
-keymap.set({ "n", "v" }, "<leader>mp", function()
-	require("conform").format({
-		lsp_fallback = true,
-		async = false,
-		timeout_ms = 1000,
-	})
-end, { desc = "Format file or range (in visual mode)" })
-
--- Linting
-keymap.set({ "n", "v" }, "<leader>l", function()
-	require("lint").try_lint()
-end, { desc = "Trigger linting for current file" })
 
 -- Nvim-dap
 keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")

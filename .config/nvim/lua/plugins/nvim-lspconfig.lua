@@ -6,7 +6,8 @@ return {
 		-- LSP Management
 		"williamboman/mason.nvim", -- https://github.com/williamboman/mason.nvim
 		"williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		"WhoIsSethDaniel/mason-tool-installer.nvim", -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
+		"hrsh7th/cmp-nvim-lsp", -- LSP completion capabilities
 
 		-- Useful status updates for LSP
 		"j-hui/fidget.nvim", -- https://github.com/j-hui/fidget.nvim
@@ -26,13 +27,14 @@ return {
 				"jsonls",
 				"lemminx",
 				"marksman",
-				"quick_lint_js",
 				"powershell_es",
 				"lemminx",
+				"quick_lint_js",
 				"cssls",
 				"tailwindcss",
 				"html",
 				"svelte",
+				"rust_analyzer",
 			},
 			automatic_installation = true,
 		})
@@ -41,8 +43,9 @@ return {
 		local mason_tool_installer = require("mason-tool-installer")
 		require("fidget").setup({})
 
+		-- Keybindings for LSPs (works only if lsp is attached to buffer)
 		local lsp_attach = function(client, bufnr)
-			-- Create your attached keybindings here..
+			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP Code Action" })
 		end
 
 		-- Call setup on each LSP server
@@ -69,6 +72,7 @@ return {
 				"shellcheck",
 			},
 		})
+		local util = require("lspconfig.util")
 
 		-- Lua LSP settings
 		lspconfig.lua_ls.setup({
@@ -93,12 +97,14 @@ return {
 		lspconfig.bashls.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
-			settings = { -- custom settings for bash
-				bash = {
-					-- make language server recognize the `vim` global
-					filetypes = { "sh", "zsh" },
-				},
-			},
+			filetypes = { "sh", "zsh", "bash", "dosbatch" }, -- Standard filetypes
+			root_dir = function(fname)
+				-- Match `.{foo}rc` files and attach the LSP
+				if fname:match(".*%.%w+rc$") then
+					return vim.fn.getcwd() -- Attach in current directory for dotfiles
+				end
+				return lspconfig.util.find_git_ancestor(fname) -- Otherwise, use Git root
+			end,
 		})
 
 		-- PowerShell LSP settings
@@ -120,76 +126,117 @@ return {
 			on_attach = lsp_attach,
 		})
 
+		-- ccls LSP settings
+		lspconfig.ccls.setup({
+			init_options = {
+				compilationDatabaseDirectory = ".pio/build/",
+				index = { threads = 4 },
+				clang = {
+					extraArgs = { "-I", ".pio/libdeps/", "-I", ".pio/build/" },
+					resourceDir = "",
+				},
+			},
+		})
+
 		-- C++ LSP settings
 		lspconfig.clangd.setup({
-			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
+			capabilities = lsp_capabilities,
+			cmd = {
+				"clangd",
+				"--background-index",
+				"-j=12",
+				"--query-driver=**",
+				"--clang-tidy",
+				"--all-scopes-completion",
+				"--cross-file-rename",
+				"--completion-style=detailed",
+				"--header-insertion-decorators",
+				"--header-insertion=iwyu",
+				"--pch-storage=memory",
+				"--suggest-missing-includes",
+			},
 		})
+		--
+		-- -- Arduino LSP settings
+		-- -- When the arduino server starts in these directories, use the provided FQBN.
+		-- -- Note that the server needs to start exactly in these directories.
+		-- -- This example would require some extra modification to support applying the FQBN on subdirectories!
 
-		-- Arduino LSP settings
-		-- When the arduino server starts in these directories, use the provided FQBN.
-		-- Note that the server needs to start exactly in these directories.
-		-- This example would require some extra modification to support applying the FQBN on subdirectories!
-		local util = require("lspconfig.util")
+		--
+		-- -- Define FQBN mappings for different projects
+		-- local my_arduino_fqbn = {
+		-- 	["teensy31"] = "teensy:avr:teensy31",
+		-- 	["teensy41"] = "teensy:avr:teensy41",
+		-- 	["esp32dev"] = "esp32:esp32:esp32",
+		-- }
+		--
+		-- -- Default to Arduino Nano if no board is detected
+		-- local DEFAULT_FQBN = "arduino:avr:nano"
+		--
+		-- -- Function to get the board from platformio.ini
+		-- local function get_fqbn_from_pio()
+		-- 	local ini_file = io.open("platformio.ini", "r")
+		-- 	if not ini_file then
+		-- 		return DEFAULT_FQBN
+		-- 	end
+		--
+		-- 	for line in ini_file:lines() do
+		-- 		local board = line:match("^%s*board%s*=%s*(%S+)")
+		-- 		if board and my_arduino_fqbn[board] then
+		-- 			ini_file:close()
+		-- 			return my_arduino_fqbn[board]
+		-- 		end
+		-- 	end
+		--
+		-- 	ini_file:close()
+		-- 	return DEFAULT_FQBN
+		-- end
+		--
+		-- -- LSP Setup for Arduino
+		-- lspconfig.arduino_language_server.setup({
+		-- 	capabilities = lsp_capabilities,
+		-- 	on_attach = lsp_attach,
+		--
+		-- 	on_new_config = function(config, root_dir)
+		-- 		local fqbn = get_fqbn_from_pio()
+		-- 		vim.notify(("Using FQBN: %q for project in %q"):format(fqbn, root_dir))
+		--
+		-- 		config.cmd = {
+		-- 			"arduino-language-server",
+		-- 			"-clangd",
+		-- 			"/usr/bin/clangd", -- Ensure clangd is installed
+		-- 			"-cli",
+		-- 			"/opt/homebrew/bin/arduino-cli", -- Homebrew-installed Arduino CLI
+		-- 			"-cli-config",
+		-- 			"/Users/pforsten/Library/Arduino15/arduino-cli.yaml",
+		-- 			"-fqbn",
+		-- 			fqbn,
+		-- 		}
+		-- 	end,
+		--
+		-- 	filetypes = { "ino" },
+		--
+		-- 	root_dir = function(fname)
+		-- 		return util.root_pattern("*.ino", "CMakeLists.txt", ".git", "platformio.ini")(fname) or vim.fn.getcwd() -- Fallback to the current working directory
+		-- 	end,
+		-- })
 
-		-- Define FQBN mappings for different projects
-		local my_arduino_fqbn = {
-			["teensy31"] = "teensy:avr:teensy31",
-			["teensy41"] = "teensy:avr:teensy41",
-			["esp32dev"] = "esp32:esp32:esp32",
-		}
-
-		-- Default to Arduino Nano if no board is detected
-		local DEFAULT_FQBN = "arduino:avr:nano"
-
-		-- Function to get the board from platformio.ini
-		local function get_fqbn_from_pio()
-			local ini_file = io.open("platformio.ini", "r")
-			if not ini_file then
-				return DEFAULT_FQBN
-			end
-
-			for line in ini_file:lines() do
-				local board = line:match("^%s*board%s*=%s*(%S+)")
-				if board and my_arduino_fqbn[board] then
-					ini_file:close()
-					return my_arduino_fqbn[board]
-				end
-			end
-
-			ini_file:close()
-			return DEFAULT_FQBN
-		end
-
-		-- LSP Setup for Arduino
-		lspconfig.arduino_language_server.setup({
+		lspconfig.rust_analyzer.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
-
-			on_new_config = function(config, root_dir)
-				local fqbn = get_fqbn_from_pio()
-				vim.notify(("Using FQBN: %q for project in %q"):format(fqbn, root_dir))
-
-				config.cmd = {
-					"arduino-language-server",
-					"-clangd",
-					"/usr/bin/clangd", -- Ensure clangd is installed
-					"-cli",
-					"/opt/homebrew/bin/arduino-cli", -- Homebrew-installed Arduino CLI
-					"-cli-config",
-					"/Users/pforsten/Library/Arduino15/arduino-cli.yaml",
-					"-fqbn",
-					fqbn,
-				}
-			end,
-
-			filetypes = { "ino" },
-
+			filetypes = { "rust" },
 			root_dir = function(fname)
-				return util.root_pattern("*.ino", "CMakeLists.txt", ".git", "platformio.ini")(fname) or vim.fn.getcwd() -- Fallback to the current working directory
+				return util.root_pattern("Cargo.toml", "rust-project.json")(fname) or vim.fn.getcwd() -- Fallback to the current working directory
 			end,
+			settings = {
+				["rust-analyzer"] = {
+					cargo = {
+						allFreeArgs = true,
+					},
+				},
+			},
 		})
-
 		-- JS LSP settings
 		lspconfig.ts_ls.setup({
 			capabilities = lsp_capabilities,
