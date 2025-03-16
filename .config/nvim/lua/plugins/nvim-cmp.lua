@@ -8,6 +8,7 @@ return {
 		"hrsh7th/cmp-path", -- source for file system paths
 		"hrsh7th/cmp-cmdline", -- source for vim commandline  https://github.com/hrsh7th/cmp-cmdline
 		"hrsh7th/cmp-nvim-lua", -- source for neovim lua api  https://github.com/hrsh7th/cmp-nvim-lua
+		"hrsh7th/cmp-calc", -- source for math                https://github.com/hrsh7th/cmp-calc
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip", -- for autocompletion
 		"rafamadriz/friendly-snippets", --useful snippets
@@ -124,6 +125,7 @@ return {
 				{ name = "codeium" }, -- ai completion
 				{ name = "path" }, -- file system paths
 				{ name = "neorg" }, -- neorg
+				{ name = "calc" }, -- math
 				{ name = "zsh" }, -- shellcompletion
 				{ name = "emoji" }, -- fun
 			},

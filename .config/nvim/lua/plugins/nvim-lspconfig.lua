@@ -157,7 +157,7 @@ return {
 				"--suggest-missing-includes",
 			},
 		})
-		--
+
 		-- -- Arduino LSP settings
 		-- -- When the arduino server starts in these directories, use the provided FQBN.
 		-- -- Note that the server needs to start exactly in these directories.
@@ -226,17 +226,25 @@ return {
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
 			filetypes = { "rust" },
-			root_dir = function(fname)
-				return util.root_pattern("Cargo.toml", "rust-project.json")(fname) or vim.fn.getcwd() -- Fallback to the current working directory
-			end,
 			settings = {
 				["rust-analyzer"] = {
+					checkOnSave = {
+						command = "clippy",
+					},
 					cargo = {
-						allFreeArgs = true,
+						allFeatures = true,
+						rundBuildScripts = true,
+					},
+					procMacro = {
+						enable = true,
 					},
 				},
 			},
+			root_dir = function(fname)
+				return util.root_pattern("Cargo.toml", "rust-project.json")(fname) or vim.fn.getcwd() -- Fallback to the current working directory
+			end,
 		})
+
 		-- JS LSP settings
 		lspconfig.ts_ls.setup({
 			capabilities = lsp_capabilities,

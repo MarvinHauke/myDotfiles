@@ -32,7 +32,7 @@ return {
 
 				-- Custom key mappings for nvim-tree-preview:
 				local preview = require("nvim-tree-preview")
-				vim.keymap.set("n", "p", preview.watch, opts("Open Preview"))
+				-- vim.keymap.set("n", "p", preview.watch, opts("Open Preview"))
 				vim.keymap.set("n", "<CTRL-k>", function()
 					return preview.scroll(4)
 				end, opts("Scroll Down"))
@@ -45,6 +45,9 @@ return {
 			require("nvim-tree").setup({
 				disable_netrw = true,
 				hijack_netrw = true,
+				git = {
+					ignore = false, -- show files and folders which are listed in .gitignore files
+				},
 				view = {
 					width = 30,
 					side = "left",

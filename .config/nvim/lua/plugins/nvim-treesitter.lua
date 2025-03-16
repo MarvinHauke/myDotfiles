@@ -26,6 +26,7 @@ return {
 			"python",
 			"javascript",
 			"vim",
+			"vimdoc",
 			"html",
 			"norg",
 		},

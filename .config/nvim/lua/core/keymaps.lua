@@ -35,11 +35,10 @@ keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" }) -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" }) -- previous tab
 
 -- Resize with arrows
-
-keymap.set("n", "<C-Up>", ":resize +2<CR>")
-keymap.set("n", "<C-Down>", ":resize -2<CR>")
-keymap.set("n", "<C-Left>", ":vertical resize +2<CR>")
-keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
+keymap.set("n", "<D-Up>", ":resize +2<CR>")
+keymap.set("n", "<D-Down>", ":resize -2<CR>")
+keymap.set("n", "<D-Left>", ":vertical resize +2<CR>")
+keymap.set("n", "<D-Right>", ":vertical resize -2<CR>")
 
 -- Open URL under Cursor
 -- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
