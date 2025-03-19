@@ -44,19 +44,22 @@ return {
 		require("fidget").setup({})
 
 		-- Keybindings for LSPs (works only if lsp is attached to buffer)
-		local lsp_attach = function(client, bufnr)
-			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP Code Action" })
-		end
-
-		-- Call setup on each LSP server
-		require("mason-lspconfig").setup_handlers({
-			function(server_name)
-				lspconfig[server_name].setup({
-					on_attach = lsp_attach,
-					capabilities = lsp_capabilities,
-				})
+		local lsp_attach =
+			function(client, bufnr)
+				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP Code Action" })
+				vim.keymap.set({ "n", "v" }, "<leader>j", function()
+					vim.diagnostic.open_float(nil, { focusable = false, border = "rounded" })
+				end, { desc = "Show Line Diagnostics" })
 			end,
-		})
+			-- Call setup on each LSP server
+			require("mason-lspconfig").setup_handlers({
+				function(server_name)
+					lspconfig[server_name].setup({
+						on_attach = lsp_attach,
+						capabilities = lsp_capabilities,
+					})
+				end,
+			})
 
 		mason_tool_installer.setup({
 			ensure_installed = {
