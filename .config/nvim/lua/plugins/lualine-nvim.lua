@@ -16,22 +16,33 @@ return {
 			lualine_b = { "branch" },
 			lualine_c = {
 				{
-					-- TODO: use lsp progress
-					-- Display LSP clients attached to the buffer
+					-- Display LSP clients attached to the buffer with language-specific icons
 					function()
 						local bufnr = vim.api.nvim_get_current_buf()
-						local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+						local clients = vim.lsp.get_clients({ bufnr = bufnr })
 						if next(clients) == nil then
 							return ""
 						end
+
+						-- Get filetype of the current buffer
+						local filetype = vim.bo.filetype
+						local devicons = require("nvim-web-devicons")
+						local icon, color = devicons.get_icon_color_by_filetype(filetype)
+
 						local c = {}
 						for _, client in pairs(clients) do
-							table.insert(c, client.name)
+							-- Use the fetched icon if available; otherwise, fallback to a gear icon
+							local display_icon = icon or ""
+							table.insert(c, display_icon .. " " .. client.name)
 						end
-						return " " .. table.concat(c, " | ") -- Gear icon for LSP
+
+						return table.concat(c, " | ")
 					end,
-					icon = "",
-					color = { fg = "#98c379", gui = "bold" },
+					color = function()
+						local filetype = vim.bo.filetype
+						local _, color = require("nvim-web-devicons").get_icon_color_by_filetype(filetype)
+						return { fg = color or "#98c379", gui = "bold" }
+					end,
 				},
 				{
 					-- Customize the filename part of lualine to be parent/filename
