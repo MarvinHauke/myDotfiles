@@ -259,5 +259,27 @@ return {
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
 		})
+
+		-- CMakeLists
+		lspconfig.cmake.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
+		-- Makefile linting via efm-lsp
+
+		lspconfig.efm.setup({
+			init_options = { documentFormatting = true },
+			settings = {
+				languages = {
+					make = {
+						{
+							lintCommand = "checkmake",
+							lintStdin = true,
+							lintFormats = { "%f:%l:%c: %m" },
+						},
+					},
+				},
+			},
+		})
 	end,
 }
