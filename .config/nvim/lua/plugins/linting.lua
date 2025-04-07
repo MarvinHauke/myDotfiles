@@ -10,7 +10,7 @@ return {
 
 		lint.linters_by_ft = {
 			cpp = { "cpplint" },
-			c = { "clangd" },
+			c = { "cpplint" },
 			javascript = { "eslint_d" },
 			typescript = { "eslint_d" },
 			javascriptreact = { "eslint_d" },
