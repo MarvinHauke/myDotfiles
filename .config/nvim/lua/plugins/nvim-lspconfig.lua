@@ -269,10 +269,12 @@ return {
 
 		lspconfig.efm.setup({
 			init_options = { documentFormatting = true },
+			filetypes = { "make" },
 			settings = {
 				languages = {
 					make = {
 						{
+							formatCommand = "checkmake",
 							lintCommand = "checkmake",
 							lintStdin = true,
 							lintFormats = { "%f:%l:%c: %m" },

@@ -32,6 +32,13 @@ return {
 				lint.try_lint()
 			end,
 		})
+
+		-- Autocommand for formatting Makefiles
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			pattern = "Makefile",
+			command = "lua vim.lsp.buf.format()",
+		})
+
 		-- Keymaps for triggering linting
 		vim.keymap.set("n", "<leader>ll", function()
 			lint.try_lint()
