@@ -30,6 +30,8 @@ return {
 			end
 		end, {})
 
+		-- Make `q` an alias for `Q`, and `q!` an alias for `Bwipeout`
+		vim.cmd("cabbrev Q! Bwipeout")
 		vim.cmd("cabbrev q Q")
 	end,
 }
