@@ -145,6 +145,7 @@ return {
 		lspconfig.clangd.setup({
 			on_attach = lsp_attach,
 			capabilities = lsp_capabilities,
+			root_dir = require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
 			cmd = {
 				"clangd",
 				"--background-index",
@@ -158,6 +159,7 @@ return {
 				"--header-insertion=iwyu",
 				"--pch-storage=memory",
 				"--suggest-missing-includes",
+				-- "--clang-format-style=LLVM", -- adds the prefered formatting style change this to Google|Chromium|GNU|Microsoft
 			},
 		})
 
@@ -254,6 +256,63 @@ return {
 			on_attach = lsp_attach,
 		})
 
+		-- JSON lsp
+		lspconfig.jsonls.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+			settings = {
+				json = {
+					-- Schemas https://www.schemastore.org
+					schemas = {
+						{
+							fileMatch = { "package.json" },
+							url = "https://json.schemastore.org/package.json",
+						},
+						{
+							fileMatch = { "tsconfig*.json" },
+							url = "https://json.schemastore.org/tsconfig.json",
+						},
+						{
+							fileMatch = {
+								".prettierrc",
+								".prettierrc.json",
+								"prettier.config.json",
+							},
+							url = "https://json.schemastore.org/prettierrc.json",
+						},
+						{
+							fileMatch = { ".eslintrc", ".eslintrc.json" },
+							url = "https://json.schemastore.org/eslintrc.json",
+						},
+						{
+							fileMatch = {
+								".babelrc",
+								".babelrc.json",
+								"babel.config.json",
+							},
+							url = "https://json.schemastore.org/babelrc.json",
+						},
+						{
+							fileMatch = { "lerna.json" },
+							url = "https://json.schemastore.org/lerna.json",
+						},
+						{
+							fileMatch = { "now.json", "vercel.json" },
+							url = "https://json.schemastore.org/now.json",
+						},
+						{
+							fileMatch = {
+								".stylelintrc",
+								".stylelintrc.json",
+								"stylelint.config.json",
+							},
+							url = "http://json.schemastore.org/stylelintrc.json",
+						},
+					},
+				},
+			},
+		})
+
 		-- Python LSP settings
 		lspconfig.pyright.setup({
 			capabilities = lsp_capabilities,
@@ -265,8 +324,8 @@ return {
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
 		})
-		-- Makefile linting via efm-lsp
 
+		-- Makefile linting via efm-lsp
 		lspconfig.efm.setup({
 			init_options = { documentFormatting = true },
 			filetypes = { "make" },
@@ -281,6 +340,9 @@ return {
 						},
 					},
 				},
+			},
+			capabilities = {
+				offsetEncoding = { "utf-8" },
 			},
 		})
 	end,

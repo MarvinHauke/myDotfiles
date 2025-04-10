@@ -28,6 +28,7 @@ return {
 				cpp = { "clang-format" },
 				c = { "clang-format" },
 				cmake = { "cmake_format" },
+				make = { "shfmt" },
 				rust = { "rustfmt" },
 				go = { "gofmt" },
 				arduino = { "clang-format" },
