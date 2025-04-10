@@ -74,7 +74,7 @@ eval "$(zoxide init --cmd cd zsh)"
 eval "$(direnv hook zsh)"
 
 # Setup shellcompletion for uv (a python toolchain manager)
-eval "$(uv generate-shel-completion zsh)"
+eval "$(uv generate-shell-completion zsh)"
 
 # this is for Node-Version-Manager not for Nvim. Dont touch it!!!
 export NVM_DIR="$HOME/.nvm"

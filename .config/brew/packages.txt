@@ -13,3 +13,4 @@ lsd
 tmux
 imagemagick
 direnv
+uv
