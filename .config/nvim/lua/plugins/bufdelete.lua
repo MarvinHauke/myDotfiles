@@ -10,21 +10,45 @@ return {
 			if #listed_buffers > 1 then
 				vim.cmd("Bdelete")
 			else
-				-- If only one buffer is left, check its name
-				local last_buf = listed_buffers[1] or buffers[1] -- Fallback to any buffer if needed
+				-- Get the last buffer info
+				local last_buf = listed_buffers[1] or buffers[1] -- Use fallback buffer
 				local last_buf_name = last_buf and vim.api.nvim_buf_get_name(last_buf) or ""
+				local last_buf_modified = vim.api.nvim_buf_get_option(last_buf, "modified")
 
-				-- Get the number of listed buffers and check if nvim-tree is the only one left
+				-- Check if only nvim-tree is open
 				local open_windows = vim.api.nvim_tabpage_list_wins(0)
 				local nvim_tree_only = #open_windows == 1
 					and vim.bo[vim.api.nvim_win_get_buf(open_windows[1])].filetype == "NvimTree"
 
-				if last_buf_name == "" then -- Empty name means "No Name"
-					vim.cmd("quit")
-					vim.cmd("quit") -- do a second quit for also leaving nvim-tree
+				-- Handle unnamed buffers
+				if last_buf_name == "" then
+					local buf_contents = vim.api.nvim_buf_get_lines(last_buf, 0, -1, false)
+					local is_empty = #buf_contents == 1 and buf_contents[1] == ""
+
+					if is_empty then
+						-- If last buffer is empty, exit Vim completely
+						vim.cmd("qa!")
+					elseif last_buf_modified then
+						-- If modified, ask user to save
+						local choice = vim.fn.confirm("Save changes?", "&Yes\n&No\n&Cancel", 3)
+						if choice == 1 then
+							-- User chose to save, ask for filename
+							local save_path = vim.fn.input("Save as: ", vim.fn.getcwd() .. "/", "file")
+							if save_path and save_path ~= "" then
+								vim.cmd("write! " .. save_path)
+								vim.cmd("quit")
+							end
+						elseif choice == 2 then
+							-- User chose not to save, exit Vim
+							vim.cmd("qa!")
+						end
+					else
+						-- Just exit if last buffer is unnamed but not modified
+						vim.cmd("qa!")
+					end
 				elseif nvim_tree_only then
 					vim.cmd("quit")
-				else -- Otherwise, just delete the buffer
+				else
 					vim.cmd("Bdelete")
 				end
 			end
