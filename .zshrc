@@ -70,6 +70,12 @@ fi
 # Setup Zoxide for easy "cd anywhere"
 eval "$(zoxide init --cmd cd zsh)"
 
+# Setup for direnv local .env files
+eval "$(direnv hook zsh)"
+
+# Setup shellcompletion for uv (a python toolchain manager)
+eval "$(uv generate-shel-completion zsh)"
+
 # this is for Node-Version-Manager not for Nvim. Dont touch it!!!
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
