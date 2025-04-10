@@ -30,10 +30,29 @@ return {
 			end
 
 			-- Setup debug Adapters:
-			-- C, C++ and Rust: (https://github.com/mfussenegger/nvim-dap/wiki/C-C---Rust-(via--codelldb))
 			dap.adapters.codelldb = {
 				type = "executable",
 				command = "codelldb",
+			}
+
+			dap.adapters.bash = {
+				type = "executable",
+				command = vim.fn.expand("~/.local/share/nvim/mason/packages/bash-debug-adapter/bash-debug-adapter"),
+				args = {},
+			}
+
+			-- Bash config
+			dap.configurations.sh = {
+				{
+					name = "Launch Bash Script",
+					type = "bash",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to script: ", vim.fn.getcwd() .. "/", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					terminalKind = "integrated",
+				},
 			}
 
 			-- C Config
@@ -85,12 +104,17 @@ return {
 			local keymap = vim.keymap.set
 			local opts = { noremap = true, silent = true }
 			keymap("n", "<leader>dc", ":DapContinue<CR>", vim.tbl_extend("keep", { desc = "Debugger continue" }, opts))
+			keymap("n", "<leader>dt", ":DapNew<CR>", vim.tbl_extend("keep", { desc = "Debugger new session" }, opts))
 			keymap(
 				"n",
 				"<leader>db",
 				":DapToggleBreakpoint<CR>",
 				vim.tbl_extend("keep", { desc = "Debugger toggle breakpoint" }, opts)
 			)
+			keymap("n", "<leader>dn", ":DapStepOver<CR>", vim.tbl_extend("keep", { desc = "Step Over" }, opts))
+			keymap("n", "<leader>di", ":DapStepInto<CR>", { desc = "Step Into" }, opts)
+			keymap("n", "<leader>do", ":DapStepOut<CR>", { desc = "Step Out" })
+			keymap("n", "<leader>dq", ":DapTerminate<CR>", { desc = "Stop Debugging" }, opts)
 		end,
 	},
 

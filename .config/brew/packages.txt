@@ -12,3 +12,4 @@ rust
 lsd
 tmux
 imagemagick
+direnv
