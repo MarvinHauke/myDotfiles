@@ -97,7 +97,6 @@ keymap.set("n", "K", ":BufferLineCycleNext<CR>")
 keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Run REST query
 
 -- LSP
-keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.hover()<CR>")
 keymap.set("n", "<leader>gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "go to definition" })
 keymap.set("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { desc = "go to declaration" })
 keymap.set("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "go to declaration" })
@@ -112,8 +111,7 @@ keymap.set("n", "<leader>gl", "<cmd>lua vim.diagnostic.open_float()<CR>")
 keymap.set("n", "<leader>gp", "<cmd>lua vim.diagnostic.goto_prev()<CR>")
 keymap.set("n", "<leader>gn", "<cmd>lua vim.diagnostic.goto_next()<CR>")
 keymap.set("n", "<leader>tr", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
-keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.hover()<CR>")
-keymap.set("i", "<C-Space>", "<cmd>lua vim.lsp.buf.completion()<CR>")
+keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "get hover info" })
 
 -- Nvim-dap
 keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
