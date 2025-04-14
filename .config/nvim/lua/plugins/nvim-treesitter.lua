@@ -22,6 +22,7 @@ return {
 			"lua",
 			"bash",
 			"cmake",
+			"make",
 			"cpp",
 			"python",
 			"javascript",
