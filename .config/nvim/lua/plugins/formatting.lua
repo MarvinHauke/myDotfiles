@@ -28,7 +28,7 @@ return {
 				cpp = { "clang-format" },
 				c = { "clang-format" },
 				cmake = { "cmake_format" },
-				make = { "shfmt" },
+				-- make = { "shfmt" }, -- Don´t format makefiles!!!
 				rust = { "rustfmt" },
 				go = { "gofmt" },
 				arduino = { "clang-format" },

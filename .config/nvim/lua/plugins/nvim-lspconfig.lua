@@ -198,7 +198,7 @@ return {
 			end,
 		})
 
-		-- JS LSP settings
+		-- JS/TS LSP settings
 		lspconfig.ts_ls.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
