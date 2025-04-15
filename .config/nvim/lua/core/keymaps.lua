@@ -17,16 +17,16 @@ local keymap = vim.keymap
 --   command_mode = "c",
 
 -- General keymaps
-keymap.set("n", "<leader>bd", ":BufDel<CR>", { desc = "close buffer" }) -- close buffer
-keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" }) -- save and quit
-keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" }) -- quit all open buffers
-keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" }) -- save
+keymap.set("n", "<leader>bd", ":BufDel<CR>", { desc = "close buffer" })
+keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })
+keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" })
+keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })
 
 -- Split window management
-keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" }) -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" }) -- split window horizontally
-keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" }) -- make split windows equal width
-keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" }) -- close split window
+keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })
+keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" })
+keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" })
 
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab
@@ -35,10 +35,10 @@ keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" }) -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" }) -- previous tab
 
 -- Resize with arrows
-keymap.set("n", "<D-Up>", ":resize +2<CR>")
-keymap.set("n", "<D-Down>", ":resize -2<CR>")
-keymap.set("n", "<D-Left>", ":vertical resize +2<CR>")
-keymap.set("n", "<D-Right>", ":vertical resize -2<CR>")
+keymap.set("n", "<Tab>k", ":resize +2<CR>", { desc = "resize up" })
+keymap.set("n", "<Tab>j", ":resize -2<CR>", { desc = "resize down" })
+keymap.set("n", "<Tab>h", ":vertical resize +2<CR>", { desc = "resize left" })
+keymap.set("n", "<Tab>l", ":vertical resize -2<CR>", { desc = "resize right" })
 
 -- Open URL under Cursor
 -- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
