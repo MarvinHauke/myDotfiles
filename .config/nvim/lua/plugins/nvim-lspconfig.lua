@@ -267,20 +267,43 @@ return {
 			on_attach = lsp_attach,
 		})
 
-		-- Makefile linting via efm-lsp
+		-- Define individual languages for efm lsp
+		local checkmake = {
+			lintCommand = "checkmake",
+			lintStdin = true,
+			lintFormats = { "%f:%l:%c: %m" },
+		}
+
+		local shfmt = {
+			formatCommand = "shfmt -i 2 -ci -sr",
+			formatStdin = true,
+		}
+
+		local shellcheck = {
+			lintCommand = "shellcheck",
+			lintStdin = true,
+			lintFormats = { "%f:%l:%c: %m" },
+		}
+
+		local shellharden = {
+			formatCommand = "shellharden --transform",
+			formatStdin = true,
+		}
+
+		-- Setup EFM with structured config
 		lspconfig.efm.setup({
-			init_options = { documentFormatting = true },
-			filetypes = { "make" },
+			init_options = {
+				documentFormatting = true,
+				hover = true,
+				completion = true,
+				diagnostics = true,
+			},
+			filetypes = { "make", "sh" },
 			settings = {
+				rootMarkers = { ".git/" },
 				languages = {
-					make = {
-						{
-							formatCommand = "checkmake",
-							lintCommand = "checkmake",
-							lintStdin = true,
-							lintFormats = { "%f:%l:%c: %m" },
-						},
-					},
+					make = { checkmake }, -- only linting for Makefiles
+					sh = { shellharden, shfmt, shellcheck }, -- formatting and linting for shell
 				},
 			},
 			capabilities = {
