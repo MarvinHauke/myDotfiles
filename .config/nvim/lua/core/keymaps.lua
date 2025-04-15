@@ -47,8 +47,8 @@ keymap.set("n", "<D-Right>", ":vertical resize -2<CR>")
 keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
 keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
 keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
-keymap.set("n", "<leader>cn", "]c") -- next diff hunk
-keymap.set("n", "<leader>cp", "[c") -- previous diff hunk
+keymap.set("n", "<leader>cn", "]c", { desc = "next diff" }) -- next diff hunk
+keymap.set("n", "<leader>cp", "[c", { desc = "prev diff" }) -- previous diff hunk
 
 -- Delete to void Register
 -- keymap.set("n", "<leader>d", '"_dd')
@@ -71,15 +71,15 @@ keymap.set("n", "<leader>p", '"*p')
 keymap.set("v", "<leader>p", '"*p')
 
 -- Clear seach highlighting
-keymap.set("n", "<leader>h", ":nohlsearch<CR>") -- clear search highlight
+keymap.set("n", "<leader>h", ":nohlsearch<CR>", { desc = "clear search highlight" })
 
 -- Lets your Cursor stay in Place while "J"
 -- keymap.set("n", "J", "mzJ`z")
 keymap.set("n", "J", "<NOP>", opts) -- remove J from normal mode
 
 -- Quickfix keymaps
-keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
-keymap.set("n", "<leader>qp", ":cprev<CR>") -- jump to prev quickfix list item
+keymap.set("n", "<leader>qn", ":cnext<CR>", { desc = "quickfix list next" })
+keymap.set("n", "<leader>qp", ":cprev<CR>", { desc = "quickfix list prev" })
 
 -- Vim-maximizer
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle maximize tab
@@ -95,23 +95,6 @@ keymap.set("n", "K", ":BufferLineCycleNext<CR>")
 
 -- Vim REST Console
 keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Run REST query
-
--- LSP
-keymap.set("n", "<leader>gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "go to definition" })
-keymap.set("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { desc = "go to declaration" })
-keymap.set("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "go to implementation" })
-keymap.set("n", "<leader>gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { desc = "go to type definition" })
-keymap.set("n", "<leader>gr", "<cmd>lua vim.lsp.buf.references()<CR>", { desc = "show references" })
-keymap.set("n", "<leader>gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { desc = "show signature help" })
-keymap.set("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "rename" })
-keymap.set("n", "<leader>gf", "<cmd>lua vim.lsp.buf.format({async = true})<CR>", { desc = "format file with lsp" })
-keymap.set("v", "<leader>gf", "<cmd>lua vim.lsp.buf.format({async = true})<CR>", { desc = "format file with lsp" })
-keymap.set("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", { desc = "toggle code action" })
-keymap.set("n", "<leader>gl", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "show diagnostics" })
-keymap.set("n", "<leader>gp", "<cmd>lua vim.diagnostic.goto_prev()<CR>", { desc = "go to prev diagnostic" })
-keymap.set("n", "<leader>gn", "<cmd>lua vim.diagnostic.goto_next()<CR>", { desc = "go to next diagnostic" })
-keymap.set("n", "<leader>tr", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
-keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "get hover info" })
 
 -- Nvim-dap
 keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")

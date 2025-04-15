@@ -44,22 +44,102 @@ return {
 		require("fidget").setup({})
 
 		-- Keybindings for LSPs (works only if lsp is attached to buffer)
-		local lsp_attach =
-			function(client, bufnr)
-				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP Code Action" })
-				vim.keymap.set({ "n", "v" }, "<leader>j", function()
-					vim.diagnostic.open_float(nil, { focusable = false, border = "rounded" })
-				end, { desc = "Show Line Diagnostics" })
+		local lsp_attach = function(client, bufnr)
+			local keymap = vim.keymap.set
+			local opts = { noremap = true, silent = true, buffer = bufnr }
+
+			-- LSP navigation
+			keymap(
+				"n",
+				"<leader>gd",
+				vim.lsp.buf.definition,
+				vim.tbl_extend("force", opts, { desc = "Go to Definition" })
+			)
+			keymap(
+				"n",
+				"<leader>gD",
+				vim.lsp.buf.declaration,
+				vim.tbl_extend("force", opts, { desc = "Go to Declaration" })
+			)
+			keymap(
+				"n",
+				"<leader>gi",
+				vim.lsp.buf.implementation,
+				vim.tbl_extend("force", opts, { desc = "Go to Implementation" })
+			)
+			keymap(
+				"n",
+				"<leader>gt",
+				vim.lsp.buf.type_definition,
+				vim.tbl_extend("force", opts, { desc = "Go to Type Definition" })
+			)
+			keymap(
+				"n",
+				"<leader>gr",
+				vim.lsp.buf.references,
+				vim.tbl_extend("force", opts, { desc = "Show References" })
+			)
+			keymap(
+				"n",
+				"<leader>gs",
+				vim.lsp.buf.signature_help,
+				vim.tbl_extend("force", opts, { desc = "Signature Help" })
+			)
+
+			-- Actions
+			keymap("n", "<leader>rr", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename Symbol" }))
+			keymap({ "n", "v" }, "<leader>gf", function()
+				vim.lsp.buf.format({ async = true })
+			end, vim.tbl_extend("force", opts, { desc = "Format File" }))
+			keymap("n", "<leader>ga", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code Action" }))
+			keymap(
+				"n",
+				"<leader>ca",
+				vim.lsp.buf.code_action,
+				vim.tbl_extend("force", opts, { desc = "LSP Code Action" })
+			) -- optional dup
+
+			-- Diagnostics
+			keymap(
+				"n",
+				"<leader>gl",
+				vim.diagnostic.open_float,
+				vim.tbl_extend("force", opts, { desc = "Show Line Diagnostics" })
+			)
+			keymap(
+				"n",
+				"<leader>gp",
+				vim.diagnostic.goto_prev,
+				vim.tbl_extend("force", opts, { desc = "Previous Diagnostic" })
+			)
+			keymap(
+				"n",
+				"<leader>gn",
+				vim.diagnostic.goto_next,
+				vim.tbl_extend("force", opts, { desc = "Next Diagnostic" })
+			)
+			keymap("n", "<leader>j", function()
+				vim.diagnostic.open_float(nil, { focusable = false, border = "rounded" })
+			end, vim.tbl_extend("force", opts, { desc = "Show Line Diagnostics (rounded)" }))
+
+			-- Misc
+			keymap(
+				"n",
+				"<leader>tr",
+				vim.lsp.buf.document_symbol,
+				vim.tbl_extend("force", opts, { desc = "Document Symbols" })
+			)
+			keymap("n", "<leader>k", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover Info" }))
+		end
+		-- Call setup on each LSP server
+		require("mason-lspconfig").setup_handlers({
+			function(server_name)
+				lspconfig[server_name].setup({
+					on_attach = lsp_attach,
+					capabilities = lsp_capabilities,
+				})
 			end,
-			-- Call setup on each LSP server
-			require("mason-lspconfig").setup_handlers({
-				function(server_name)
-					lspconfig[server_name].setup({
-						on_attach = lsp_attach,
-						capabilities = lsp_capabilities,
-					})
-				end,
-			})
+		})
 
 		mason_tool_installer.setup({
 			ensure_installed = {
@@ -309,6 +389,7 @@ return {
 			capabilities = {
 				offsetEncoding = { "utf-8" },
 			},
+			on_attach = lsp_attach,
 		})
 	end,
 }
