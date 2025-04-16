@@ -47,8 +47,8 @@ keymap.set("n", "<Tab>l", ":vertical resize -2<CR>", { desc = "resize right" })
 keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
 keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) during merge
 keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
-keymap.set("n", "<leader>cn", "]c", { desc = "next diff" }) -- next diff hunk
-keymap.set("n", "<leader>cp", "[c", { desc = "prev diff" }) -- previous diff hunk
+keymap.set("n", "<leader>cn", "]c", { desc = "next diff" })
+keymap.set("n", "<leader>cp", "[c", { desc = "prev diff" })
 
 -- Delete to void Register
 -- keymap.set("n", "<leader>d", '"_dd')
@@ -63,15 +63,15 @@ keymap.set("v", "<", "<gv", opts)
 keymap.set("v", ">", ">gv", opts)
 
 -- Copy to clipboard
-keymap.set("n", "<leader>y", '"*yy')
-keymap.set("v", "<leader>y", '"*y')
+keymap.set("n", "<leader>y", '"*yy', { desc = "copy to clipboard" })
+keymap.set("v", "<leader>y", '"*y', { desc = "copy to clipboard" })
 
 -- Paste from clipboard
-keymap.set("n", "<leader>p", '"*p')
-keymap.set("v", "<leader>p", '"*p')
+keymap.set("n", "<leader>p", '"*p', { desc = "paste from clipboard" })
+keymap.set("v", "<leader>p", '"*p', { desc = "paste from clipboard" })
 
 -- Clear seach highlighting
-keymap.set("n", "<leader>h", ":nohlsearch<CR>", { desc = "clear search highlight" })
+keymap.set("n", "<leader>hl", ":nohlsearch<CR>", { desc = "clear search highlight" })
 
 -- Lets your Cursor stay in Place while "J"
 -- keymap.set("n", "J", "mzJ`z")
@@ -85,27 +85,35 @@ keymap.set("n", "<leader>qp", ":cprev<CR>", { desc = "quickfix list prev" })
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle maximize tab
 
 -- Git-blame
-keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>") -- toggle git blame
-
---Bufferdelete
+keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>", { desc = "GitBlameToggle" })
 
 -- Bufferline
 keymap.set("n", "J", ":BufferLineCyclePrev<CR>")
 keymap.set("n", "K", ":BufferLineCycleNext<CR>")
 
 -- Vim REST Console
-keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Run REST query
+keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>", { desc = "run REST query" })
 
 -- Nvim-dap
-keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
-keymap.set("n", "<leader>bc", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>")
-keymap.set("n", "<leader>bl", "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<cr>")
-keymap.set("n", "<leader>br", "<cmd>lua require'dap'.clear_breakpoints()<cr>")
-keymap.set("n", "<leader>ba", "<cmd>Telescope dap list_breakpoints<cr>")
-keymap.set("n", "<leader>dc", "<cmd>lua require'dap'.continue()<cr>")
-keymap.set("n", "<leader>dj", "<cmd>lua require'dap'.step_over()<cr>")
-keymap.set("n", "<leader>dk", "<cmd>lua require'dap'.step_into()<cr>")
-keymap.set("n", "<leader>do", "<cmd>lua require'dap'.step_out()<cr>")
+keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>", { desc = "set Breakpoint" })
+keymap.set(
+	"n",
+	"<leader>bc",
+	"<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>",
+	{ desc = "set Breakpoint description" }
+)
+keymap.set(
+	"n",
+	"<leader>bl",
+	"<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<cr>",
+	{ desc = "set Breakpoint Log message" }
+)
+keymap.set("n", "<leader>br", "<cmd>lua require'dap'.clear_breakpoints()<cr>", { desc = "clear breakpoint" })
+keymap.set("n", "<leader>ba", "<cmd>Telescope dap list_breakpoints<cr>", { desc = "list breakpoints" })
+keymap.set("n", "<leader>dc", "<cmd>lua require'dap'.continue()<cr>", { desc = "dap continue" })
+keymap.set("n", "<leader>dj", "<cmd>lua require'dap'.step_over()<cr>", { desc = "dap setop over" })
+keymap.set("n", "<leader>dk", "<cmd>lua require'dap'.step_into()<cr>", { desc = "dap step into" })
+keymap.set("n", "<leader>do", "<cmd>lua require'dap'.step_out()<cr>", { desc = "dap step out" })
 
 keymap.set("n", "<leader>dd", function()
 	require("dap").disconnect()
