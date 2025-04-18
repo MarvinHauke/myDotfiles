@@ -33,12 +33,12 @@ keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open 
 keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "close tab" }) -- close a tab
 keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" }) -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" }) -- previous tab
-
--- Resize with arrows
-keymap.set("n", "<Tab>k", ":resize +2<CR>", { desc = "resize up" })
-keymap.set("n", "<Tab>j", ":resize -2<CR>", { desc = "resize down" })
-keymap.set("n", "<Tab>h", ":vertical resize +2<CR>", { desc = "resize left" })
-keymap.set("n", "<Tab>l", ":vertical resize -2<CR>", { desc = "resize right" })
+--
+-- -- Resize with arrows
+-- keymap.set("n", "<Tab>k", ":resize +2<CR>", { desc = "resize up" })
+-- keymap.set("n", "<Tab>j", ":resize -2<CR>", { desc = "resize down" })
+-- keymap.set("n", "<Tab>h", ":vertical resize +2<CR>", { desc = "resize left" })
+-- keymap.set("n", "<Tab>l", ":vertical resize -2<CR>", { desc = "resize right" })
 
 -- Open URL under Cursor
 -- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default

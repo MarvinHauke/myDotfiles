@@ -30,6 +30,7 @@ return {
 			"vimdoc",
 			"html",
 			"norg",
+			"markdown",
 		},
 	},
 	config = function(_, opts)

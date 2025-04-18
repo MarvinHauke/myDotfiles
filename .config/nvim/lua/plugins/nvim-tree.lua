@@ -32,7 +32,7 @@ return {
 
 				-- Custom key mappings for nvim-tree-preview:
 				local preview = require("nvim-tree-preview")
-				-- vim.keymap.set("n", "p", preview.watch, opts("Open Preview"))
+				vim.keymap.set("n", "p", preview.watch, opts("Open Preview"))
 				vim.keymap.set("n", "<CTRL-k>", function()
 					return preview.scroll(4)
 				end, opts("Scroll Down"))
