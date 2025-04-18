@@ -6,6 +6,8 @@ return {
 			"theHamsta/nvim-dap-virtual-text",
 			"jay-babu/mason-nvim-dap.nvim",
 			"williamboman/mason.nvim",
+			"nvim-neotest/nvim-nio",
+			"jbyuki/one-small-step-for-vimkind",
 		},
 		config = function()
 			local dap = require("dap")
@@ -52,6 +54,24 @@ return {
 					end,
 					cwd = "${workspaceFolder}",
 					terminalKind = "integrated",
+				},
+			}
+
+			-- Use overseer for running preLaunchTask and postDebugTask.
+			-- require("overseer").patch_dap(true)
+			-- require("dap.ext.vscode").json_decode = require("overseer.json").decode
+
+			-- Lua Config
+
+			dap.adapters.nlua = function(callback, config)
+				callback({ type = "server", host = config.host or "127.0.0.1", port = config.port or 8086 })
+			end
+
+			dap.configurations["lua"] = {
+				{
+					type = "nlua",
+					request = "attach",
+					name = "Attach to running Neovim instance",
 				},
 			}
 
@@ -104,7 +124,7 @@ return {
 			local keymap = vim.keymap.set
 			local opts = { noremap = true, silent = true }
 			keymap("n", "<leader>dc", ":DapContinue<CR>", vim.tbl_extend("keep", { desc = "Debugger continue" }, opts))
-			keymap("n", "<leader>dt", ":DapNew<CR>", vim.tbl_extend("keep", { desc = "Debugger new session" }, opts))
+			keymap("n", "<leader>dd", ":DapNew<CR>", vim.tbl_extend("keep", { desc = "Debugger new session" }, opts))
 			keymap(
 				"n",
 				"<leader>db",
@@ -115,18 +135,24 @@ return {
 			keymap("n", "<leader>di", ":DapStepInto<CR>", { desc = "Step Into" }, opts)
 			keymap("n", "<leader>do", ":DapStepOut<CR>", { desc = "Step Out" })
 			keymap("n", "<leader>dq", ":DapTerminate<CR>", { desc = "Stop Debugging" }, opts)
+			keymap("n", "<leader>dl", function()
+				require("osv").launch({ port = 8086 })
+			end, { desc = "launch Lua Debugserver" }, opts)
 		end,
 	},
 
 	-- This is required to configure debuggers with mason-nvim-dap
+	-- load this after all adapters have been setup
 	{
 		"jay-babu/mason-nvim-dap.nvim",
 		event = "VeryLazy",
 		dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
 		opts = {
+
 			handlers = {},
 			ensure_installed = {
 				"codelldb",
+				"osv",
 			},
 		},
 	},
