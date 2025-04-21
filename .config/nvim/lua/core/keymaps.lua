@@ -7,6 +7,7 @@
 local opts = { noremap = true, silent = true }
 local term_opts = { slient = true }
 local keymap = vim.keymap
+local utils = require("core.utils")
 
 -- Modes:
 --   normal_mode = "n",
@@ -33,15 +34,9 @@ keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open 
 keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "close tab" }) -- close a tab
 keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" }) -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" }) -- previous tab
---
--- -- Resize with arrows
--- keymap.set("n", "<Tab>k", ":resize +2<CR>", { desc = "resize up" })
--- keymap.set("n", "<Tab>j", ":resize -2<CR>", { desc = "resize down" })
--- keymap.set("n", "<Tab>h", ":vertical resize +2<CR>", { desc = "resize left" })
--- keymap.set("n", "<Tab>l", ":vertical resize -2<CR>", { desc = "resize right" })
 
--- Open URL under Cursor
--- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
+-- Utils from core.utils
+keymap.set("n", "ge", utils.open_command_with_filepath, { desc = "open current path in cmd" })
 
 -- Diff keymaps
 keymap.set("n", "<leader>cc", ":diffput<CR>") -- put diff from current to other during diff
@@ -49,10 +44,6 @@ keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) du
 keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
 keymap.set("n", "<leader>cn", "]c", { desc = "next diff" })
 keymap.set("n", "<leader>cp", "[c", { desc = "prev diff" })
-
--- Delete to void Register
--- keymap.set("n", "<leader>d", '"_dd')
--- keymap.set("v", "<leader>d", '"_d')
 
 -- Move lines in Visual Mode
 keymap.set("v", "J", ":m '>+1<CR>gv=gv")
