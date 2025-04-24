@@ -27,6 +27,7 @@ opt.cursorline = true
 
 -- Appearance
 opt.termguicolors = true
+require("nvim-highlight-colors").setup({})
 opt.background = "dark"
 opt.signcolumn = "yes"
 
@@ -44,11 +45,11 @@ opt.splitbelow = true
 opt.iskeyword:append("-")
 
 --This goes to "~/.vim/undodir"
-opt.undodir = vim.fn.stdpath('config') .. '\\undodir'
+opt.undodir = vim.fn.stdpath("config") .. "\\undodir"
 opt.undofile = true
 
-vim.cmd [[ set noswapfile ]]
-vim.cmd [[ set termguicolors ]]
+vim.cmd([[ set noswapfile ]])
+vim.cmd([[ set termguicolors ]])
 
 -- Folding
 opt.foldlevel = 20
