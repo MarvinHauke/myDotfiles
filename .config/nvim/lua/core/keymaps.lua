@@ -18,7 +18,6 @@ local utils = require("core.utils")
 --   command_mode = "c",
 
 -- General keymaps
-keymap.set("n", "<leader>bd", ":BufDel<CR>", { desc = "close buffer" })
 keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })
 keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" })
 keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })
@@ -27,7 +26,7 @@ keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })
 keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })
 keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" })
-keymap.set("n", "<leader>sx", ":close<CR>", { desc = "close current split window" })
+keymap.set("n", "<leader>sc", ":close<CR>", { desc = "close current split window" })
 
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab
