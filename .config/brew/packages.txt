@@ -14,3 +14,4 @@ tmux
 imagemagick
 direnv
 uv
+zathura
