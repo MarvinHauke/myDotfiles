@@ -41,6 +41,7 @@ alias src='source $ZSH'
 alias notes='nvim $HOME/Notizen'
 alias lsusb='cyme'
 alias :q='exit'
+alias -s pdf='zathura --fork'
 
 # Define the config alias
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'

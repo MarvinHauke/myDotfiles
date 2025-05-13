@@ -210,16 +210,16 @@ return {
 		})
 
 		-- ccls LSP settings
-		lspconfig.ccls.setup({
-			init_options = {
-				compilationDatabaseDirectory = ".pio/build/",
-				index = { threads = 4 },
-				clang = {
-					extraArgs = { "-I", ".pio/libdeps/", "-I", ".pio/build/" },
-					resourceDir = "",
-				},
-			},
-		})
+		-- lspconfig.ccls.setup({
+		-- 	init_options = {
+		-- 		compilationDatabaseDirectory = ".pio/build/",
+		-- 		index = { threads = 4 },
+		-- 		clang = {
+		-- 			extraArgs = { "-I", ".pio/libdeps/", "-I", ".pio/build/" },
+		-- 			resourceDir = "",
+		-- 		},
+		-- 	},
+		-- })
 
 		-- C++ LSP settings
 		lspconfig.clangd.setup({
@@ -229,17 +229,10 @@ return {
 			cmd = {
 				"clangd",
 				"--background-index",
-				"-j=12",
-				"--query-driver=**",
 				"--clang-tidy",
-				"--all-scopes-completion",
-				"--cross-file-rename",
 				"--completion-style=detailed",
-				"--header-insertion-decorators",
-				"--header-insertion=iwyu",
 				"--pch-storage=memory",
-				"--suggest-missing-includes",
-				-- "--clang-format-style=LLVM", -- adds the prefered formatting style change this to Google|Chromium|GNU|Microsoft
+				"--all-scopes-completion",
 			},
 		})
 
