@@ -4,8 +4,8 @@ return {
 	event = "VeryLazy",
 	dependencies = {
 		-- LSP Management
-		"williamboman/mason.nvim", -- https://github.com/williamboman/mason.nvim
-		"williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
+		"mason-org/mason.nvim", -- https://github.com/williamboman/mason.nvim
+		"mason-org/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
 		"WhoIsSethDaniel/mason-tool-installer.nvim", -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
 		"hrsh7th/cmp-nvim-lsp", -- LSP completion capabilities
 
@@ -21,8 +21,8 @@ return {
 			ensure_installed = {
 				-- Update this list to the language servers you need installed
 				"bashls",
-				"lua_ls",
-				"clangd",
+				-- "lua_ls",
+				-- "clangd", -- provided systemwide Not by Mason
 				"jsonls",
 				"lemminx",
 				"marksman",
@@ -30,11 +30,11 @@ return {
 				"lemminx",
 				"quick_lint_js",
 				"cssls",
-				"tailwindcss",
 				"html",
 				"svelte",
 				"rust_analyzer",
-				"ruff",
+				"efm",
+				"cmake",
 			},
 			automatic_installation = true,
 		})
@@ -131,15 +131,6 @@ return {
 			)
 			keymap("n", "<leader>k", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover Info" }))
 		end
-		-- Call setup on each LSP server
-		require("mason-lspconfig").setup_handlers({
-			function(server_name)
-				lspconfig[server_name].setup({
-					on_attach = lsp_attach,
-					capabilities = lsp_capabilities,
-				})
-			end,
-		})
 
 		mason_tool_installer.setup({
 			ensure_installed = {
@@ -180,13 +171,13 @@ return {
 		lspconfig.bashls.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
-			filetypes = { "sh", "zsh", "bash", "dosbatch" }, -- Standard filetypes
+			filetypes = { "sh", "bash", "dosbatch" }, -- Standard filetypes
 			root_dir = function(fname)
 				-- Match `.{foo}rc` files and attach the LSP
 				if fname:match(".*%.%w+rc$") then
 					return vim.fn.getcwd() -- Attach in current directory for dotfiles
 				end
-				return lspconfig.util.find_git_ancestor(fname) -- Otherwise, use Git root
+				return vim.fs.dirname(fname)
 			end,
 		})
 
@@ -209,18 +200,6 @@ return {
 			on_attach = lsp_attach,
 		})
 
-		-- ccls LSP settings
-		-- lspconfig.ccls.setup({
-		-- 	init_options = {
-		-- 		compilationDatabaseDirectory = ".pio/build/",
-		-- 		index = { threads = 4 },
-		-- 		clang = {
-		-- 			extraArgs = { "-I", ".pio/libdeps/", "-I", ".pio/build/" },
-		-- 			resourceDir = "",
-		-- 		},
-		-- 	},
-		-- })
-
 		-- C++ LSP settings
 		lspconfig.clangd.setup({
 			on_attach = lsp_attach,
@@ -236,17 +215,14 @@ return {
 			},
 		})
 
-		-- Python ruff linter
-		lspconfig.ruff.setup({
+		-- -- Python LSP settings (removed in favor of ruff)
+		lspconfig.pyright.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
 		})
-
-		-- -- Python LSP settings (removed in favor of ruff)
-		-- lspconfig.pyright.setup({
-		-- 	capabilities = lsp_capabilities,
-		-- 	on_attach = lsp_attach,
-		-- })
+		vim.lsp.config("ruff", {
+			settings = {},
+		})
 
 		lspconfig.rust_analyzer.setup({
 			capabilities = lsp_capabilities,
@@ -363,6 +339,12 @@ return {
 			formatStdin = true,
 		}
 
+		local languages = {
+			zsh = { shellcheck, shfmt, shellharden },
+			make = { checkmake }, -- only linting for Makefiles
+			sh = { shellharden, shfmt, shellcheck }, -- formatting and linting for shell
+		}
+
 		-- Setup EFM with structured config
 		lspconfig.efm.setup({
 			init_options = {
@@ -371,13 +353,10 @@ return {
 				completion = true,
 				diagnostics = true,
 			},
-			filetypes = { "make", "sh" },
+			filetypes = vim.tbl_keys(languages),
 			settings = {
 				rootMarkers = { ".git/" },
-				languages = {
-					make = { checkmake }, -- only linting for Makefiles
-					sh = { shellharden, shfmt, shellcheck }, -- formatting and linting for shell
-				},
+				languages = languages,
 			},
 			capabilities = {
 				offsetEncoding = { "utf-8" },

@@ -27,9 +27,19 @@ keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })
 keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" })
 keymap.set("n", "<leader>sc", ":close<CR>", { desc = "close current split window" })
+
+-- Close command-line and search windows with Esc
 vim.api.nvim_create_autocmd("CmdwinEnter", {
 	callback = function()
 		vim.keymap.set("n", "<Esc>", "<C-c><C-c>", { buffer = true, desc = "Close command-line window" })
+	end,
+})
+
+-- Handle search-history (q/) window as well
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "qf",
+	callback = function()
+		vim.keymap.set("n", "<Esc>", "<C-c><C-c>", { buffer = true, desc = "Close search-history window" })
 	end,
 })
 
