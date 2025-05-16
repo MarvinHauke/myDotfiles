@@ -13,6 +13,9 @@ export XDG_CONFIG_HOME="$HOME/.config"
 eval "$(starship init zsh)"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
+export EDITOR=nvim
+export VISUAL=nvim
+
 # load plugins with zap
 plug "zap-zsh/zsh-syntax-highlighting"        # adds syntax-highlighting to shell commands
 plug "zap-zsh/zsh-autosuggestions"            # adds autosuggestions to shell commands
@@ -25,6 +28,9 @@ plug "MichaelAquilina/zsh-you-should-use"     # shows aliases you should use ins
 plug "kutsan/zsh-system-clipboard"            # https://github.com/kutsan/zsh-system-clipboard
 plug "aloxaf/fzf-tab"                         # Use fzf for tab completion https://github.com/aloxaf/zsh-fzf-tab
 plug "Freed-Wu/fzf-tab-source"                # Additional sources for fzf-tab https://github.com/Fred-Wu/fzf-tab-source
+
+# add fzf keybindings to shell
+source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
 # some more ls aliases
 alias ll='ls -alF'
@@ -85,3 +91,5 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+
+export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/MacOs/bin
