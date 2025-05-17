@@ -26,7 +26,30 @@ keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })
 keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })
 keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "make split windows equal width" })
-keymap.set("n", "<leader>sc", ":close<CR>", { desc = "close current split window" })
+keymap.set("n", "<leader><Esc>", ":close<CR>", { desc = "close current split window" })
+
+-- Close command-line windows with Esc
+vim.api.nvim_create_autocmd("CmdwinEnter", {
+	callback = function()
+		vim.keymap.set("n", "<Esc>", ":close<CR>", { buffer = true, desc = "Close command-line window" })
+	end,
+})
+
+-- Close search-history (q/) window as well
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "qf",
+	callback = function()
+		vim.keymap.set("n", "<Esc>", ":close<CR>", { buffer = true, desc = "Close search-history window" })
+	end,
+})
+
+-- Close quickfix-window and help-window
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "qf", "help" },
+	callback = function()
+		vim.keymap.set("n", "<Esc>", ":close<CR>", { buffer = true, desc = "Close search-history window" })
+	end,
+})
 
 -- Tab management
 keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab

@@ -10,7 +10,7 @@ return {
 
 		lint.linters_by_ft = {
 			cpp = { "cpplint" },
-			c = { "cpplint" },
+			c = { "clangtidy" },
 			cmake = { "cmakelint" },
 			make = { "checkmake" },
 			javascript = { "eslint_d" },
