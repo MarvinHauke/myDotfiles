@@ -18,7 +18,7 @@ return {
 			javascriptreact = { "eslint_d" },
 			typescriptreact = { "eslint_d" },
 			svelte = { "eslint_d" },
-			python = { "pylint" },
+			python = { "ruff" },
 			shellcheck = { "shellcheck" },
 			bash = { "shellcheck", "shellharden" },
 		}

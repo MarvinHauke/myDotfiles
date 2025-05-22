@@ -15,32 +15,29 @@ return {
 			lualine_a = { "mode" },
 			lualine_b = { "branch" },
 			lualine_c = {
+				"diagnostics",
 				{
-					-- Display LSP clients attached to the buffer with language-specific icons
+					-- TODO: use lsp progress
+					-- Display LSP clients attached to the buffer
 					function()
-						local bufnr = vim.api.nvim_get_current_buf()
-						local clients = vim.lsp.get_clients({ bufnr = bufnr })
-						if next(clients) == nil then
-							return ""
+						local icon, _ =
+							require("nvim-web-devicons").get_icon_by_filetype(vim.bo.filetype, { default = true })
+						local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+
+						if not clients or vim.tbl_isempty(clients) then
+							return icon or ""
 						end
 
-						-- Get filetype of the current buffer
-						local filetype = vim.bo.filetype
-						local devicons = require("nvim-web-devicons")
-						local icon, color = devicons.get_icon_color_by_filetype(filetype)
-
-						local c = {}
-						for _, client in pairs(clients) do
-							-- Use the fetched icon if available; otherwise, fallback to a gear icon
-							local display_icon = icon or ""
-							table.insert(c, display_icon .. " " .. client.name)
+						local names = {}
+						for _, client in ipairs(clients) do
+							table.insert(names, client.name)
 						end
 
-						return table.concat(c, " | ")
+						return string.format("%s %s", icon or "", table.concat(names, " | "))
 					end,
 					color = function()
-						local filetype = vim.bo.filetype
-						local _, color = require("nvim-web-devicons").get_icon_color_by_filetype(filetype)
+						local _, color =
+							require("nvim-web-devicons").get_icon_color_by_filetype(vim.bo.filetype, { default = true })
 						return { fg = color or "#98c379", gui = "bold" }
 					end,
 				},
