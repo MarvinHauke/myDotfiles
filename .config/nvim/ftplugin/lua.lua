@@ -9,4 +9,3 @@ vim.opt_local.softtabstop = 4
 -- Optional: smarter indentation
 vim.opt_local.smartindent = true
 vim.opt_local.autoindent = true
-vim.notify("Loaded lua filetype settings")
