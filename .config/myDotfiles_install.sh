@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # Clone the bare repo
 git clone --bare git@github.com:MarvinHauke/myDotfiles.git "$HOME"/.cfg
@@ -43,12 +43,15 @@ if [[ -f "$HOME/.config/brew/packages.txt" ]]; then
   xargs brew install <"$HOME/.config/brew/packages.txt"
 else
   echo "No package list found at ~/.config/brew/packages.txt"
+
 fi
 
 # Install Homebrew cask packages
-if [[ -f "$HOME/.config/brew/cask-packages.txt" ]]; then
-  echo "Installing Brew Cask packages..."
-  xargs brew install --cask <"$HOME/.config/brew/cask-packages.txt"
-else
-  echo "No cask package list found at ~/.config/brew/cask-packages.txt"
+if [[ "$branch" == "macos" ]]; then
+  if [[ -f "$HOME/.config/brew/cask-packages.txt" ]]; then
+    echo "Installing Brew Cask packages..."
+    xargs brew install --cask <"$HOME/.config/brew/cask-packages.txt"
+  else
+    echo "No cask package list found at ~/.config/brew/cask-packages.txt"
+  fi
 fi

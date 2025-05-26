@@ -10,3 +10,4 @@ vim.keymap.set("n", "k", "gk")
 -- Spell check
 -- vim.opt.spelllang = 'en_us'
 -- vim.opt.spell = true
+vim.notify("Loaded md filetype settings")

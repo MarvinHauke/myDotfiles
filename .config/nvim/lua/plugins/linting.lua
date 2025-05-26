@@ -19,8 +19,9 @@ return {
 			typescriptreact = { "eslint_d" },
 			svelte = { "eslint_d" },
 			python = { "ruff" },
-			shellcheck = { "shellcheck" },
-			bash = { "shellcheck", "shellharden" },
+			-- shellCheck = { "shellcheck" },
+			-- bash = { "bash" },
+			-- zsh = { "zsh" },
 		}
 
 		-- Autocommand for triggering linting
