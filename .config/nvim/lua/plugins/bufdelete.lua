@@ -23,7 +23,7 @@ return {
 				-- Handle unnamed buffers
 				if last_buf_name == "" then
 					local buf_contents = vim.api.nvim_buf_get_lines(last_buf, 0, -1, false)
-					local is_empty = #buf_contents == 1 and buf_contents[1] == ""
+					local is_empty = buf_contents == 1 and buf_contents[1] == ""
 
 					if is_empty then
 						-- If last buffer is empty, exit Vim completely
