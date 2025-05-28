@@ -26,13 +26,16 @@ return {
 			},
 		},
 	},
+
 	vim.api.nvim_create_user_command("Nvc", function()
 		require("telescope.builtin").find_files({
 			prompt_title = "< Neovim Config >",
-			cwd = vim.fn.expand("$HOME") .. "/AppData/Local/nvim",
-			search_dirs = { vim.fn.expand("$HOME") .. "/AppData/Local/nvim" },
+			cwd = vim.fn.expand("$HOME") .. "/.config/nvim",
+			search_dirs = { vim.fn.expand("$HOME") .. "/.config/nvim" },
 		})
 	end, {}),
+
+	-- keymaps for telescope
 	keys = {
 		{ "<leader>ff", ":Telescope find_files<cr>", desc = "find files" },
 		{ "<leader>fg", ":Telescope live_grep<cr>", desc = "live grep" },
@@ -42,10 +45,17 @@ return {
 		{ "<leader>fs", ":Telescope current_buffer_fuzzy_find<cr>", desc = "current buffer fuzzy find" },
 		{ "<leader>fo", ":Telescope lsp_document_symbols<cr>", desc = "lsp document symbols" },
 		{ "<leader>fi", ":Telescope lsp_incoming_calls<cr>", desc = "lsp incoming calls" },
-		{ "<leader>nv", "<cmd>Nvc<cr>", desc = "search in neovim config" },
-
-		vim.keymap.set("n", "<leader>fm", function()
-			require("telescope.builtin").treesitter({ default_text = ":method:" })
-		end),
+		{ "<leader>nv", ":Nvc<cr>", desc = "search in neovim config" },
+		-- find methods in current buffer with treesitter
+		{
+			"<leader>fm",
+			function()
+				require("telescope.builtin").treesitter({ default_text = ":method:" })
+			end,
+			desc = "treesitter method search",
+		},
+		-- 	vim.keymap.set("n", "<leader>fm", function()
+		-- 		require("telescope.builtin").treesitter({ default_text = ":method:" })
+		-- 	end),
 	},
 }

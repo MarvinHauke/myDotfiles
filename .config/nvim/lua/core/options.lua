@@ -27,7 +27,6 @@ opt.cursorline = true
 
 -- Appearance
 opt.termguicolors = true
-require("nvim-highlight-colors").setup({})
 opt.background = "dark"
 opt.signcolumn = "yes"
 
@@ -55,3 +54,6 @@ vim.cmd([[ set termguicolors ]])
 opt.foldlevel = 20
 opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()" -- Utilize Treesitter folds
+
+-- This makes is so that o doesn't add comment and a regular newline
+opt.formatoptions:remove("o")

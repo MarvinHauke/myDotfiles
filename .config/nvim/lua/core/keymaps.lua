@@ -52,8 +52,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Tab management
-keymap.set("n", "<leader>to", ":tabnew<CR>", { desc = "open new tab" }) -- open a new tab
-keymap.set("n", "<leader>tx", ":tabclose<CR>", { desc = "close tab" }) -- close a tab
 keymap.set("n", "<leader>tn", ":tabn<CR>", { desc = "next tab" }) -- next tab
 keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "previous tab" }) -- previous tab
 

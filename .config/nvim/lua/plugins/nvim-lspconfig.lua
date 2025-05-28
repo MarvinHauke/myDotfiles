@@ -156,6 +156,12 @@ return {
 			on_attach = lsp_attach,
 		})
 
+		-- CSS LSP settings
+		lspconfig.cssls.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
+
 		-- C++ LSP settings
 		lspconfig.clangd.setup({
 			on_attach = lsp_attach,
@@ -243,53 +249,5 @@ return {
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
 		})
-
-		-- 	-- Define individual languages for efm lsp
-		-- 	local checkmake = {
-		-- 		lintCommand = "checkmake",
-		-- 		lintStdin = true,
-		-- 		lintFormats = { "%f:%l:%c: %m" },
-		-- 	}
-		--
-		-- 	local shfmt = {
-		-- 		formatCommand = "shfmt -i 2 -ci -sr",
-		-- 		formatStdin = true,
-		-- 	}
-		--
-		-- 	local shellcheck = {
-		-- 		lintCommand = "shellcheck",
-		-- 		lintStdin = true,
-		-- 		lintFormats = { "%f:%l:%c: %m" },
-		-- 	}
-		--
-		-- 	local shellharden = {
-		-- 		formatCommand = "shellharden --transform",
-		-- 		formatStdin = true,
-		-- 	}
-		--
-		-- 	local languages = {
-		-- 		zsh = { shellcheck, shfmt, shellharden },
-		-- 		make = { checkmake }, -- only linting for Makefiles
-		-- 		sh = { shellharden, shfmt, shellcheck }, -- formatting and linting for shell
-		-- 	}
-		--
-		-- 	-- Setup EFM with structured config
-		-- 	lspconfig.efm.setup({
-		-- 		init_options = {
-		-- 			documentFormatting = true,
-		-- 			hover = true,
-		-- 			completion = true,
-		-- 			diagnostics = true,
-		-- 		},
-		-- 		filetypes = vim.tbl_keys(languages),
-		-- 		settings = {
-		-- 			rootMarkers = { ".git/" },
-		-- 			languages = languages,
-		-- 		},
-		-- 		capabilities = {
-		-- 			offsetEncoding = { "utf-8" },
-		-- 		},
-		-- 		on_attach = lsp_attach,
-		-- 	})
 	end,
 }

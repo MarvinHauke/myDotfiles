@@ -1,4 +1,4 @@
--- Code Tree Support / Syntax Highlighting
+-- | Code Tree Support / Syntax Highlighting |
 return {
 	-- https://github.com/nvim-treesitter/nvim-treesitter
 	"nvim-treesitter/nvim-treesitter",
@@ -7,7 +7,6 @@ return {
 		-- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		-- https://github.com/nvim-treesitter/playground
-		"nvim-treesitter/playground",
 	},
 	build = ":TSUpdate",
 	opts = {
@@ -18,12 +17,12 @@ return {
 		auto_install = true, -- automatically install syntax support when entering new file type buffer
 		ensure_installed = {
 			"arduino",
-			"c",
-			"lua",
 			"bash",
-			"cmake",
-			"make",
+			"c",
 			"cpp",
+			"cmake",
+			"lua",
+			"make",
 			"python",
 			"javascript",
 			"vim",
