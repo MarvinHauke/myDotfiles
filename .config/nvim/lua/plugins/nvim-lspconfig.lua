@@ -1,7 +1,7 @@
 return {
 	-- LSP Configuration
 	"neovim/nvim-lspconfig", -- https://github.com/neovim/nvim-lspconfig
-	event = "VeryLazy",
+	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		-- LSP Management
 		"mason-org/mason.nvim", -- https://github.com/williamboman/mason.nvim
@@ -21,7 +21,6 @@ return {
 		require("mason-lspconfig").setup({
 			ensure_installed = {
 				-- Update this list to the language servers you need installed
-				"bashls",
 				-- "lua_ls",
 				-- "clangd", -- provided systemwide Not by Mason
 				"lemminx",
@@ -33,7 +32,6 @@ return {
 				"html",
 				"svelte",
 				"rust_analyzer",
-				"efm",
 				"cmake",
 			},
 			automatic_installation = { exclude = { "jsonls" } },
@@ -43,95 +41,50 @@ return {
 		local mason_tool_installer = require("mason-tool-installer")
 		require("fidget").setup({})
 
-		-- Keybindings for LSPs (works only if lsp is attached to buffer)
 		local lsp_attach = function(client, bufnr)
-			local keymap = vim.keymap.set
-			local opts = { noremap = true, silent = true, buffer = bufnr }
+			local map = function(mode, keys, func, desc)
+				vim.keymap.set(mode, keys, func, {
+					noremap = true,
+					silent = true,
+					buffer = bufnr,
+					desc = desc,
+				})
+			end
 
-			-- LSP navigation
-			keymap(
-				"n",
-				"<leader>gd",
-				vim.lsp.buf.definition,
-				vim.tbl_extend("force", opts, { desc = "Go to Definition" })
-			)
-			keymap(
-				"n",
-				"<leader>gD",
-				vim.lsp.buf.declaration,
-				vim.tbl_extend("force", opts, { desc = "Go to Declaration" })
-			)
-			keymap(
-				"n",
-				"<leader>gi",
-				vim.lsp.buf.implementation,
-				vim.tbl_extend("force", opts, { desc = "Go to Implementation" })
-			)
-			keymap(
-				"n",
-				"<leader>gt",
-				vim.lsp.buf.type_definition,
-				vim.tbl_extend("force", opts, { desc = "Go to Type Definition" })
-			)
-			keymap(
-				"n",
-				"<leader>gr",
-				vim.lsp.buf.references,
-				vim.tbl_extend("force", opts, { desc = "Show References" })
-			)
-			keymap(
-				"n",
-				"<leader>gs",
-				vim.lsp.buf.signature_help,
-				vim.tbl_extend("force", opts, { desc = "Signature Help" })
-			)
+			-- LSP: Navigation
+			map("n", "<leader>gd", vim.lsp.buf.definition, "Go to Definition")
+			map("n", "<leader>gD", vim.lsp.buf.declaration, "Go to Declaration")
+			map("n", "<leader>gi", vim.lsp.buf.implementation, "Go to Implementation")
+			map("n", "<leader>gt", vim.lsp.buf.type_definition, "Go to Type Definition")
+			map("n", "<leader>gr", vim.lsp.buf.references, "Show References")
+			map("n", "<leader>gs", vim.lsp.buf.signature_help, "Signature Help")
+			map("n", "<leader>k", vim.lsp.buf.hover, "Hover Info")
 
-			-- Actions
-			keymap("n", "<leader>rr", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename Symbol" }))
-			keymap({ "n", "v" }, "<leader>gf", function()
-				vim.lsp.buf.format({ async = true })
-			end, vim.tbl_extend("force", opts, { desc = "Format File" }))
-			keymap("n", "<leader>ga", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code Action" }))
-			keymap(
-				"n",
-				"<leader>ca",
-				vim.lsp.buf.code_action,
-				vim.tbl_extend("force", opts, { desc = "LSP Code Action" })
-			) -- optional dup
+			-- LSP: Actions
+			map("n", "<leader>rr", vim.lsp.buf.rename, "Rename Symbol")
+			map("n", "<leader>ga", vim.lsp.buf.code_action, "Code Action")
+			map("n", "<leader>ca", vim.lsp.buf.code_action, "LSP Code Action")
 
-			-- Diagnostics
-			keymap(
-				"n",
-				"<leader>gl",
-				vim.diagnostic.open_float,
-				vim.tbl_extend("force", opts, { desc = "Show Line Diagnostics" })
-			)
-			keymap(
-				"n",
-				"<leader>gp",
-				vim.diagnostic.goto_prev,
-				vim.tbl_extend("force", opts, { desc = "Previous Diagnostic" })
-			)
-			keymap(
-				"n",
-				"<leader>gn",
-				vim.diagnostic.goto_next,
-				vim.tbl_extend("force", opts, { desc = "Next Diagnostic" })
-			)
-			keymap("n", "<leader>j", function()
+			-- Format (safe fallback for async)
+			map({ "n", "v" }, "<leader>gf", function()
+				if client.supports_method("textDocument/formatting") then
+					vim.lsp.buf.format({ async = true })
+				end
+			end, "Format File")
+
+			-- LSP: Diagnostics
+			map("n", "<leader>gl", vim.diagnostic.open_float, "Show Line Diagnostics")
+			map("n", "<leader>gp", vim.diagnostic.goto_prev, "Previous Diagnostic")
+			map("n", "<leader>gn", vim.diagnostic.goto_next, "Next Diagnostic")
+			map("n", "<leader>j", function()
 				vim.diagnostic.open_float(nil, { focusable = false, border = "rounded" })
-			end, vim.tbl_extend("force", opts, { desc = "Show Line Diagnostics (rounded)" }))
+			end, "Show Line Diagnostics (rounded)")
 
-			-- Misc
-			keymap(
-				"n",
-				"<leader>tr",
-				vim.lsp.buf.document_symbol,
-				vim.tbl_extend("force", opts, { desc = "Document Symbols" })
-			)
-			keymap("n", "<leader>k", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover Info" }))
+			-- LSP: Symbols
+			map("n", "<leader>tr", vim.lsp.buf.document_symbol, "Document Symbols")
 		end
 
+		-- Mason tool installer
 		mason_tool_installer.setup({
 			ensure_installed = {
 				"prettier", -- prettier formatter
@@ -171,14 +124,17 @@ return {
 		lspconfig.bashls.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
-			filetypes = { "sh", "bash", "dosbatch" }, -- Standard filetypes
+			cmd = { "bash-language-server", "start" },
+			filetypes = { "bash", "sh" },
 			root_dir = function(fname)
-				-- Match `.{foo}rc` files and attach the LSP
-				if fname:match(".*%.%w+rc$") then
-					return vim.fn.getcwd() -- Attach in current directory for dotfiles
-				end
-				return vim.fs.dirname(fname)
+				-- Try to find a .git or fallback to CWD
+				return util.root_pattern(".git")(fname) or vim.fn.getcwd()
 			end,
+			settings = {
+				bashIde = {
+					globPattern = "*@(.sh|.inc|.bash|.command)",
+				},
+			},
 		})
 
 		-- PowerShell LSP settings
@@ -200,11 +156,17 @@ return {
 			on_attach = lsp_attach,
 		})
 
+		-- CSS LSP settings
+		lspconfig.cssls.setup({
+			capabilities = lsp_capabilities,
+			on_attach = lsp_attach,
+		})
+
 		-- C++ LSP settings
 		lspconfig.clangd.setup({
 			on_attach = lsp_attach,
 			capabilities = lsp_capabilities,
-			root_dir = require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
+			root_dir = util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
 			cmd = {
 				"clangd",
 				"--background-index",
@@ -215,12 +177,10 @@ return {
 			},
 		})
 
-		-- -- Python LSP settings (removed in favor of ruff)
-		lspconfig.pyright.setup({
-			capabilities = lsp_capabilities,
-			on_attach = lsp_attach,
-		})
+		-- Python LSP settings
 		vim.lsp.config("ruff", {
+			on_attach = lsp_attach,
+			capabilities = lsp_capabilities,
 			settings = {},
 		})
 
@@ -287,54 +247,6 @@ return {
 		-- CMakeLists
 		lspconfig.cmake.setup({
 			capabilities = lsp_capabilities,
-			on_attach = lsp_attach,
-		})
-
-		-- Define individual languages for efm lsp
-		local checkmake = {
-			lintCommand = "checkmake",
-			lintStdin = true,
-			lintFormats = { "%f:%l:%c: %m" },
-		}
-
-		local shfmt = {
-			formatCommand = "shfmt -i 2 -ci -sr",
-			formatStdin = true,
-		}
-
-		local shellcheck = {
-			lintCommand = "shellcheck",
-			lintStdin = true,
-			lintFormats = { "%f:%l:%c: %m" },
-		}
-
-		local shellharden = {
-			formatCommand = "shellharden --transform",
-			formatStdin = true,
-		}
-
-		local languages = {
-			zsh = { shellcheck, shfmt, shellharden },
-			make = { checkmake }, -- only linting for Makefiles
-			sh = { shellharden, shfmt, shellcheck }, -- formatting and linting for shell
-		}
-
-		-- Setup EFM with structured config
-		lspconfig.efm.setup({
-			init_options = {
-				documentFormatting = true,
-				hover = true,
-				completion = true,
-				diagnostics = true,
-			},
-			filetypes = vim.tbl_keys(languages),
-			settings = {
-				rootMarkers = { ".git/" },
-				languages = languages,
-			},
-			capabilities = {
-				offsetEncoding = { "utf-8" },
-			},
 			on_attach = lsp_attach,
 		})
 	end,
