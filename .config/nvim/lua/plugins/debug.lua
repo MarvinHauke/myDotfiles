@@ -56,7 +56,7 @@ return {
 					configFiles = { "${workspaceFolder}/FirstProject/openocd/connect.cfg" },
 					gdbTarget = "localhost:3333",
 					rttConfig = cortex.rtt_config(0), -- use RTT channel 0 for console
-					showDevDebugOutput = true,
+					showDevDebugOutput = false,
 					toolchainPath = "/opt/homebrew/bin", -- change this to your toolchain path
 				}),
 			}
@@ -170,8 +170,12 @@ return {
 			keymap("n", "<leader>dq", ":DapTerminate<CR>", { desc = "Stop Debugging", noremap = true, silent = true })
 			-- stylua: ignore end
 
+			keymap("n", "<leader>?", function()
+				dapui.eval(nil, { enter = true })
+			end, { desc = "eval var under cursor" })
+
 			keymap("n", "<leader>da", function()
-				require("dap").continue()
+				dap.continue()
 			end, { desc = "Dap attach", noremap = true })
 
 			keymap("n", "<leader>du", function()
