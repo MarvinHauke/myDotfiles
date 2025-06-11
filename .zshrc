@@ -13,6 +13,19 @@ export XDG_CONFIG_HOME="$HOME/.config"
 eval "$(starship init zsh)"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
+# Load .env file if it exists
+load_env() {
+  if [ -f "$HOME/.env" ]; then
+    export "$(grep -v '^#' "$HOME/.env" | xargs)"
+    echo "✓ Loaded environment variables from ~/.env"
+  else
+    echo "⚠ No .env file found at ~/.env"
+  fi
+}
+
+# Call the function
+load_env
+
 export EDITOR=nvim
 export VISUAL=nvim
 

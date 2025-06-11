@@ -1,61 +1,131 @@
 return {
 	"famiu/bufdelete.nvim",
 	config = function()
-		vim.api.nvim_create_user_command("Q", function()
-			local buffers = vim.api.nvim_list_bufs()
-			local listed_buffers = vim.tbl_filter(function(buf)
-				return vim.api.nvim_buf_get_option(buf, "buflisted")
-			end, buffers)
+		local function get_listed_buffers()
+			return vim.tbl_filter(function(buf)
+				return vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted
+			end, vim.api.nvim_list_bufs())
+		end
 
-			if #listed_buffers > 1 then
-				vim.cmd("Bdelete")
-			else
-				-- Get the last buffer info
-				local last_buf = listed_buffers[1] or buffers[1] -- Use fallback buffer
-				local last_buf_name = last_buf and vim.api.nvim_buf_get_name(last_buf) or ""
-				local last_buf_modified = vim.api.nvim_buf_get_option(last_buf, "modified")
+		local function is_buffer_empty(buf)
+			if not vim.api.nvim_buf_is_valid(buf) then
+				return true
+			end
+			local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+			return #lines == 1 and lines[1] == ""
+		end
 
-				-- Check if only nvim-tree is open
-				local open_windows = vim.api.nvim_tabpage_list_wins(0)
-				local nvim_tree_only = #open_windows == 1
-					and vim.bo[vim.api.nvim_win_get_buf(open_windows[1])].filetype == "NvimTree"
-
-				-- Handle unnamed buffers
-				if last_buf_name == "" then
-					local buf_contents = vim.api.nvim_buf_get_lines(last_buf, 0, -1, false)
-					local is_empty = buf_contents == 1 and buf_contents[1] == ""
-
-					if is_empty then
-						-- If last buffer is empty, exit Vim completely
-						vim.cmd("qa!")
-					elseif last_buf_modified then
-						-- If modified, ask user to save
-						local choice = vim.fn.confirm("Save changes?", "&Yes\n&No\n&Cancel", 3)
-						if choice == 1 then
-							-- User chose to save, ask for filename
-							local save_path = vim.fn.input("Save as: ", vim.fn.getcwd() .. "/", "file")
-							if save_path and save_path ~= "" then
-								vim.cmd("write! " .. save_path)
-								vim.cmd("quit")
-							end
-						elseif choice == 2 then
-							-- User chose not to save, exit Vim
-							vim.cmd("qa!")
-						end
-					else
-						-- Just exit if last buffer is unnamed but not modified
-						vim.cmd("qa!")
-					end
-				elseif nvim_tree_only then
-					vim.cmd("quit")
-				else
-					vim.cmd("Bdelete")
+		local function is_only_special_buffers_open()
+			local wins = vim.api.nvim_tabpage_list_wins(0)
+			for _, win in ipairs(wins) do
+				local buf = vim.api.nvim_win_get_buf(win)
+				local ft = vim.bo[buf].filetype
+				-- Check for common special buffer types
+				if
+					ft ~= "NvimTree"
+					and ft ~= "neo-tree"
+					and ft ~= "oil"
+					and ft ~= "help"
+					and ft ~= "qf"
+					and ft ~= "trouble"
+				then
+					return false
 				end
 			end
-		end, {})
+			return true
+		end
 
-		-- Make `q` an alias for `Q`, and `q!` an alias for `Bwipeout`
-		vim.cmd("cabbrev Q! Bwipeout")
+		local function handle_unsaved_buffer(buf)
+			local buf_name = vim.api.nvim_buf_get_name(buf)
+			local display_name = buf_name ~= "" and vim.fn.fnamemodify(buf_name, ":t") or "[No Name]"
+
+			local choice =
+				vim.fn.confirm(string.format('Save changes to "%s"?', display_name), "&Save\n&Don't Save\n&Cancel", 1)
+
+			if choice == 1 then -- Save
+				if buf_name == "" then
+					-- Prompt for filename for unnamed buffer
+					local save_path = vim.fn.input("Save as: ", vim.fn.getcwd() .. "/", "file")
+					if save_path and save_path ~= "" then
+						vim.cmd("write! " .. vim.fn.fnameescape(save_path))
+						return true
+					else
+						return false -- User cancelled save dialog
+					end
+				else
+					vim.cmd("write!")
+					return true
+				end
+			elseif choice == 2 then -- Don't save
+				return true
+			else -- Cancel
+				return false
+			end
+		end
+
+		vim.api.nvim_create_user_command("Q", function()
+			local listed_buffers = get_listed_buffers()
+
+			-- If multiple buffers, just delete current one
+			if #listed_buffers > 1 then
+				-- Check if current buffer has unsaved changes
+				local current_buf = vim.api.nvim_get_current_buf()
+				if vim.bo[current_buf].modified then
+					if not handle_unsaved_buffer(current_buf) then
+						return -- User cancelled
+					end
+				end
+				vim.cmd("Bdelete")
+				return
+			end
+
+			-- Handle single buffer case
+			local last_buf = listed_buffers[1]
+			if not last_buf then
+				vim.cmd("quit") -- No valid buffers, just quit
+				return
+			end
+
+			local buf_name = vim.api.nvim_buf_get_name(last_buf)
+			local is_modified = vim.bo[last_buf].modified
+
+			-- Handle unsaved changes
+			if is_modified then
+				if not handle_unsaved_buffer(last_buf) then
+					return -- User cancelled
+				end
+			end
+
+			-- Check if only special buffers (file explorers, etc.) are open
+			if is_only_special_buffers_open() then
+				vim.cmd("quit")
+				return
+			end
+
+			-- For unnamed empty buffers, quit Vim entirely
+			if buf_name == "" and is_buffer_empty(last_buf) then
+				vim.cmd("quit")
+			else
+				-- Try to delete buffer, fallback to quit if it fails
+				local ok = pcall(vim.cmd, "Bdelete")
+				if not ok then
+					vim.cmd("quit")
+				end
+			end
+		end, { desc = "Smart buffer delete or quit" })
+
+		-- Create QForce command for force wipeout
+		vim.api.nvim_create_user_command("QForce", function()
+			local listed_buffers = get_listed_buffers()
+			if #listed_buffers > 1 then
+				vim.cmd("Bwipeout!")
+			else
+				vim.cmd("quit!")
+			end
+		end, { desc = "Force buffer wipeout or quit" })
+
+		-- Set up command aliases
 		vim.cmd("cabbrev q Q")
+		vim.cmd("cabbrev q! QForce")
 	end,
 }
