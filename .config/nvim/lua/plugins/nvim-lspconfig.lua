@@ -33,6 +33,7 @@ return {
 				"svelte",
 				"rust_analyzer",
 				"cmake",
+				-- "bashls",
 			},
 			automatic_installation = { exclude = { "jsonls" } },
 		})
@@ -84,6 +85,25 @@ return {
 			map("n", "<leader>tr", vim.lsp.buf.document_symbol, "Document Symbols")
 		end
 
+		-- Enhanced lsp_attach for bash files
+		local bash_lsp_attach = function(client, bufnr)
+			lsp_attach(client, bufnr) -- Call the standard attach function
+
+			local map = function(mode, keys, func, desc)
+				vim.keymap.set(mode, keys, func, {
+					noremap = true,
+					silent = true,
+					buffer = bufnr,
+					desc = desc,
+				})
+			end
+
+			-- Bash-specific keymaps
+			map("n", "<leader>le", "<cmd>!shellcheck %<CR>", "Lint with shellcheck")
+			map("n", "<leader>lx", "<cmd>!chmod +x %<CR>", "Make executable")
+			map("n", "<leader>lr", "<cmd>!bash %<CR>", "Run bash script")
+		end
+
 		-- Mason tool installer
 		mason_tool_installer.setup({
 			ensure_installed = {
@@ -92,13 +112,18 @@ return {
 				"isort", -- python formatter
 				"black", -- python formatter
 				"pylint", -- python linter
-				"prittier", -- js formatter
+
+				"prettier", -- js formatter
 				"eslint_d", -- js linter
 				"shellharden",
 				"shfmt",
 				"shellcheck",
+				-- "bash-language-server", -- not needed, installed systemwide
 			},
 		})
+
+		-- Setup none-ls
+
 		local util = require("lspconfig.util")
 
 		-- Lua LSP settings
@@ -120,23 +145,44 @@ return {
 			},
 		})
 
-		-- Bash LSP settings
+		-- -- Bash LSP settings ( old settings)
+		-- lspconfig.bashls.setup({
+		-- 	capabilities = lsp_capabilities,
+		-- 	on_attach = lsp_attach,
+		-- 	cmd = { "bash-language-server", "start" },
+		-- 	filetypes = { "bash", "sh", "zsh" },
+		-- 	root_dir = function(fname)
+		-- 		-- Try to find a .git or fallback to CWD
+		-- 		return util.root_pattern(".git")(fname) or vim.fn.getcwd()
+		-- 	end,
+		-- 	settings = {
+		-- 		bashIde = {
+		-- 			globPattern = "*@(.sh|.inc|.bash|.command)",
+		-- 		},
+		-- 	},
+		-- })
+
+		-- Enhanced Bash LSP settings (TODO: testi it and validate)
 		lspconfig.bashls.setup({
 			capabilities = lsp_capabilities,
-			on_attach = lsp_attach,
+			on_attach = bash_lsp_attach, -- Use enhanced attach function
 			cmd = { "bash-language-server", "start" },
-			filetypes = { "bash", "sh" },
+			filetypes = { "bash", "sh", "zsh" },
 			root_dir = function(fname)
-				-- Try to find a .git or fallback to CWD
-				return util.root_pattern(".git")(fname) or vim.fn.getcwd()
+				-- Better root detection
+				return util.root_pattern(".git", ".bashrc", ".zshrc", ".bash_profile", "package.json")(fname)
+					or util.path.dirname(fname)
 			end,
 			settings = {
 				bashIde = {
-					globPattern = "*@(.sh|.inc|.bash|.command)",
+					-- Expanded glob pattern for better file detection
+					globPattern = "*@(.sh|.inc|.bash|.command|.zsh|.bashrc|.bash_profile|.bash_aliases|.zshrc|.profile)",
+					-- Enable additional features
+					enableSourceErrorDiagnostics = true,
+					explainshellEndpoint = "https://explainshell.com/explain",
 				},
 			},
 		})
-
 		-- PowerShell LSP settings
 		lspconfig.powershell_es.setup({
 			capabilities = lsp_capabilities,
@@ -248,6 +294,14 @@ return {
 		lspconfig.cmake.setup({
 			capabilities = lsp_capabilities,
 			on_attach = lsp_attach,
+		})
+
+		-- Auto-detect shell script filetypes for files without extensions
+		vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+			pattern = { ".bashrc", ".bash_profile", ".bash_aliases", ".zshrc", ".profile", ".bash_logout" },
+			callback = function()
+				vim.bo.filetype = "bash"
+			end,
 		})
 	end,
 }
