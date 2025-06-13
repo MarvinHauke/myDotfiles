@@ -7,7 +7,7 @@
 local opts = { noremap = true, silent = true }
 local term_opts = { slient = true }
 local keymap = vim.keymap
-local utils = require("core.utils")
+local utils = require("helper.utils")
 
 -- Modes:
 --   normal_mode = "n",
