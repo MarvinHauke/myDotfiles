@@ -52,6 +52,13 @@ return {
 						readonly = "[-]", -- Text to show when the file is readonly.
 					},
 				},
+				{
+					-- Shows dotfiles Icon
+					function()
+						return require("dotfiles").statusline()
+					end,
+					color = { fg = "#f7768e" },
+				},
 			},
 			lualine_x = { "encoding", "fileformat", "filetype" },
 			lualine_y = { "progress" },

@@ -1,41 +1,41 @@
 return {
 	dir = "~/Development/lua/dotfiles.nvim",
 	name = "dotfiles.nvim",
-	config = function()
-		require("dotfiles").setup({
-			-- Git directory for dotfiles (bare repo)
-			git_dir = os.getenv("HOME") .. "/.cfg",
-
-			-- Working tree (usually home directory)
-			work_tree = os.getenv("HOME"),
-
-			-- Auto-refresh cache when dotfiles directory changes
-			auto_refresh = true,
-
-			-- Show notifications
-			notifications = true,
-
-			-- Auto-detect dotfiles on buffer enter
-			auto_detect = true,
-
-			-- Keymaps
-			keymaps = {
-				enable = true,
-				prefix = "<leader>d",
-				mappings = {
-					list = "f", -- <leader>df - List dotfiles
-					check = "c", -- <leader>dc - Check if current file is dotfile
-					add = "a", -- <leader>da - Add current file to dotfiles
-					status = "s", -- <leader>ds - Show dotfiles status
-					refresh = "r", -- <leader>dr - Refresh cache
-				},
-			},
-
-			-- Statusline integration
-			statusline = {
-				enable = true,
-				icon = "📁",
-			},
-		})
-	end,
+	-- Disabled because of double loading
+	-- config = function()
+	-- require("dotfiles").setup({
+	-- 		-- Git directory for dotfiles (bare repo)
+	-- 		git_dir = os.getenv("HOME") .. "/.cfg",
+	--
+	-- 		-- Working tree (usually home directory)
+	-- 		work_tree = os.getenv("HOME"),
+	--
+	-- 		-- Auto-refresh cache when dotfiles directory changes
+	-- 		auto_refresh = true,
+	--
+	-- 		-- Show notifications
+	-- 		notifications = true,
+	--
+	-- 		-- Auto-detect dotfiles on buffer enter
+	-- 		auto_detect = true,
+	--
+	-- Keymaps --conflict with dap and are not needed
+	-- keymaps = {
+	-- enable = false,
+	-- 	prefix = "<leader>d",
+	-- 	mappings = {
+	-- 		list = "f", -- <leader>df - List dotfiles
+	-- 		check = "c", -- <leader>dc - Check if current file is dotfile
+	-- 		add = "a", -- <leader>da - Add current file to dotfiles
+	-- 		status = "s", -- <leader>ds - Show dotfiles status
+	-- 		refresh = "r", -- <leader>dr - Refresh cache
+	-- 	},
+	-- },
+	-- Statusline integration
+	-- 		statusline = {
+	-- 			enable = false,
+	-- 			icon = "📁",
+	-- 		},
+	-- 	})
+	-- end,
 }
