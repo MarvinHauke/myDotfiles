@@ -103,9 +103,24 @@ plug "Freed-Wu/fzf-tab-source"            # Additional sources for fzf-tab https
 # =============================================================================
 # COMPLETION SYSTEM
 # =============================================================================
-
 # Initialize completion system
 autoload -U compinit && compinit
+
+# Custom function to accept autosuggestion or clear screen
+accept-suggestion-or-clear() {
+    if [[ -n $POSTDISPLAY ]]; then
+        # If there's an autosuggestion, accept it
+        zle autosuggest-accept
+    else
+        # If no autosuggestion, clear screen
+        zle clear-screen
+    fi
+}
+# Create a widget from the function
+zle -N accept-suggestion-or-clear
+# Bind Ctrl+L to the custom function
+bindkey '^L' accept-suggestion-or-clear
+
 
 # # Completion styling (TODO: not tested, check incremantaly)
 # zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case-insensitive
@@ -116,6 +131,7 @@ autoload -U compinit && compinit
 
 # zstyle ':fzf-tab:*' fzf-flags --height=50% --reverse --border
 # zstyle ':fzf-tab:*' continuous-trigger 'right'
+#
 
 # =============================================================================
 # ZSH OPTIONS (TODO: not tested, check incremantaly)
