@@ -17,12 +17,13 @@ return {
 					"lemminx",
 					"marksman",
 					"powershell_es",
-					"quick_lint_js",
+					-- "quick_lint_js",
 					"cssls",
 					"html",
 					"svelte",
 					"rust_analyzer",
 					"cmake",
+					-- "typescript-language-server",
 				},
 				automatic_installation = { exclude = { "jsonls" } },
 			})
@@ -134,6 +135,7 @@ return {
 			require("plugins.lsp.markup")
 			require("plugins.lsp.powershell")
 			require("plugins.lsp.cmake")
+			require("plugins.lsp.js")
 
 			-- Auto-detect shell script filetypes
 			vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {

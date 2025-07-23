@@ -121,10 +121,11 @@ return {
 			end
 
 			-- Optional: Add endwise support for Ruby, Lua, etc.
-			-- Uncomment if you want auto-completion for 'end' statements
 			local endwise = require("nvim-autopairs.ts-rule").endwise
 			npairs.add_rule(endwise("then$", "end", "lua", "if_statement"))
 			npairs.add_rule(endwise("do$", "end", "lua", "function_definition"))
+			-- For C/C++/Java block comments
+			npairs.add_rule(Rule("/*", "*/", { "c", "cpp", "java" }))
 		end,
 	},
 }
