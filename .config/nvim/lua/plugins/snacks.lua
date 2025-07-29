@@ -4,6 +4,7 @@ return {
 	lazy = false,
 	opts = {
 		bigfile = { enabled = true },
+		bufdelete = { enabled = true },
 		dashboard = { enabled = false },
 		explorer = { enabled = false },
 		indent = { enabled = true },
@@ -23,6 +24,15 @@ return {
 			notification = {
 				-- wo = { wrap = true } -- Wrap notifications
 			},
+		},
+	},
+	keys = {
+		{
+			"<leader>bd",
+			function()
+				Snacks.bufdelete.all()
+			end,
+			desc = "Delete Buffer",
 		},
 	},
 }

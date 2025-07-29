@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "dotfiles": {
+      "command": "/Users/pforsten/.local/bin/uv",
+      "args": [
+        "run",
+        "--project",
+        "/Users/pforsten/Development/python/dotfiles-mcp",
+        "python",
+        "/Users/pforsten/Development/python/dotfiles-mcp/src/main.py"
+      ]
+    },
+    "mcp-svelte-docs": {
+      "command": "npx",
+      "args": ["-y", "mcp-svelte-docs"]
+    },
+    "AbletonMCP": {
+      "command": "/Users/pforsten/.local/bin/uvx",
+      "args": ["ableton-mcp"]
+    }
+  }
+}

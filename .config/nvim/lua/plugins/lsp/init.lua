@@ -15,7 +15,7 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = {
 					"lemminx",
-					"marksman",
+					-- "marksman",
 					"powershell_es",
 					-- "quick_lint_js",
 					"cssls",
