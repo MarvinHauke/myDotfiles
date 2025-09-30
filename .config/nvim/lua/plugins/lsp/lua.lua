@@ -1,7 +1,6 @@
 -- Lua LSP Configuration
-local lspconfig = require("lspconfig")
 
-lspconfig.lua_ls.setup({
+vim.lsp.config("lua_ls", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = _G.lsp_common.lsp_attach,
 	settings = {
@@ -18,3 +17,5 @@ lspconfig.lua_ls.setup({
 		},
 	},
 })
+
+vim.lsp.enable("lua_ls")

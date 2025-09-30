@@ -13,8 +13,10 @@ vim.opt_local.wrap = true
 vim.opt_local.linebreak = true
 
 -- Folding
-vim.opt_local.foldmethod = "indent"
-vim.opt_local.foldlevel = 99
+-- handled by ufo
+-- vim.opt_local.foldmethod = "expr"
+-- vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- vim.opt_local.foldlevel = 99
 
 -- Display
 vim.opt_local.number = true

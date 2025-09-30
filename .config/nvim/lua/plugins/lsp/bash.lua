@@ -1,6 +1,4 @@
 -- Bash LSP Configuration
-local lspconfig = require("lspconfig")
-local util = require("lspconfig.util")
 
 -- Enhanced lsp_attach for bash files
 local bash_lsp_attach = function(client, bufnr)
@@ -27,15 +25,12 @@ local bash_lsp_attach = function(client, bufnr)
 end
 
 -- Enhanced Bash LSP settings
-lspconfig.bashls.setup({
+vim.lsp.config("bashls", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = bash_lsp_attach,
 	cmd = { "bash-language-server", "start" },
 	filetypes = { "bash", "sh", "zsh" },
-	root_dir = function(fname)
-		return util.root_pattern(".git", ".bashrc", ".zshrc", ".bash_profile", "package.json")(fname)
-			or util.path.dirname(fname)
-	end,
+	root_dir = vim.fs.root(0, { ".git", ".bashrc", ".zshrc", ".bash_profile", "package.json" }),
 	settings = {
 		bashIde = {
 			globPattern = "*@(.sh|.inc|.bash|.command|.zsh|.bashrc|.bash_profile|.bash_aliases|.zshrc|.profile)",
@@ -44,3 +39,5 @@ lspconfig.bashls.setup({
 		},
 	},
 })
+
+vim.lsp.enable("bashls")

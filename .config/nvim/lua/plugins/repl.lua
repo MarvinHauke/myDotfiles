@@ -27,10 +27,12 @@ return {
 						command = { "lua" },
 						block_dividers = { "-- %%", "--%%" },
 					},
+					-- ✅ Add Node.js REPL (JavaScript)
+					javascript = {
+						command = { "node" },
+						block_dividers = { "// %%", "//%%" },
+					},
 				},
-				-- set the file type of the newly created repl to ft
-				-- bufnr is the buffer id of the REPL and ft is the filetype of the
-				-- language being used for the REPL.
 				repl_filetype = function(bufnr, ft)
 					return ft
 					-- or return a string name such as the following

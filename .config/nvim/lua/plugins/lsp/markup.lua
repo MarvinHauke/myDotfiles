@@ -1,8 +1,7 @@
 -- Markup Language LSP Configuration
-local lspconfig = require("lspconfig")
 
 -- YAML LSP settings
-lspconfig.yamlls.setup({
+vim.lsp.config("yamlls", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = _G.lsp_common.lsp_attach,
 	settings = {
@@ -16,14 +15,20 @@ lspconfig.yamlls.setup({
 	},
 })
 
+vim.lsp.enable("yamlls")
+
 -- Markdown LSP settings
-lspconfig.marksman.setup({
+vim.lsp.config("marksman", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = _G.lsp_common.lsp_attach,
 })
 
+vim.lsp.enable("marksman")
+
 -- XML LSP settings
-lspconfig.lemminx.setup({
+vim.lsp.config("lemminx", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = _G.lsp_common.lsp_attach,
 })
+
+vim.lsp.enable("lemminx")

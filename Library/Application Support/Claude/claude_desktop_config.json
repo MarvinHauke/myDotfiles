@@ -1,0 +1,45 @@
+{
+  "mcpServers": {
+    "dotfiles": {
+      "command": "/Users/pforsten/.local/bin/uv",
+      "args": [
+        "run",
+        "--project",
+        "/Users/pforsten/Development/python/dotfiles-mcp",
+        "python",
+        "/Users/pforsten/Development/python/dotfiles-mcp/src/main.py"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/pforsten/Development",
+        "/Users/pforsten/.config/",
+        "/Users/pforsten/Downloads/",
+        "/Users/pforsten/Library/Logs/Claude/"
+      ]
+    },
+    "mcp-svelte-docs": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-svelte-docs"
+      ]
+    },
+    "Context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "AbletonMCP": {
+      "command": "/Users/pforsten/.local/bin/uvx",
+      "args": [
+        "ableton-mcp"
+      ]
+    }
+  }
+}

@@ -1,14 +1,12 @@
 -- Rust LSP Configuration
-local lspconfig = require("lspconfig")
-local util = require("lspconfig.util")
-
-lspconfig.rust_analyzer.setup({
+vim.lsp.config("rust_analyzer", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = _G.lsp_common.lsp_attach,
 	filetypes = { "rust" },
 	settings = {
 		["rust-analyzer"] = {
-			checkOnSave = {
+			checkOnSave = true,
+			check = {
 				command = "clippy",
 			},
 			cargo = {
@@ -20,7 +18,7 @@ lspconfig.rust_analyzer.setup({
 			},
 		},
 	},
-	root_dir = function(fname)
-		return util.root_pattern("Cargo.toml", "rust-project.json")(fname) or vim.fn.getcwd()
-	end,
+	root_dir = vim.fs.root(0, { "Cargo.toml", "rust-project.json" }),
 })
+
+vim.lsp.enable("rust_analyzer")
