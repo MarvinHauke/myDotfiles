@@ -1,11 +1,8 @@
 -- C/C++ LSP Configuration
-local lspconfig = require("lspconfig")
-local util = require("lspconfig.util")
-
-lspconfig.clangd.setup({
+vim.lsp.config("clangd", {
 	on_attach = _G.lsp_common.lsp_attach,
 	capabilities = _G.lsp_common.lsp_capabilities,
-	root_dir = util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
+	root_dir = vim.fs.root(0, { "compile_commands.json", "compile_flags.txt", ".git" }),
 	cmd = {
 		"clangd",
 		"--background-index",
@@ -15,3 +12,5 @@ lspconfig.clangd.setup({
 		"--all-scopes-completion",
 	},
 })
+
+vim.lsp.enable("clangd")

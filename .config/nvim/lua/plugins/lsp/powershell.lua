@@ -1,7 +1,5 @@
 -- PowerShell LSP Configuration
-local lspconfig = require("lspconfig")
-
-lspconfig.powershell_es.setup({
+vim.lsp.config("powershell_es", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = _G.lsp_common.lsp_attach,
 	settings = {
@@ -12,3 +10,5 @@ lspconfig.powershell_es.setup({
 		},
 	},
 })
+
+vim.lsp.enable("powershell_es")

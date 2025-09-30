@@ -51,9 +51,7 @@ vim.cmd([[ set noswapfile ]])
 vim.cmd([[ set termguicolors ]])
 
 -- Folding
-opt.foldlevel = 20
-opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()" -- Utilize Treesitter folds
+--managed by ufo.lua
 
 -- This makes is so that o doesn't add comment and a regular newline
 opt.formatoptions:remove("o")

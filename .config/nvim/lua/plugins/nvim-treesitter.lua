@@ -14,6 +14,7 @@ return {
 			enable = true,
 		},
 		indent = { enable = true },
+		fold = { enable = true },
 		auto_install = true, -- automatically install syntax support when entering new file type buffer
 		ensure_installed = {
 			"arduino",
@@ -30,6 +31,7 @@ return {
 			"html",
 			"norg",
 			"markdown",
+			"json",
 		},
 	},
 	config = function(_, opts)

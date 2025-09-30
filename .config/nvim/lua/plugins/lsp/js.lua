@@ -1,6 +1,4 @@
 -- JavaScript/TypeScript LSP Configuration
-local lspconfig = require("lspconfig")
-local util = require("lspconfig.util")
 
 -- Custom on_attach for JavaScript
 local js_lsp_attach = function(client, bufnr)
@@ -25,7 +23,7 @@ local js_lsp_attach = function(client, bufnr)
 end
 
 -- Setup tsserver (JS/TS support)
-lspconfig.ts_ls.setup({
+vim.lsp.config("ts_ls", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = function(client, bufnr)
 		-- Disable tsserver formatting if using prettier/eslint
@@ -40,5 +38,7 @@ lspconfig.ts_ls.setup({
 		"typescriptreact",
 		"typescript.tsx",
 	},
-	root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
+	root_dir = vim.fs.root(0, { "tsconfig.json", "package.json", ".git" }),
 })
+
+vim.lsp.enable("ts_ls")
