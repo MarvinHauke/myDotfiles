@@ -1,5 +1,9 @@
 {
   "mcpServers": {
+    "bash": {
+      "command": "npx",
+      "args": ["bash-mcp"]
+    },
     "dotfiles": {
       "command": "/Users/pforsten/.local/bin/uv",
       "args": [
@@ -10,36 +14,17 @@
         "/Users/pforsten/Development/python/dotfiles-mcp/src/main.py"
       ]
     },
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/pforsten/Development",
-        "/Users/pforsten/.config/",
-        "/Users/pforsten/Downloads/",
-        "/Users/pforsten/Library/Logs/Claude/"
-      ]
-    },
-    "mcp-svelte-docs": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-svelte-docs"
-      ]
-    },
-    "Context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp"
-      ]
-    },
     "AbletonMCP": {
       "command": "/Users/pforsten/.local/bin/uvx",
-      "args": [
-        "ableton-mcp"
-      ]
+      "args": ["ableton-mcp"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "svelte": {
+      "command": "npx",
+      "args": ["-y", "@sveltejs/mcp"]
     }
   }
 }
