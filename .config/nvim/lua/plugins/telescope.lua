@@ -17,15 +17,35 @@ return {
 			end,
 		},
 	},
-	opts = {
-		defaults = {
-			layout_config = {
-				vertical = {
-					width = 0.75,
+	-- Convert opts to a function so we can load and use telescope.actions
+	opts = function()
+		-- Load the actions module for use in mappings
+		local actions = require("telescope.actions")
+		return {
+			defaults = {
+				layout_config = {
+					vertical = {
+						width = 0.75,
+					},
+				},
+				-- Custom key mappings for the Telescope window
+				mappings = {
+					i = {
+						-- In Insert mode: Ctrl-J moves to the next result
+						["<C-j>"] = actions.move_selection_next,
+						-- In Insert mode: Ctrl-K moves to the previous result
+						["<C-k>"] = actions.move_selection_previous,
+					},
+					n = {
+						-- In Normal mode: Ctrl-J moves to the next result
+						["<C-j>"] = actions.move_selection_next,
+						-- In Normal mode: Ctrl-K moves to the previous result
+						["<C-k>"] = actions.move_selection_previous,
+					},
 				},
 			},
-		},
-	},
+		}
+	end,
 
 	vim.api.nvim_create_user_command("Nvc", function()
 		require("telescope.builtin").find_files({
