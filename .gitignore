@@ -2,3 +2,5 @@
 ~/.config/nvim/lazy-lock.json
 ~/.config/Local/nvim/undodir/
 ~/.config/karabiner/automatic_backups/
+~/.config/github/token
+~/.env
