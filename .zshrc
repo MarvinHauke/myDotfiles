@@ -40,16 +40,16 @@ export NVM_DIR="$HOME/.nvm"
 # Load .env file if it exists
 load_env() {
   if [ -f "$HOME/.env" ]; then
-    export "$(grep -v '^#' "$HOME/.env" | xargs)"
-    echo "✓ Loaded environment variables from ~/.env"
-  else
-    echo "⚠ No .env file found at ~/.env"
+    set -a; source "$HOME/.env"; set +a
   fi
 }
 
 # Quick directory navigation
 dev() { cd "$HOME/Development/$1" 2>/dev/null || cd "$HOME/Development" }
 conf() { cd "$XDG_CONFIG_HOME/$1" 2>/dev/null || cd "$XDG_CONFIG_HOME" }
+
+# Zathura PDF viewer (fork and detach from terminal)
+zathura() { command zathura --fork "$@" >/dev/null 2>&1 }
 
 # Git bare repo management for dotfiles
 dotfiles() {
@@ -137,10 +137,11 @@ zstyle ':fzf-tab:*' continuous-trigger 'right'
 
 # History settings
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
-setopt SHARE_HISTORY     # Share history between sessions
-setopt HIST_IGNORE_DUPS  # Don't record duplicates
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY      # Share history between sessions
+setopt HIST_IGNORE_DUPS   # Don't record duplicates
+setopt HIST_FIND_NO_DUPS  # Hide duplicates when searching history
 setopt HIST_IGNORE_SPACE # Don't record commands starting with space
 setopt HIST_VERIFY       # Show command before executing from history
 
@@ -159,36 +160,33 @@ setopt PUSHD_IGNORE_DUPS # Don't push duplicates
 # DEPENDENCY CHECKS
 # =============================================================================
 
-# Check for important tools and provide installation hints
-missing_tools=()
+# Check for important tools (run manually with: check-deps)
+check-deps() {
+  local missing_tools=()
 
-command -v fzf >/dev/null || missing_tools+=("fzf (brew install fzf) - https://github.com/junegunn/fzf")
-command -v zoxide >/dev/null || missing_tools+=("zoxide (brew install zoxide) - https://github.com/ajeetdsouza/zoxide")
-command -v starship >/dev/null || missing_tools+=("starship (brew install starship) - https://github.com/starship/starship")
-command -v direnv >/dev/null || missing_tools+=("direnv (brew install direnv) - https://github.com/direnv/direnv")
-command -v uv >/dev/null || missing_tools+=("uv (brew install uv) - https://github.com/astral-sh/uv")
-command -v nvim >/dev/null || missing_tools+=("neovim (brew install neovim) - https://github.com/neovim/neovim")
-command -v lsd >/dev/null || missing_tools+=("lsd (brew install lsd) - https://github.com/lsd-rs/lsd")
-command -v tmux >/dev/null || missing_tools+=("tmux (brew install tmux) - https://github.com/tmux/tmux")
+  command -v fzf >/dev/null || missing_tools+=("fzf (brew install fzf) - https://github.com/junegunn/fzf")
+  command -v zoxide >/dev/null || missing_tools+=("zoxide (brew install zoxide) - https://github.com/ajeetdsouza/zoxide")
+  command -v starship >/dev/null || missing_tools+=("starship (brew install starship) - https://github.com/starship/starship")
+  command -v direnv >/dev/null || missing_tools+=("direnv (brew install direnv) - https://github.com/direnv/direnv")
+  command -v uv >/dev/null || missing_tools+=("uv (brew install uv) - https://github.com/astral-sh/uv")
+  command -v nvim >/dev/null || missing_tools+=("neovim (brew install neovim) - https://github.com/neovim/neovim")
+  command -v lsd >/dev/null || missing_tools+=("lsd (brew install lsd) - https://github.com/lsd-rs/lsd")
+  command -v tmux >/dev/null || missing_tools+=("tmux (brew install tmux) - https://github.com/tmux/tmux")
 
-if (( ${#missing_tools[@]} > 0 )); then
-    echo "⚠ Missing tools detected:"
+  if (( ${#missing_tools[@]} > 0 )); then
+    echo "Missing tools detected:"
     printf "  - %s\n" "${missing_tools[@]}"
-    echo ""
-fi
+  else
+    echo "All tools installed."
+  fi
+}
 
 # =============================================================================
 # EXTERNAL INTEGRATIONS
 # =============================================================================
 
-# FZF keybindings
-if command -v fzf >/dev/null; then
-if [ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]; then
-        source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
-    else
-        echo "⚠ fzf is installed but key-bindings not found at expected location"
-    fi
-fi
+# FZF keybindings and completion
+command -v fzf >/dev/null && eval "$(fzf --zsh)"
 
 # Zoxide (smart cd)
 command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
@@ -214,11 +212,8 @@ npx() { unset -f npx; nvm use default >/dev/null; command npx "$@"; }
 # ALIASES
 # =============================================================================
 
-# Enhanced ls aliases
-alias ls='lsd'                                # Use lsd instead of ls
-alias ll='lsd -alF'                          # Long format with file type indicators
-alias la='lsd -A'                            # Show hidden files
-alias lt='lsd --tree'                        # Tree view
+# Tree view (ls/ll/la/tree provided by zsh-lsd plugin)
+alias lt='lsd --tree'
 
 # Editor aliases
 alias vim='nvim'
@@ -259,8 +254,7 @@ alias top='htop'
 alias df='df -h'
 alias du='du -h'
 
-# File associations
-alias -s pdf='zathura --fork'
+# File associations (pdf handled by zathura function)
 alias -s {jpg,jpeg,png,gif}='open'
 alias -s {mp4,mkv,avi}='open'
 
@@ -281,7 +275,7 @@ if command -v tmux >/dev/null 2>&1; then
     -z "$INTELLIJ_ENVIRONMENT_READER" ]]; then
     # Attach to default session or create new one
     tmux attach -t default >/dev/null 2>&1 || tmux new -s default
-    exit
+    return
   fi
 fi
 
