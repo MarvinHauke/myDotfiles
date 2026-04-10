@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 # =============================================================================
 # ZSH CONFIGURATION
@@ -11,8 +11,8 @@
 # ENVIRONMENT VARIABLES
 # =============================================================================
 
-# Zsh config dir
-export ZSH="$HOME/.zshrc"
+# Zsh config file
+export ZSHRC="$HOME/.zshrc"
 
 # Set XDG_CONFIG_HOME path for ghostty and other cmdline tools
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -26,6 +26,9 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/MacOs/bin
+
+# Github
+[ -f ~/.config/github/token ] && export GITHUB_TOKEN=$(cat ~/.config/github/token)
 
 # Node Version Manager (NVM) - not for Nvim!
 export NVM_DIR="$HOME/.nvm"
@@ -44,15 +47,11 @@ load_env() {
   fi
 }
 
-# Quick directory navigation (TODO: use this instead of cdd and cdn test it and validate)
+# Quick directory navigation
 dev() { cd "$HOME/Development/$1" 2>/dev/null || cd "$HOME/Development" }
 conf() { cd "$XDG_CONFIG_HOME/$1" 2>/dev/null || cd "$XDG_CONFIG_HOME" }
 
-# # Define the config alias ( old version use "dotfiles" command instead)
-# alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-
-# Git bare repo management for dotfiles (TODO: test it and validate if dotfiles is working better)
-# The function is essentially the same functionality but with better naming and more robust argument handling. It's a small change that makes your dotfiles management much clearer and more maintainable!
+# Git bare repo management for dotfiles
 dotfiles() {
   git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"
 }
@@ -75,9 +74,9 @@ dotfiles-lg() {
 # Call load_env function
 load_env
 
-# set Starship config path
-eval "$(starship init zsh)"
+# Starship prompt
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+eval "$(starship init zsh)"
 
 # =============================================================================
 # ZSH PLUGINS
@@ -91,7 +90,7 @@ plug "zsh-users/zsh-history-substring-search" # fish style substring search http
 plug "zsh-users/zsh-completions"              # https://github.com/zsh-users/zsh-completions
 
 # Visual enhancements
-plug "zsh-zsh/supercharge" # adds color to ls https://github.com/zap-zsh/supercharge
+plug "zap-zsh/supercharge" # adds color to ls https://github.com/zap-zsh/supercharge
 plug "wintermi/zsh-lsd"    # makes everything colorfull https://github.com/wintermi/zsh-lsd
 
 # Productivity plugins
@@ -122,40 +121,39 @@ zle -N accept-suggestion-or-clear
 bindkey '^L' accept-suggestion-or-clear
 
 
-# # Completion styling (TODO: not tested, check incremantaly)
-# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case-insensitive
-# zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"     # Colored completions
-# zstyle ':completion:*' menu select                        # Menu selection
-# zstyle ':completion:*' group-name ''                      # Group completions
-# zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case-insensitive
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"     # Colored completions
+zstyle ':completion:*' menu select                        # Menu selection
+zstyle ':completion:*' group-name ''                      # Group completions
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
 
-# zstyle ':fzf-tab:*' fzf-flags --height=50% --reverse --border
-# zstyle ':fzf-tab:*' continuous-trigger 'right'
-#
+zstyle ':fzf-tab:*' fzf-flags --height=50% --reverse --border
+zstyle ':fzf-tab:*' continuous-trigger 'right'
 
 # =============================================================================
-# ZSH OPTIONS (TODO: not tested, check incremantaly)
+# ZSH OPTIONS
 # =============================================================================
 
-# # History settings
-# HISTFILE=~/.zsh_history
-# HISTSIZE=10000
-# SAVEHIST=10000
-# setopt SHARE_HISTORY     # Share history between sessions
-# setopt HIST_IGNORE_DUPS  # Don't record duplicates
-# setopt HIST_IGNORE_SPACE # Don't record commands starting with space
-# setopt HIST_VERIFY       # Show command before executing from history
-#
-# # Completion options
-# setopt COMPLETE_IN_WORD # Complete from both ends of word
-# setopt AUTO_LIST        # List choices on ambiguous completion
-# setopt AUTO_MENU        # Use menu completion
-# setopt AUTO_PARAM_SLASH # Add slash after directory completion
-#
-# # Directory options
-# setopt AUTO_CD           # cd by typing directory name
-# setopt AUTO_PUSHD        # Push directories to stack
-# setopt PUSHD_IGNORE_DUPS # Don't push duplicates
+# History settings
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY     # Share history between sessions
+setopt HIST_IGNORE_DUPS  # Don't record duplicates
+setopt HIST_IGNORE_SPACE # Don't record commands starting with space
+setopt HIST_VERIFY       # Show command before executing from history
+
+# Completion options
+setopt COMPLETE_IN_WORD # Complete from both ends of word
+setopt AUTO_LIST        # List choices on ambiguous completion
+setopt AUTO_MENU        # Use menu completion
+setopt AUTO_PARAM_SLASH # Add slash after directory completion
+
+# Directory options
+setopt AUTO_CD           # cd by typing directory name
+setopt AUTO_PUSHD        # Push directories to stack
+setopt PUSHD_IGNORE_DUPS # Don't push duplicates
 
 # =============================================================================
 # DEPENDENCY CHECKS
@@ -201,8 +199,16 @@ command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 # UV shell completion (Python toolchain)
 command -v uv >/dev/null && eval "$(uv generate-shell-completion zsh)"
 
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+# NVM lazy loading (defers ~200-400ms startup cost until first use)
+nvm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
+node() { unset -f node; nvm use default >/dev/null; command node "$@"; }
+npm() { unset -f npm; nvm use default >/dev/null; command npm "$@"; }
+npx() { unset -f npx; nvm use default >/dev/null; command npx "$@"; }
 
 # =============================================================================
 # ALIASES
@@ -218,18 +224,16 @@ alias lt='lsd --tree'                        # Tree view
 alias vim='nvim'
 alias vi='nvim'
 
-# Quick navigation (deprecated with zoxide, but kept for muscle memory)
-alias cdd='cd $HOME/Development' # (use dev() instead)
+# Quick navigation
 alias cdl='cd $HOME/Downloads'
-alias cdn='cd $XDG_CONFIG_HOME/nvim' # (use config() instead be carefull with)
 alias cdt='cd $XDG_CONFIG_HOME/tmux'
 
 # Config editing shortcuts
 alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
 alias nvt='nvim $XDG_CONFIG_HOME/tmux/tmux.conf'
-alias nvz='nvim $ZSH'
+alias nvz='nvim $ZSHRC'
 alias nvs='nvim $STARSHIP_CONFIG'
-alias src='source $ZSH'
+alias src='source $ZSHRC'
 alias notes='nvim $HOME/Notizen'
 
 # System aliases
@@ -238,6 +242,7 @@ alias :q='exit'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias avrdude7="/Applications/Teensyduino.app/Contents/Java/hardware/tools/avr/bin/avrdude -C /Applications/Teensyduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf"
 
 # Git shortcuts (in addition to your dotfiles function)
 alias g='git'
@@ -253,22 +258,18 @@ alias gb='git branch'
 alias top='htop'
 alias df='df -h'
 alias du='du -h'
-alias free='free -h'
 
 # File associations
 alias -s pdf='zathura --fork'
 alias -s {jpg,jpeg,png,gif}='open'
 alias -s {mp4,mkv,avi}='open'
 
-# Alert alias for long running commands
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 # =============================================================================
 # TMUX AUTO-START
 # =============================================================================
 
 # Always work in a tmux session if available
-if which tmux >/dev/null 2>&1; then
+if command -v tmux >/dev/null 2>&1; then
   # Check if current environment is suitable for tmux
   if [[ -z "$TMUX" &&
     $TERM != "screen-256color" &&
@@ -283,17 +284,6 @@ if which tmux >/dev/null 2>&1; then
     exit
   fi
 fi
-
-# =============================================================================
-# PERFORMANCE OPTIMIZATIONS
-# =============================================================================
-
-# Lazy load NVM (uncomment if NVM is slow to load)
-# nvm() {
-#   unset -f nvm
-#   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-#   nvm "$@"
-# }
 
 # =============================================================================
 # LOCAL CUSTOMIZATIONS
