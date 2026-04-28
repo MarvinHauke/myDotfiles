@@ -1,7 +1,7 @@
 return {
 	-- Setup codeium for auto_suggestions
 	{
-		"Exafunction/codeium.nvim",
+		"Exafunction/windsurf.nvim",
 		dpendencies = {
 			"nvim-lua/plenary.nvim",
 			"hrsh7th/nvim-cmp",

@@ -11,3 +11,4 @@ end)
 
 --Ableton hotkeys
 require("ableton")
+require("ableton_cmd")
