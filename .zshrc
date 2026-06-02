@@ -32,6 +32,18 @@ export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgra
 
 # Node Version Manager (NVM) - not for Nvim!
 export NVM_DIR="$HOME/.nvm"
+export PATH="$HOME/.nvm/versions/node/v24.16.0/bin:$PATH"
+
+# NVM lazy loading (defers ~200-400ms startup cost until first use)
+nvm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
+node() { unset -f node; nvm use default >/dev/null; command node "$@"; }
+npm() { unset -f npm; nvm use default >/dev/null; command npm "$@"; }
+npx() { unset -f npx; nvm use default >/dev/null; command npx "$@"; }
 
 # =============================================================================
 # FUNCTIONS
@@ -197,16 +209,6 @@ command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 # UV shell completion (Python toolchain)
 command -v uv >/dev/null && eval "$(uv generate-shell-completion zsh)"
 
-# NVM lazy loading (defers ~200-400ms startup cost until first use)
-nvm() {
-  unset -f nvm node npm npx
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-  nvm "$@"
-}
-node() { unset -f node; nvm use default >/dev/null; command node "$@"; }
-npm() { unset -f npm; nvm use default >/dev/null; command npm "$@"; }
-npx() { unset -f npx; nvm use default >/dev/null; command npx "$@"; }
 
 # =============================================================================
 # ALIASES
@@ -257,6 +259,9 @@ alias du='du -h'
 # File associations (pdf handled by zathura function)
 alias -s {jpg,jpeg,png,gif}='open'
 alias -s {mp4,mkv,avi}='open'
+
+# xournalpp
+alias xournal="open -a Xournal++"
 
 # =============================================================================
 # TMUX AUTO-START

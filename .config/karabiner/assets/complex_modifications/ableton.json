@@ -2,7 +2,7 @@
   "title": "Ableton Live",
   "rules": [
     {
-      "description": "Ableton: Ctrl+Minus öffnet/schließt den Browser (→ Cmd+Option+B)",
+      "description": "Ableton: Ctrl+Minus öffnet/schließt den Browser (→ Cmd+Option+5)",
       "manipulators": [
         {
           "conditions": [
