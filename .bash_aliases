@@ -66,16 +66,18 @@ export PATH=$PATH:~/.cargo/bin/
 # use nvim as vim when installed:
 export PATH=$PATH:~/nvim-linux64/bin
 if command -v nvim >/dev/null 2>&1; then
-   alias vim=nvim 
+   alias vim=nvim
 else
     echo "only vim is installed"
 fi
 
-# Add Config as Alias with gitcompletion
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-# Add completion for config Alias
+# Git bare repo management for dotfiles
+dotfiles() {
+  git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"
+}
+# Add git completion for dotfiles function
 source /usr/share/bash-completion/completions/git
-__git_complete config __git_main
+__git_complete dotfiles __git_main
 
 # Associate the autocompletion function with the 'cdd' and 'cdl' alias
 complete -C _completion cdd
