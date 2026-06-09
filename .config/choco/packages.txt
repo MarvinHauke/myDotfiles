@@ -1,0 +1,3 @@
+# Chocolatey packages — one package name per line
+# Example: git
+# Example: neovim
