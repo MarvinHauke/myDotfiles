@@ -100,35 +100,7 @@ Register-ArgumentCompleter -CommandName 'cdd' -ParameterName 'Path' -ScriptBlock
 
 # Git bare repo management for dotfiles
 function dotfiles {
-  param(
-    [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
-    [String[]]$AdditionalArgs
-  )
-
-  $gitCommand = "git --git-dir=`$HOME/.cfg/ --work-tree=`$HOME"
-
-  # Run just 'git status' if no arguments are provided
-  if ($AdditionalArgs.count -eq 0){
-    Invoke-Expression "$gitCommand status"
-    return
-  }
-
-  # If fetching, handle it properly
-  if ($AdditionalArgs[0] -eq "fetch") {
-    Invoke-Expression "$gitCommand fetch --all"
-    return
-  }
-
-  # Handle commit messages separately
-  $commitIndex = $AdditionalArgs.IndexOf('-m')
-  if ($commitIndex -ne -1) {
-    $commitMessage = $AdditionalArgs[$commitIndex + 1]
-    $command = "$gitCommand commit -m `"$commitMessage`""
-  } else {
-    $arguments = $AdditionalArgs -join ' '
-    $command = "$gitCommand --% $arguments"
-  }
-  Invoke-Expression $command
+    git --git-dir="$HOME/.cfg/" --work-tree="$HOME" @args
 }
 
 function showDotfiles {
