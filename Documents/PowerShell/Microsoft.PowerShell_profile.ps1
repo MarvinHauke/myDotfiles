@@ -98,8 +98,8 @@ $CompletePath = {
 }
 Register-ArgumentCompleter -CommandName 'cdd' -ParameterName 'Path' -ScriptBlock $CompletePath
 
-# Git alias and function
-function cfg {
+# Git bare repo management for dotfiles
+function dotfiles {
   param(
     [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
     [String[]]$AdditionalArgs
@@ -108,7 +108,7 @@ function cfg {
   $gitCommand = "git --git-dir=`$HOME/.cfg/ --work-tree=`$HOME"
 
   # Run just 'git status' if no arguments are provided
-  if ($AdditionalArgs.count -eq0){
+  if ($AdditionalArgs.count -eq 0){
     Invoke-Expression "$gitCommand status"
     return
   }
@@ -119,7 +119,7 @@ function cfg {
     return
   }
 
-  # Handle commit messages separetely
+  # Handle commit messages separately
   $commitIndex = $AdditionalArgs.IndexOf('-m')
   if ($commitIndex -ne -1) {
     $commitMessage = $AdditionalArgs[$commitIndex + 1]
@@ -130,10 +130,9 @@ function cfg {
   }
   Invoke-Expression $command
 }
-Set-Alias -Name config -Value cfg
 
-function showConfigFiles {
-  git --git-dir=$HOME/.cfg/ ls-tree -r master --name-only
+function showDotfiles {
+  git --git-dir=$HOME/.cfg/ ls-tree -r HEAD --name-only
 }
 
 function LazyGitFunc {
@@ -228,4 +227,3 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path $ChocolateyProfile) {
   Import-Module $ChocolateyProfile
 }
-
