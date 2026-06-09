@@ -9,5 +9,8 @@ fzf
 fd-find
 direnv
 zathura
+imagemagick
 python3
 python3-pip
+bat
+build-essential

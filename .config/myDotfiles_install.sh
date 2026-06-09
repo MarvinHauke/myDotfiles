@@ -38,18 +38,15 @@ fi
 git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" checkout "$branch" || echo "Branch $branch does not exist."
 git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" pull origin "$branch"
 
-# Install Homebrew packages (macOS / linux only)
-if [[ "$branch" == "macos" || "$branch" == "linux" ]]; then
+# Install Homebrew packages (macOS only)
+if [[ "$branch" == "macos" ]]; then
     if [[ -f "$HOME/.config/brew/packages.txt" ]]; then
         echo "Installing Brew packages..."
         xargs brew install <"$HOME/.config/brew/packages.txt"
     else
         echo "No package list found at ~/.config/brew/packages.txt"
     fi
-fi
 
-# Install Homebrew cask packages (macOS only)
-if [[ "$branch" == "macos" ]]; then
     if [[ -f "$HOME/.config/brew/cask-packages.txt" ]]; then
         echo "Installing Brew Cask packages..."
         xargs brew install --cask <"$HOME/.config/brew/cask-packages.txt"
@@ -58,8 +55,15 @@ if [[ "$branch" == "macos" ]]; then
     fi
 fi
 
-# Install apt packages (raspbian only)
-if [[ "$branch" == "raspbian" ]]; then
+# Install apt packages (linux / raspbian)
+if [[ "$branch" == "linux" || "$branch" == "raspbian" ]]; then
+    # Add neovim PPA for a modern version (Ubuntu/x86_64 only)
+    if [[ "$branch" == "linux" ]]; then
+        echo "Adding neovim PPA..."
+        sudo add-apt-repository ppa:neovim-ppa/stable -y
+        sudo apt update
+    fi
+
     if [[ -f "$HOME/.config/apt/packages.txt" ]]; then
         echo "Installing apt packages..."
         xargs sudo apt install -y <"$HOME/.config/apt/packages.txt"
