@@ -1,50 +1,81 @@
 # myDotfiles
 
 ## Overview
-It is configuered as a git bare repo to make it easier to move to new machines.
-For details how to clone this Repo to your machine take a look at the following artikel: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the artikel")
 
-## install
+Configured as a git bare repo for easy migration to new machines.
+For details on how to clone this repo take a look at: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the article")
+
+> **Install script preview:** [gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e](https://gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e)
+
+## Branches
+
+The install script auto-detects your OS/architecture and checks out the matching branch:
+
+| Branch | Target |
+|---|---|
+| `macos` | macOS (Homebrew + cask packages) |
+| `linux` | Linux x86\_64 (Homebrew packages) |
+| `raspbian` | Raspberry Pi / ARM64 Linux (apt, minimal setup) |
+| `linux-android` | Android via Termux |
+| `main` | Fallback |
+
+## Install
+
+On a fresh machine, bootstrap with a single curl command:
 
 ```bash
-chmod +x .config/my-dotfiles_install.sh
-. ./.config/my-dotfiles_install.sh
+curl -fsSL https://raw.githubusercontent.com/MarvinHauke/myDotfiles/master/.config/myDotfiles_install.sh | bash
 ```
-this will run the install script for my dotfiles
 
-
-### Vim:
-you can find all related vim files in the following directory
+Or manually:
 
 ```bash
+chmod +x .config/myDotfiles_install.sh
+. ./.config/myDotfiles_install.sh
+```
+
+The script will:
+1. Clone the bare repo to `~/.cfg`
+2. Detect your OS and check out the correct branch
+3. Install packages (Homebrew on macOS/Linux, apt on Raspbian)
+
+## Config files
+
+### Neovim
+```
 ~/.config/nvim/
-
 ```
-it contains:
-- init.lua for loading Lazy and initializing nvim
-- lua/Plugins with the plugins I use
-- ftplugins for filetype plugin configuration
+- `init.lua` — bootstraps Lazy.nvim
+- `lua/plugins/` — plugin specs
+- `ftplugin/` — filetype-specific settings
 
-
-### Zsh:
-```bash
+### Zsh
+```
 ~/.zshrc
 ```
+- Path aliases
+- Utility functions
 
-it contains:
-- aliases I use for often use paths
-- functions I use for often use commands
-
-
-### Starship:
-```Bash
+### Starship
+```
 ~/.config/starship/starship.toml
 ```
-this contains my configured prompt
 
-
-### Ghostty:
-```Bash
-~/.config/ghostty/conf
+### Ghostty
 ```
-this contains my configured ghostty
+~/.config/ghostty/config
+```
+
+### Tmux
+```
+~/.config/tmux/tmux.conf
+```
+
+## Raspbian / Minimal setup (ARM64)
+
+The `raspbian` branch targets Raspberry Pi 3+ and other ARM64 Linux devices.
+It installs a lightweight subset via `apt` — no Homebrew, no macOS-specific tools.
+
+Packages are listed in `~/.config/apt/packages.txt`.
+
+> **Note:** `starship` and `zoxide` are not in standard apt repos — install them via their upstream curl scripts after running the dotfiles install.
