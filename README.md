@@ -24,7 +24,7 @@ The install script auto-detects your OS/architecture and checks out the matching
 On a fresh machine, bootstrap with a single curl command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/MarvinHauke/myDotfiles/master/.config/myDotfiles_install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/MarvinHauke/myDotfiles/main/.config/myDotfiles_install.sh | bash
 ```
 
 Or manually:
