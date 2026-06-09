@@ -1,69 +1,42 @@
-# myDotfiles
+# myDotfiles — macOS
 
 ## Overview
 
 Configured as a git bare repo for easy migration to new machines.
 For details on how to clone this repo take a look at: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the article")
 
-> **Install script preview:** [gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e](https://gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e)
-
-## Branches
-
-The install script auto-detects your OS/architecture and checks out the matching branch:
-
-| Branch | Target |
-|---|---|
-| `macos` | macOS (Homebrew + cask packages) |
-| `linux` | Linux x86\_64 (Homebrew packages) |
-| `raspbian` | Raspberry Pi / ARM64 Linux (apt, minimal setup) |
-| `linux-android` | Android via Termux |
-| `main` | Fallback |
-
 ## Install
 
-On a fresh machine, bootstrap with a single curl command:
-
 ```bash
-curl -fsSL https://raw.githubusercontent.com/MarvinHauke/myDotfiles/main/.config/myDotfiles_install.sh | bash
-```
-
-Or manually:
-
-```bash
-chmod +x .config/myDotfiles_install.sh
-. ./.config/myDotfiles_install.sh
+curl -fsSL https://gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e/raw | bash
 ```
 
 The script will:
 1. Clone the bare repo to `~/.cfg`
-2. Detect your OS and check out the correct branch
-3. Install packages (Homebrew on macOS/Linux, apt on Raspbian)
+2. Back up any conflicting files to `~/.dotfiles-backup`
+3. Check out the `macos` branch
+4. Install Homebrew packages from `~/.config/brew/packages.txt`
+5. Install Homebrew cask packages from `~/.config/brew/cask-packages.txt`
 
 ## Config files
+
+### Zsh
+```
+~/.zshrc
+```
 
 ### Neovim
 ```
 ~/.config/nvim/
 ```
 - `init.lua` — bootstraps Lazy.nvim
-- `lua/plugins/` — plugin specs
+- `lua/plugins/` — full plugin set (LSP, DAP, formatting, AI, etc.)
+- `lua/plugins/lsp/` — per-language LSP configs (bash, C, Python, Rust, JS, Lua, web)
 - `ftplugin/` — filetype-specific settings
-
-### Zsh
-```
-~/.zshrc
-```
-- Path aliases
-- Utility functions
 
 ### Starship
 ```
 ~/.config/starship/starship.toml
-```
-
-### Ghostty
-```
-~/.config/ghostty/config
 ```
 
 ### Tmux
@@ -71,11 +44,36 @@ The script will:
 ~/.config/tmux/tmux.conf
 ```
 
-## Raspbian / Minimal setup (ARM64)
+### Ghostty
+```
+~/.config/ghostty/config
+```
 
-The `raspbian` branch targets Raspberry Pi 3+ and other ARM64 Linux devices.
-It installs a lightweight subset via `apt` — no Homebrew, no macOS-specific tools.
+### Karabiner-Elements
+```
+~/.config/karabiner/karabiner.json
+~/.config/karabiner/assets/complex_modifications/
+```
 
-Packages are listed in `~/.config/apt/packages.txt`.
+### Hammerspoon
+```
+~/.hammerspoon/init.lua
+```
 
-> **Note:** `starship` and `zoxide` are not in standard apt repos — install them via their upstream curl scripts after running the dotfiles install.
+### Zathura
+```
+~/.config/zathura/zathurarc
+```
+
+### VS Code
+```
+~/.config/Code/User/settings.json
+~/.config/Code/User/keybindings.json
+```
+
+## Package lists
+
+| File | Contents |
+|---|---|
+| `~/.config/brew/packages.txt` | CLI tools via `brew install` |
+| `~/.config/brew/cask-packages.txt` | GUI apps via `brew install --cask` |
