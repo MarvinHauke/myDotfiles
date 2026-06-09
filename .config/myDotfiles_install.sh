@@ -14,7 +14,6 @@ fi
 # Set up the alias
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 echo "alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >>"$shell_config"
-# shellcheck source=$HOME/.bashrc
 source "$shell_config"
 
 # Hide untracked files
@@ -34,9 +33,25 @@ else
     branch="main"
 fi
 
-# Checkout and pull the branch
-git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" checkout "$branch" || echo "Branch $branch does not exist."
-git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" pull origin "$branch"
+cfg_git() { git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"; }
+
+# Checkout branch, backing up any conflicting files first
+if ! cfg_git checkout "$branch" 2>/dev/null; then
+    backup_dir="$HOME/.dotfiles-backup"
+    echo "Backing up conflicting files to $backup_dir..."
+    cfg_git checkout "$branch" 2>&1 \
+        | grep -E "^\s+\S" | awk '{print $1}' | while IFS= read -r file; do
+            mkdir -p "$backup_dir/$(dirname "$file")"
+            mv "$HOME/$file" "$backup_dir/$file"
+            echo "  Backed up: $file"
+        done
+    cfg_git checkout "$branch" || { echo "Error: checkout of $branch failed."; exit 1; }
+fi
+
+# Pull latest (set upstream first to avoid divergent-branch errors)
+cfg_git fetch origin "$branch"
+cfg_git branch --set-upstream-to="origin/$branch" "$branch" 2>/dev/null || true
+cfg_git pull --ff-only origin "$branch"
 
 # Install Homebrew packages (macOS / linux only)
 if [[ "$branch" == "macos" || "$branch" == "linux" ]]; then
@@ -58,7 +73,7 @@ if [[ "$branch" == "macos" ]]; then
     fi
 fi
 
-# Install apt packages (raspbian only)
+# Install apt packages + tools (raspbian only)
 if [[ "$branch" == "raspbian" ]]; then
     if [[ -f "$HOME/.config/apt/packages.txt" ]]; then
         echo "Installing apt packages..."
@@ -69,7 +84,15 @@ if [[ "$branch" == "raspbian" ]]; then
 
     echo "Installing starship..."
     curl -sS https://starship.rs/install.sh | sh -s -- --yes
+    grep -qF 'starship init bash' "$shell_config" \
+        || echo 'eval "$(starship init bash)"' >>"$shell_config"
 
     echo "Installing zoxide..."
     curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+    grep -qF 'zoxide init bash' "$shell_config" \
+        || echo 'eval "$(zoxide init bash)"' >>"$shell_config"
+
+    # Ensure ~/.local/bin is on PATH
+    grep -qF '$HOME/.local/bin' "$shell_config" \
+        || echo 'export PATH="$HOME/.local/bin:$PATH"' >>"$shell_config"
 fi
