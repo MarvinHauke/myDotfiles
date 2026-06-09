@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Clone the bare repo
-git clone --bare git@github.com:MarvinHauke/myDotfiles.git "$HOME"/.cfg
+# Clone the bare repo (SSH preferred, HTTPS fallback for machines without SSH keys)
+git clone --bare git@github.com:MarvinHauke/myDotfiles.git "$HOME"/.cfg 2>/dev/null \
+    || git clone --bare https://github.com/MarvinHauke/myDotfiles.git "$HOME"/.cfg
 
 # Source the correct shell configuration
 if [[ "$SHELL" =~ "zsh" ]]; then
@@ -65,4 +66,10 @@ if [[ "$branch" == "raspbian" ]]; then
     else
         echo "No package list found at ~/.config/apt/packages.txt"
     fi
+
+    echo "Installing starship..."
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes
+
+    echo "Installing zoxide..."
+    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 fi
