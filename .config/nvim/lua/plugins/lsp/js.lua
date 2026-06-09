@@ -1,6 +1,9 @@
--- JavaScript/TypeScript LSP Configuration
+-- JavaScript/TypeScript LSP Configuration (vtsls)
 
--- Custom on_attach for JavaScript
+-- Altes ts_ls deaktivieren, damit kein zweiter Server parallel attached
+vim.lsp.enable("ts_ls", false)
+
+-- Custom on_attach für JS/TS
 local js_lsp_attach = function(client, bufnr)
 	_G.lsp_common.lsp_attach(client, bufnr)
 
@@ -22,23 +25,18 @@ local js_lsp_attach = function(client, bufnr)
 	map("n", "<leader>lr", "<cmd>!node %<CR>", "Run JavaScript with Node.js")
 end
 
--- Setup tsserver (JS/TS support)
-vim.lsp.config("ts_ls", {
+-- vtsls (JS/TS support)
+vim.lsp.config("vtsls", {
 	capabilities = _G.lsp_common.lsp_capabilities,
 	on_attach = function(client, bufnr)
-		-- Disable tsserver formatting if using prettier/eslint
 		client.server_capabilities.documentFormattingProvider = false
 		js_lsp_attach(client, bufnr)
 	end,
-	filetypes = {
-		"javascript",
-		"javascriptreact",
-		"javascript.jsx",
-		"typescript",
-		"typescriptreact",
-		"typescript.tsx",
+	settings = {
+		vtsls = {
+			autoUseWorkspaceTsdk = true, -- nutzt node_modules/typescript wie VSCode
+		},
 	},
-	root_dir = vim.fs.root(0, { "tsconfig.json", "package.json", ".git" }),
 })
 
-vim.lsp.enable("ts_ls")
+vim.lsp.enable("vtsls")
