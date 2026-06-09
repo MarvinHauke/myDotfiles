@@ -1,30 +1,42 @@
-# myDotfiles
+# myDotfiles — Android / Termux
 
-## this is a repository for my personel confgfiles.
+## Overview
 
-### It is configuered as a git bare repo to make it easier to move to new machines.
-### For details how to clone this Repo to your machine take a look at the following artikel: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the artikel")
+Configured as a git bare repo for easy migration to new machines.
+For details on how to clone this repo take a look at: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the article")
 
-Bash:
+## Install
 
-- .bashrc
-- .bash_profile
-- .zshrc
-- .bash_aliases
+```bash
+curl -fsSL https://gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e/raw | bash
+```
 
-Vim:
+The script will:
+1. Clone the bare repo to `~/.cfg`
+2. Back up any conflicting files to `~/.dotfiles-backup`
+3. Check out the `linux-android` branch
 
-- .nvimrc
-- .vimrc
+> **Note:** No package manager installs are automated for Termux — install packages manually via `pkg install`.
 
-Snipets:
+## Config files
 
-It also contains some basic concepts for shellscripting aswell, like if statements and for loops.
+### Bash
+```
+~/.bashrc
+~/.bash_aliases
+~/.profile
+```
 
-Misc:
+### Neovim
+```
+~/.config/nvim/
+```
+- `init.lua` — bootstraps Lazy.nvim
+- `lua/plugins/` — minimal plugin set for Termux
+- `ftplugin/` — filetype-specific settings
 
-- README.md
-
-## Technologies
-
-Bash
+### VS Code
+```
+~/.config/Code/User/settings.json
+~/.config/Code/User/keybindings.json
+```
