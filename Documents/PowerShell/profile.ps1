@@ -32,20 +32,9 @@ function go_to_dev {
         Write-Host "Directory '$Directory' not found in $HOME\Development/."
     }
 }
-<#
-.SYNOPSIS
-	Binds the config repo to the home directory
-.DESCRIPTION
-	Funktion for creating a git alias for the config repo
-.NOTES
-	Information or caveats about the function e.g. 'This function is not supported in Linux'
-.LINK
-	Specify a URI to a help page, this will show when Get-Help -Online is used.
-.EXAMPLE
-	Test-MyTestFunction -Verbose
-	Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
-#>
-function cfg {
+
+# Git bare repo management for dotfiles
+function dotfiles {
     param(
         [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
         [String[]]$AdditionalArgs
@@ -64,7 +53,5 @@ function cfg {
 
     Invoke-Expression $command
 }
-
-Set-Alias -Name config -Value cfg
 
 Set-Alias -Name 'cdd' -Value go_to_dev
