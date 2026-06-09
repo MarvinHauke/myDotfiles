@@ -38,38 +38,19 @@ fi
 git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" checkout "$branch" || echo "Branch $branch does not exist."
 git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" pull origin "$branch"
 
-# Install Homebrew packages (macOS / linux only)
-if [[ "$branch" == "macos" || "$branch" == "linux" ]]; then
+# Install Homebrew packages (macOS only)
+if [[ "$branch" == "macos" ]]; then
     if [[ -f "$HOME/.config/brew/packages.txt" ]]; then
         echo "Installing Brew packages..."
         xargs brew install <"$HOME/.config/brew/packages.txt"
     else
         echo "No package list found at ~/.config/brew/packages.txt"
     fi
-fi
 
-# Install Homebrew cask packages (macOS only)
-if [[ "$branch" == "macos" ]]; then
     if [[ -f "$HOME/.config/brew/cask-packages.txt" ]]; then
         echo "Installing Brew Cask packages..."
         xargs brew install --cask <"$HOME/.config/brew/cask-packages.txt"
     else
         echo "No cask package list found at ~/.config/brew/cask-packages.txt"
     fi
-fi
-
-# Install apt packages (raspbian only)
-if [[ "$branch" == "raspbian" ]]; then
-    if [[ -f "$HOME/.config/apt/packages.txt" ]]; then
-        echo "Installing apt packages..."
-        xargs sudo apt install -y <"$HOME/.config/apt/packages.txt"
-    else
-        echo "No package list found at ~/.config/apt/packages.txt"
-    fi
-
-    echo "Installing starship..."
-    curl -sS https://starship.rs/install.sh | sh -s -- --yes
-
-    echo "Installing zoxide..."
-    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 fi
