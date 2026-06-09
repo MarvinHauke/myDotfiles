@@ -35,23 +35,7 @@ function go_to_dev {
 
 # Git bare repo management for dotfiles
 function dotfiles {
-    param(
-        [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
-        [String[]]$AdditionalArgs
-    )
-
-    $gitCommand = "git --git-dir=`$HOME/.cfg/ --work-tree=`$HOME"
-
-    if ($AdditionalArgs[1] -eq '-m') {
-        $commitMessage = $AdditionalArgs[2]
-        $command = "$gitCommand commit -m `"$commitMessage`""
-    }
-    else {
-        $arguments = $AdditionalArgs -join ' '
-        $command = "$gitCommand --% $arguments"
-    }
-
-    Invoke-Expression $command
+    git --git-dir="$HOME/.cfg/" --work-tree="$HOME" @args
 }
 
 Set-Alias -Name 'cdd' -Value go_to_dev
