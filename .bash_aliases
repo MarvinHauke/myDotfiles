@@ -3,6 +3,7 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias cdl='cd $HOME/Downloads'
+alias vim='nvim'
 
 cdd() {
   cd "$HOME/Development/${1:-}" 2>/dev/null || cd "$HOME/Development"
