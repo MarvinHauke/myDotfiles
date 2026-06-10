@@ -3,7 +3,6 @@ zsh
 curl
 wget
 tmux
-neovim
 ripgrep
 fzf
 fd-find
