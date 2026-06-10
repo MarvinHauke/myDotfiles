@@ -10,6 +10,11 @@ return {
   },
   config = function()
     require("mason").setup()
+
+    local lspconfig = require("lspconfig")
+    local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local lsp_attach = function(client, bufnr) end
+
     require("mason-lspconfig").setup({
       ensure_installed = {
         "bashls",
@@ -23,25 +28,19 @@ return {
         "ts_ls",
       },
       automatic_installation = true,
+      handlers = {
+        function(server_name)
+          lspconfig[server_name].setup({
+            on_attach = lsp_attach,
+            capabilities = lsp_capabilities,
+          })
+        end,
+      },
     })
 
-    local lspconfig = require("lspconfig")
-    local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-    local mason_tool_installer = require("mason-tool-installer")
     require("fidget").setup({})
 
-    local lsp_attach = function(client, bufnr) end
-
-    require("mason-lspconfig").setup_handlers({
-      function(server_name)
-        lspconfig[server_name].setup({
-          on_attach = lsp_attach,
-          capabilities = lsp_capabilities,
-        })
-      end,
-    })
-
-    mason_tool_installer.setup({
+    require("mason-tool-installer").setup({
       ensure_installed = {
         "prettier",
         "stylua",
@@ -67,31 +66,6 @@ return {
           },
         },
       },
-    })
-
-    lspconfig.bashls.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
-
-    lspconfig.html.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
-
-    lspconfig.clangd.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
-
-    lspconfig.ts_ls.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-    })
-
-    lspconfig.pyright.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
     })
   end,
 }
