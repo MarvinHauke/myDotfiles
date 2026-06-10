@@ -2,8 +2,11 @@
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias cdd= 'cd $DEV'
-alias cdl='cd /mnt/c/Users/Marvi/Downloads'
+alias cdl='cd $HOME/Downloads'
+
+cdd() {
+  cd "$HOME/Development/${1:-}" 2>/dev/null || cd "$HOME/Development"
+}
 
 # Add an "alert" alias for long running commands.  Use like so:
 # sleep 10; alert
