@@ -1,19 +1,32 @@
 return {
-  "neovim/nvim-lspconfig",
-  event = "VeryLazy",
+  "williamboman/mason.nvim",
   dependencies = {
-    "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     "j-hui/fidget.nvim",
-    "folke/neodev.nvim",
+    "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
     require("mason").setup()
+    require("fidget").setup({})
 
-    local lspconfig = require("lspconfig")
-    local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-    local lsp_attach = function(client, bufnr) end
+    -- Apply cmp capabilities to all servers
+    vim.lsp.config("*", {
+      capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    })
+
+    -- lua_ls needs custom settings for nvim development
+    vim.lsp.config("lua_ls", {
+      settings = {
+        Lua = {
+          diagnostics = { globals = { "vim" } },
+          workspace = {
+            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+            [vim.fn.stdpath("config") .. "/lua"] = true,
+          },
+        },
+      },
+    })
 
     require("mason-lspconfig").setup({
       ensure_installed = {
@@ -30,15 +43,10 @@ return {
       automatic_installation = true,
       handlers = {
         function(server_name)
-          lspconfig[server_name].setup({
-            on_attach = lsp_attach,
-            capabilities = lsp_capabilities,
-          })
+          vim.lsp.enable(server_name)
         end,
       },
     })
-
-    require("fidget").setup({})
 
     require("mason-tool-installer").setup({
       ensure_installed = {
@@ -49,22 +57,6 @@ return {
         "shellcheck",
         "shfmt",
         "clang-format",
-      },
-    })
-
-    lspconfig.lua_ls.setup({
-      capabilities = lsp_capabilities,
-      on_attach = lsp_attach,
-      settings = {
-        Lua = {
-          diagnostics = {
-            globals = { "vim" },
-          },
-          workspace = {
-            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-            [vim.fn.stdpath("config") .. "/lua"] = true,
-          },
-        },
       },
     })
   end,
