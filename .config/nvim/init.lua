@@ -1,5 +1,4 @@
--- This has to be set before initializing lazy
--- Disable netrw in favour of nvim-tree
+-- Disable netrw in favour of oil.nvim
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -11,27 +10,22 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    "--branch=stable",
     lazypath,
   })
 end
 
 vim.opt.rtp:prepend(lazypath)
 
--- Make sure to setup 'mapleader' and 'maplocalleader' before loading lazy.nvim
--- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
--- Initialize lazy with dynamic loading of anything in the plugins directory
 require("lazy").setup("plugins", {
   change_detection = {
-    enabled = true, -- automatically check for config file changes and reload the ui
-    notify = false, -- turn off notifications whenever plugin changes are made
+    enabled = true,
+    notify = false,
   },
 })
 
--- These modules are not loaded by lazy
 require("core.options")
 require("core.keymaps")
-require("snippets.my_snippets")
