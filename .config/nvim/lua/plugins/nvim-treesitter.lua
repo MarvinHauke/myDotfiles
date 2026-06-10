@@ -1,13 +1,8 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  event = "VeryLazy",
   build = ":TSUpdate",
+  main = "nvim-treesitter",
   opts = {
-    highlight = {
-      enable = true,
-    },
-    indent = { enable = true },
-    auto_install = true,
     ensure_installed = {
       "c",
       "lua",
@@ -18,9 +13,8 @@ return {
       "html",
       "json",
     },
+    highlight = { enable = true },
+    indent = { enable = true },
+    auto_install = true,
   },
-  config = function(_, opts)
-    local configs = require("nvim-treesitter.configs")
-    configs.setup(opts)
-  end,
 }
