@@ -33,8 +33,19 @@ opt.signcolumn = "yes"
 -- Backspace
 opt.backspace = "indent,eol,start"
 
--- Clipboard
-opt.clipboard:append("unnamedplus")
+-- Clipboard (OSC52 works over SSH without a display server)
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+  },
+  paste = {
+    ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+  },
+}
+opt.clipboard = "unnamedplus"
 
 -- Split Windows
 opt.splitright = true
@@ -43,14 +54,12 @@ opt.splitbelow = true
 -- Consider - as part of keyword
 opt.iskeyword:append("-")
 
---This goes to "~/.vim/undodir"
-opt.undodir = vim.fn.stdpath('config') .. '\\undodir'
+opt.undodir = vim.fn.stdpath("config") .. "/undodir"
 opt.undofile = true
 
 vim.cmd [[ set noswapfile ]]
-vim.cmd [[ set termguicolors ]]
 
 -- Folding
 opt.foldlevel = 20
 opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()" -- Utilize Treesitter folds
+opt.foldexpr = "nvim_treesitter#foldexpr()"
