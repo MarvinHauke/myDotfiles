@@ -4,20 +4,15 @@
 git clone --bare git@github.com:MarvinHauke/myDotfiles.git "$HOME"/.cfg 2>/dev/null \
     || git clone --bare https://github.com/MarvinHauke/myDotfiles.git "$HOME"/.cfg
 
-# Source the correct shell configuration
-if [[ "$SHELL" =~ "zsh" ]]; then
-    shell_config="$HOME/.zshrc"
-else
-    shell_config="$HOME/.bashrc"
-fi
+cfg_git() { git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"; }
 
-# Set up the alias
-alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-echo "alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >>"$shell_config"
-source "$shell_config"
+# Configure proper fetch refspec so all remote-tracking branches exist after fetch
+cfg_git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+cfg_git config pull.rebase false
+cfg_git fetch origin
 
 # Hide untracked files
-git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" config --local status.showUntrackedFiles no
+cfg_git config --local status.showUntrackedFiles no
 
 # Detect OS Type and checkout the corresponding branch
 if [[ "$OSTYPE" == "linux-android"* ]]; then
@@ -33,7 +28,12 @@ else
     branch="main"
 fi
 
-cfg_git() { git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"; }
+# Source the correct shell configuration
+if [[ "$SHELL" =~ "zsh" ]]; then
+    shell_config="$HOME/.zshrc"
+else
+    shell_config="$HOME/.bashrc"
+fi
 
 # Checkout branch, backing up any conflicting files first
 if ! cfg_git checkout "$branch" 2>/dev/null; then
@@ -48,10 +48,9 @@ if ! cfg_git checkout "$branch" 2>/dev/null; then
     cfg_git checkout "$branch" || { echo "Error: checkout of $branch failed."; exit 1; }
 fi
 
-# Pull latest (set upstream first to avoid divergent-branch errors)
-cfg_git fetch origin "$branch"
-cfg_git branch --set-upstream-to="origin/$branch" "$branch" 2>/dev/null || true
-cfg_git pull --ff-only origin "$branch"
+# Set upstream tracking and pull latest
+cfg_git branch --set-upstream-to="origin/$branch" "$branch"
+cfg_git pull --ff-only
 
 # Install Homebrew packages (macOS / linux only)
 if [[ "$branch" == "macos" || "$branch" == "linux" ]]; then
@@ -96,3 +95,6 @@ if [[ "$branch" == "raspbian" ]]; then
     grep -qF '$HOME/.local/bin' "$shell_config" \
         || echo 'export PATH="$HOME/.local/bin:$PATH"' >>"$shell_config"
 fi
+
+echo ""
+echo "Done! Run: source ~/.bashrc"
