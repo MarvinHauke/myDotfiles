@@ -1,5 +1,9 @@
 local opt = vim.opt
 
+-- Disable unused providers to suppress checkhealth warnings
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 -- Session Management
 opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
