@@ -43,11 +43,8 @@ keymap.set("n", "<C-Down>", ":resize -2<CR>")
 keymap.set("n", "<C-Left>", ":vertical resize +2<CR>")
 keymap.set("n", "<C-Right>", ":vertical resize -2<CR>")
 
--- Open URL under Cursor
--- keymap.set("n", "gx", ":URLOpenUnderCursor<CR>", { desc = "open URL under cursor" }) --deprecated is now a nvim default
-
 -- Oil
-keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" }) -- open Oil orOil or parent directory
+keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
 
 -- Diff keymaps
 keymap.set("n", "<leader>cc", ":diffput<CR>")   -- put diff from current to other during diff
@@ -55,10 +52,6 @@ keymap.set("n", "<leader>cj", ":diffget 1<CR>") -- get diff from left (local) du
 keymap.set("n", "<leader>ck", ":diffget 3<CR>") -- get diff from right (remote) during merge
 keymap.set("n", "<leader>cn", "]c")             -- next diff hunk
 keymap.set("n", "<leader>cp", "[c")             -- previous diff hunk
-
--- Delete to void Register
--- keymap.set("n", "<leader>d", '"_dd')
--- keymap.set("v", "<leader>d", '"_d')
 
 -- Move lines in Visual Mode
 keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -76,13 +69,10 @@ keymap.set("v", "<leader>y", '"*y')
 keymap.set("n", "<leader>p", '"*p')
 keymap.set("v", "<leader>p", '"*p')
 
--- Clear seach highlighting
-keymap.set("n", "<leader>h", ":nohlsearch<CR>") -- clear search highlight
+-- Clear search highlighting
+keymap.set("n", "<leader>h", ":nohlsearch<CR>")
 
--- Lets your Cursor stay in Place while "J"
--- keymap.set("n", "J", "mzJ`z")
 keymap.set("n", "J", "<NOP>", opts) -- remove J from normal mode
-
 
 -- Quickfix keymaps
 keymap.set("n", "<leader>qn", ":cnext<CR>") -- jump to next quickfix list item
@@ -91,23 +81,15 @@ keymap.set("n", "<leader>qp", ":cprev<CR>") -- jump to prev quickfix list item
 -- Vim-maximizer
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle maximize tab
 
--- Git-blame
-keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>") -- toggle git blame
-
---Bufferdelete
-
 -- Bufferline
 keymap.set("n", "J", ":BufferLineCyclePrev<CR>")
 keymap.set("n", "K", ":BufferLineCycleNext<CR>")
-
--- Vim REST Console
-keymap.set("n", "<leader>xr", ":call VrcQuery()<CR>") -- Run REST query
 
 -- LSP
 keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.hover()<CR>")
 keymap.set("n", "<leader>gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "go to definition" })
 keymap.set("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { desc = "go to declaration" })
-keymap.set("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "go to declaration" })
+keymap.set("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "go to implementation" })
 keymap.set("n", "<leader>gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>")
 keymap.set("n", "<leader>gr", "<cmd>lua vim.lsp.buf.references()<CR>")
 keymap.set("n", "<leader>gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>")
@@ -130,41 +112,3 @@ keymap.set({ "n", "v" }, "<leader>mp", function()
     timeout_ms = 1000,
   })
 end, { desc = "Format file or range (in visual mode)" })
-
--- Nvim-dap
-keymap.set("n", "<leader>bb", "<cmd>lua require'dap'.toggle_breakpoint()<cr>")
-keymap.set("n", "<leader>bc", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>")
-keymap.set("n", "<leader>bl", "<cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<cr>")
-keymap.set("n", "<leader>br", "<cmd>lua require'dap'.clear_breakpoints()<cr>")
-keymap.set("n", "<leader>ba", "<cmd>Telescope dap list_breakpoints<cr>")
-keymap.set("n", "<leader>dc", "<cmd>lua require'dap'.continue()<cr>")
-keymap.set("n", "<leader>dj", "<cmd>lua require'dap'.step_over()<cr>")
-keymap.set("n", "<leader>dk", "<cmd>lua require'dap'.step_into()<cr>")
-keymap.set("n", "<leader>do", "<cmd>lua require'dap'.step_out()<cr>")
-
-keymap.set("n", "<leader>dd", function()
-  require("dap").disconnect()
-  require("dapui").close()
-end)
-
-keymap.set("n", "<leader>dt", function()
-  require("dap").terminate()
-  require("dapui").close()
-end)
-
-keymap.set("n", "<leader>dr", "<cmd>lua require'dap'.repl.toggle()<cr>")
-keymap.set("n", "<leader>dl", "<cmd>lua require'dap'.run_last()<cr>")
-
-keymap.set("n", "<leader>di", function()
-  require("dap.ui.widgets").hover()
-end)
-keymap.set("n", "<leader>d?", function()
-  local widgets = require("dap.ui.widgets")
-  widgets.centered_float(widgets.scopes)
-end)
-
-keymap.set("n", "<leader>df", "<cmd>Telescope dap frames<cr>")
-keymap.set("n", "<leader>dh", "<cmd>Telescope dap commands<cr>")
-keymap.set("n", "<leader>de", function()
-  require("telescope.builtin").diagnostics({ default_text = ":E:" })
-end)
