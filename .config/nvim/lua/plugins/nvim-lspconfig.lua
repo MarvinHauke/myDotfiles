@@ -28,6 +28,7 @@ return {
       },
     })
 
+    -- automatic_enable = true (default when no handlers) sets up configs + enables all servers
     require("mason-lspconfig").setup({
       ensure_installed = {
         "bashls",
@@ -39,15 +40,10 @@ return {
         "pyright",
         "ts_ls",
       },
-      automatic_installation = true,
-      handlers = {
-        function(server_name)
-          vim.lsp.enable(server_name)
-        end,
-      },
+      automatic_installation = false,
     })
 
-    -- clangd is installed via apt (no arm64 Mason binary)
+    -- clangd installed via apt (no arm64 Mason binary)
     vim.lsp.enable("clangd")
 
     require("mason-tool-installer").setup({
