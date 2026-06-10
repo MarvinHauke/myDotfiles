@@ -37,7 +37,6 @@ return {
         "jsonls",
         "marksman",
         "pyright",
-        "clangd",
         "ts_ls",
       },
       automatic_installation = true,
@@ -47,6 +46,9 @@ return {
         end,
       },
     })
+
+    -- clangd is installed via apt (no arm64 Mason binary)
+    vim.lsp.enable("clangd")
 
     require("mason-tool-installer").setup({
       ensure_installed = {
