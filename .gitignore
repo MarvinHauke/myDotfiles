@@ -1,4 +1,5 @@
 .cfg
+.DS_Store
 .config/nvim/lazy-lock.json
 .config/nvim/undodir/
 .config/karabiner/automatic_backups/

@@ -42,12 +42,30 @@ return {
 				})
 			end, { desc = "format file with conform" }),
 
-			-- Format on save
-			format_on_save = {
-				lsp_fallback = true,
-				async = false,
-				timeout_ms = 1000,
-			},
+			-- Format on save (skips when vim.g.disable_autoformat is set)
+			format_on_save = function(bufnr)
+				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+					return
+				end
+				return {
+					lsp_fallback = true,
+					async = false,
+					timeout_ms = 1000,
+				}
+			end,
 		})
+
+		-- Toggle format-on-save: bang (!) toggles for the current buffer only
+		vim.api.nvim_create_user_command("FormatToggle", function(args)
+			if args.bang then
+				vim.b.disable_autoformat = not vim.b.disable_autoformat
+				print("Format on save (buffer): " .. (vim.b.disable_autoformat and "OFF" or "ON"))
+			else
+				vim.g.disable_autoformat = not vim.g.disable_autoformat
+				print("Format on save (global): " .. (vim.g.disable_autoformat and "OFF" or "ON"))
+			end
+		end, { desc = "Toggle format-on-save", bang = true })
+
+		vim.keymap.set("n", "<leader>fot", "<cmd>FormatToggle<cr>", { desc = "toggle format on save" })
 	end,
 }
