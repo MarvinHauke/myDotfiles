@@ -18,7 +18,7 @@ return {
 					java = false, -- Don't check treesitter on java
 				},
 				disable_filetype = { "TelescopePrompt", "vim" },
-				disable_in_macro = false, -- Disable when recording or executing a macro
+				disable_in_macro = true, -- Disable when recording or executing a macro
 				disable_in_visualblock = false, -- Disable when insert after visual block mode
 				disable_in_replace_mode = true, -- Disable in replace mode
 				ignored_next_char = [=[[%w%%%'%[%"%.%`%$]]=],
@@ -68,6 +68,21 @@ return {
 			-- Add rule for pipe operators in some languages
 			npairs.add_rule(Rule("|", "|", { "rust", "haskell" }):with_move(cond.none()):with_cr(cond.none()))
 
+			-- Only auto-close a pair when the line before the cursor is still blank/
+			-- indent-only; block it once you're editing text already on the line.
+			-- cond.before_regex(pattern, -1): length -1 = "entire text before cursor",
+			-- not just N chars -- same idiom nvim-autopairs itself uses internally
+			-- (see the vim-comment quote rule in rules/basic.lua).
+			-- Known exceptions: enable_bracket_in_quote and enable_afterquote run
+			-- outside/before this condition, so bracket-in-quote and after-quote
+			-- cases can still auto-pair mid-line.
+			local only_pair_on_blank_line = cond.before_regex("^%s*$", -1)
+			for _, char in ipairs({ "(", "[", "{" }) do
+				for _, rule in ipairs(npairs.get_rules(char)) do
+					rule:with_pair(only_pair_on_blank_line)
+				end
+			end
+
 			-- Enhanced CMP integration
 			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 			local cmp = require("cmp")
@@ -83,16 +98,6 @@ return {
 									cmp.lsp.CompletionItemKind.Function,
 									cmp.lsp.CompletionItemKind.Method,
 								},
-								handler = function(char, item, bufnr, rules, commit_character)
-									-- Custom handler for function/method completions
-									-- Add parentheses with cursor inside for functions
-									if item.insertText and item.insertText:match(".*%(.*%)$") then
-										-- Function already has parentheses, don't add more
-										return
-									end
-									-- Default behavior
-									cmp_autopairs.on_confirm_done()(char, item, bufnr, rules, commit_character)
-								end,
 							},
 						},
 						-- Language-specific overrides
@@ -103,7 +108,6 @@ return {
 
 			-- Fast wrap feature keybindings
 			local remap = vim.api.nvim_set_keymap
-			local npairs_utils = require("nvim-autopairs.utils")
 
 			-- Fast wrap with Alt-e
 			remap("i", "<M-e>", "v:lua.MPairs.autopairs_fast_wrap()", { expr = true, noremap = true })
@@ -111,7 +115,6 @@ return {
 			-- Custom function for fast wrap
 			_G.MPairs = {}
 			_G.MPairs.autopairs_fast_wrap = function()
-				local npairs = require("nvim-autopairs")
 				local utils = require("nvim-autopairs.utils")
 				local char = utils.get_next_char()
 				if char:match("%w") then
