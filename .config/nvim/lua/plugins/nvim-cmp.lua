@@ -67,8 +67,42 @@ return {
 
 		-- cmdline completion for ":"
 		-- This may contains Bugs!!!
+		-- <C-j>/<C-k>/<C-n>/<C-p> only move the highlight, <Tab> accepts it, <CR> runs the command
+		local cmdline_select = { behavior = cmp.SelectBehavior.Select } -- highlight only, don't insert
+		local function cmdline_move(dir)
+			return cmp.mapping(function()
+				if cmp.visible() then
+					(dir == "next" and cmp.select_next_item or cmp.select_prev_item)(cmdline_select)
+				else
+					cmp.complete()
+				end
+			end, { "c" })
+		end
+
 		cmp.setup.cmdline(":", {
-			mapping = cmp.mapping.preset.cmdline(),
+			mapping = cmp.mapping.preset.cmdline({
+				["<C-j>"] = cmdline_move("next"),
+				["<C-k>"] = cmdline_move("prev"),
+				["<C-n>"] = cmdline_move("next"), -- preset defaults, now highlight-only too
+				["<C-p>"] = cmdline_move("prev"),
+				["<S-Tab>"] = cmdline_move("prev"),
+				["<Tab>"] = cmp.mapping(function()
+					if cmp.visible() then
+						cmp.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace })
+						-- after accepting a directory, append "/" and reopen the menu for the next path segment
+						local line = vim.fn.getcmdline()
+						local token = line:match("(%S+)$")
+						if token and vim.fn.isdirectory(vim.fn.expand(token)) == 1 then
+							if token:sub(-1) ~= "/" then
+								vim.fn.setcmdline(line .. "/")
+							end
+							vim.schedule(cmp.complete)
+						end
+					else
+						cmp.complete()
+					end
+				end, { "c" }),
+			}),
 			sources = cmp.config.sources({
 				{ name = "path" },
 			}, {
