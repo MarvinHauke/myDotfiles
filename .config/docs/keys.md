@@ -36,6 +36,15 @@ Opt+m always means: focus this one thing, press again to put it back where it wa
 Hold Opt+m (about 250 ms) still types `µ`, in every app. Karabiner: `to_if_alone` = focus toggle,
 `to_if_held_down` = `µ`, both thresholds set to the same value. The toggle fires on key release.
 
+## Finder
+
+| Key | Action | Backend |
+|---|---|---|
+| Shift+y (Finder only) | copy the path of the selected files, or of the open folder if nothing is selected | `hammerspoon://finder-yank` (`finder.lua`), uses Finder's own Opt+Cmd+C |
+
+While renaming or typing in a search field, Shift+y types a normal `Y`.
+`yy` is not used: a double-tap rule would delay every single `y` (type-to-select) in Finder.
+
 ## OS layer (Hyper)
 
 | Key | Action | Backend |
