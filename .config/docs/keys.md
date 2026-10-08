@@ -45,11 +45,17 @@ Vim-style keys, only in Finder and only while browsing files.
 | Y (Shift+y) | copy the path of the selected files | Opt+Cmd+C ("Copy as Pathname") |
 | G (Shift+g) | jump to the last file | Opt+Down |
 | gg | jump to the first file | Opt+Up |
+| Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
 
 - While renaming or typing in a search field the keys type normally. Hammerspoon (`finder.lua`) watches
   Finder's focus and sets the Karabiner variable `finder_editing`; the rules check it.
 - G and gg work in list and column view, not in icon view (Finder ignores Opt+Up/Down there).
-- The first `g` goes to Finder at once (type-to-select), a second `g` within 250 ms jumps to the top. The selection may flash to a file starting with g on the way.
+- Known side effect of `gg`: the first `g` goes to Finder at once, so Finder's type-to-select runs. A single `g`
+  selects the first file starting with g (or the nearest one), and `gg` shows that selection briefly before it
+  lands on the first file.
+  Possible change: hold the first `g` back for 250 ms. Then `gg` is clean, but a single `g` is slow and quickly
+  typing `g` plus another letter loses the `g`.
+- Cmd+r replaces Finder's "Show Original" (for aliases) on that key.
 - Karabiner key names follow the US layout: the key labelled Y on the German keyboard is `z` in the rule.
 
 ## OS layer (Hyper)

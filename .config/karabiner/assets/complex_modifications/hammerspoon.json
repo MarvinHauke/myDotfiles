@@ -343,7 +343,7 @@
             ]
         },
         {
-            "description": "Finder: Y copies the path, G jumps to the last file, gg to the first (not while editing text)",
+            "description": "Finder: Y copies the path, G jumps to the last file, gg to the first, Cmd+r renames (not while editing text)",
             "manipulators": [
                 {
                     "type": "basic",
@@ -504,6 +504,38 @@
                     "parameters": {
                         "basic.to_delayed_action_delay_milliseconds": 250
                     }
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        {
+                            "type": "frontmost_application_if",
+                            "bundle_identifiers": [
+                                "^com\\.apple\\.finder$"
+                            ]
+                        },
+                        {
+                            "type": "variable_unless",
+                            "name": "finder_editing",
+                            "value": 1
+                        }
+                    ],
+                    "from": {
+                        "key_code": "r",
+                        "modifiers": {
+                            "mandatory": [
+                                "command"
+                            ],
+                            "optional": [
+                                "caps_lock"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "return_or_enter"
+                        }
+                    ]
                 }
             ]
         }
