@@ -47,6 +47,7 @@ Vim-style keys, only in Finder.
 | gg | jump to the first file | Opt+Up |
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
 | Ctrl+j in the search field | jump to the search results and select the first one | Tab, Down |
+| Escape twice in the search results | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 | Escape in an empty search field | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 
 - Hammerspoon (`finder.lua`) watches Finder's focus and sets the Karabiner variable `finder_editing`:
@@ -61,6 +62,8 @@ Vim-style keys, only in Finder.
   flashes to a g-file on `gg`): in the rule, set `to` of the last `g` manipulator to `[g, finder_g=1]` and
   remove the `g` from `to_if_invoked`.
 - Cmd+r replaces Finder's "Show Original" (for aliases) on that key.
+- Escape twice (within 0.5 s) is watched by Hammerspoon itself, only while Finder is in front. This is the one
+  key not defined in Karabiner: Karabiner rules never see the Escape that a Caps Lock tap produces.
 - The search exit relies on English Finder texts (window title "Searching ...", menu "Go > Back").
 - Karabiner key names follow the US layout: the key labelled Y on the German keyboard is `z` in the rule.
 
