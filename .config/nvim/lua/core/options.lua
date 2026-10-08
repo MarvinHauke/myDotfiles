@@ -43,8 +43,7 @@ opt.splitbelow = true
 -- Consider - as part of keyword
 opt.iskeyword:append("-")
 
---This goes to "~/.vim/undodir"
-opt.undodir = vim.fn.stdpath("config") .. "\\undodir"
+-- Undo files go to the default stdpath("state")/undo
 opt.undofile = true
 
 vim.cmd([[ set noswapfile ]])

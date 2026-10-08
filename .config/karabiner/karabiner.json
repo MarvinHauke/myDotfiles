@@ -4,6 +4,35 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Open cmdAbl command palette with ':' when Ableton Live is focused",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "com\\.ableton\\.live"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    },
+                                    {
+                                        "name": "cmdabl_open",
+                                        "type": "variable_if",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "period",
+                                    "modifiers": {
+                                        "mandatory": ["left_shift"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "/usr/bin/curl -s http://127.0.0.1:27184/open" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Ableton: Ctrl+Minus öffnet/schließt den Browser (→ Cmd+Option+5)",
                         "manipulators": [
                             {

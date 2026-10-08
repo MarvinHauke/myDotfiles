@@ -27,9 +27,6 @@ export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/MacOs/bin
 
-# Github
-[ -f ~/.config/github/token ] && export GITHUB_TOKEN=$(cat ~/.config/github/token)
-
 # Node Version Manager (NVM) - not for Nvim!
 export NVM_DIR="$HOME/.nvm"
 export PATH="$HOME/.nvm/versions/node/v24.16.0/bin:$PATH"
@@ -200,8 +197,7 @@ check-deps() {
 # FZF keybindings and completion
 command -v fzf >/dev/null && eval "$(fzf --zsh)"
 
-# Zoxide (smart cd)
-command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
+# Zoxide: initialized at the end of this file (see bottom)
 
 # Direnv (local environment variables)
 command -v direnv >/dev/null && eval "$(direnv hook zsh)"
@@ -252,7 +248,6 @@ alias gco='git checkout'
 alias gb='git branch'
 
 # System monitoring
-alias top='htop'
 alias df='df -h'
 alias du='du -h'
 
@@ -262,6 +257,9 @@ alias -s {mp4,mkv,avi}='open'
 
 # xournalpp
 alias xournal="open -a Xournal++"
+
+# Zoxide (smart cd) - init last, before the tmux block (which may return early)
+command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
 
 # =============================================================================
 # TMUX AUTO-START
