@@ -1,6 +1,6 @@
--- Tells Karabiner whether a text field is being edited in Finder (rename, search,
--- "Go to folder"). The single-key Finder rules (Y, G, gg) check the Karabiner
--- variable finder_editing and only fire while browsing files.
+-- Tells Karabiner what is focused in Finder through the variable finder_editing:
+-- 0 = browsing files, 1 = text field (rename, "Go to folder"), 2 = search field.
+-- The single-key Finder rules (Y, G, gg) only fire on 0, Escape leaves the search on 2.
 local M = {}
 
 local ax = require("hs.axuielement")
@@ -10,7 +10,10 @@ M.editing = nil
 
 local function publish(element)
 	local role = element and element:attributeValue("AXRole")
-	local now = (role == "AXTextField" or role == "AXTextArea") and 1 or 0
+	local now = 0
+	if role == "AXTextField" or role == "AXTextArea" then
+		now = element:attributeValue("AXSubrole") == "AXSearchField" and 2 or 1
+	end
 	if now ~= M.editing then
 		M.editing = now
 		hs.task.new(cli, nil, { "--set-variables", '{"finder_editing":' .. now .. "}" }):start()
@@ -30,6 +33,18 @@ local function watch()
 	end)
 	M.observer:start()
 	publish(appElement:attributeValue("AXFocusedUIElement"))
+end
+
+-- Escape in the search field: leave the search completely instead of staying in an
+-- empty "Searching ..." window. Called by hammerspoon://finder-escape
+function M.escape()
+	local app = hs.application.get("com.apple.finder")
+	local win = app and app:focusedWindow()
+	if win and win:title():find("^Searching ") then
+		app:selectMenuItem({ "Go", "Back" })
+	else
+		hs.eventtap.keyStroke({}, "escape", 0)
+	end
 end
 
 -- Finder gets a new process id when it is relaunched

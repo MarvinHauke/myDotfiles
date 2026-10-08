@@ -38,7 +38,7 @@ Hold Opt+m (about 250 ms) still types `µ`, in every app. Karabiner: `to_if_alon
 
 ## Finder
 
-Vim-style keys, only in Finder and only while browsing files.
+Vim-style keys, only in Finder.
 
 | Key | Action | Sent to Finder |
 |---|---|---|
@@ -46,16 +46,18 @@ Vim-style keys, only in Finder and only while browsing files.
 | G (Shift+g) | jump to the last file | Opt+Down |
 | gg | jump to the first file | Opt+Up |
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
+| Escape in the search field | leave the search and return to the folder | `hammerspoon://finder-escape` (Go > Back) |
 
-- While renaming or typing in a search field the keys type normally. Hammerspoon (`finder.lua`) watches
-  Finder's focus and sets the Karabiner variable `finder_editing`; the rules check it.
+- Hammerspoon (`finder.lua`) watches Finder's focus and sets the Karabiner variable `finder_editing`:
+  0 = browsing files, 1 = text field (rename, "Go to folder"), 2 = search field.
+  Y, G, gg and Cmd+r only fire on 0, so the keys type normally in text fields. Escape is only changed on 2.
 - G and gg work in list and column view, not in icon view (Finder ignores Opt+Up/Down there).
-- Known side effect of `gg`: the first `g` goes to Finder at once, so Finder's type-to-select runs. A single `g`
-  selects the first file starting with g (or the nearest one), and `gg` shows that selection briefly before it
-  lands on the first file.
-  Possible change: hold the first `g` back for 250 ms. Then `gg` is clean, but a single `g` is slow and quickly
-  typing `g` plus another letter loses the `g`.
+- `gg`: the first `g` is held back for 250 ms. A single `g` (type-to-select) is therefore slow, and quickly
+  typing `g` plus another letter loses the `g`. To get the old behaviour back (first `g` sent at once, selection
+  flashes to a g-file on `gg`): in the rule, set `to` of the last `g` manipulator to `[g, finder_g=1]` and
+  remove the `g` from `to_if_invoked`.
 - Cmd+r replaces Finder's "Show Original" (for aliases) on that key.
+- The search exit relies on English Finder texts (window title "Searching ...", menu "Go > Back").
 - Karabiner key names follow the US layout: the key labelled Y on the German keyboard is `z` in the rule.
 
 ## OS layer (Hyper)

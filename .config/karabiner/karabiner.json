@@ -345,7 +345,7 @@
                         ]
                     },
                     {
-                        "description": "Finder: Y copies the path, G jumps to the last file, gg to the first, Cmd+r renames (not while editing text)",
+                        "description": "Finder: Y copies the path, G last file, gg first file, Cmd+r renames, Escape leaves the search",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -357,9 +357,9 @@
                                         ]
                                     },
                                     {
-                                        "type": "variable_unless",
+                                        "type": "variable_if",
                                         "name": "finder_editing",
-                                        "value": 1
+                                        "value": 0
                                     }
                                 ],
                                 "from": {
@@ -393,9 +393,9 @@
                                         ]
                                     },
                                     {
-                                        "type": "variable_unless",
+                                        "type": "variable_if",
                                         "name": "finder_editing",
-                                        "value": 1
+                                        "value": 0
                                     }
                                 ],
                                 "from": {
@@ -433,9 +433,9 @@
                                         ]
                                     },
                                     {
-                                        "type": "variable_unless",
+                                        "type": "variable_if",
                                         "name": "finder_editing",
-                                        "value": 1
+                                        "value": 0
                                     }
                                 ],
                                 "from": {
@@ -466,18 +466,15 @@
                                         ]
                                     },
                                     {
-                                        "type": "variable_unless",
+                                        "type": "variable_if",
                                         "name": "finder_editing",
-                                        "value": 1
+                                        "value": 0
                                     }
                                 ],
                                 "from": {
                                     "key_code": "g"
                                 },
                                 "to": [
-                                    {
-                                        "key_code": "g"
-                                    },
                                     {
                                         "set_variable": {
                                             "name": "finder_g",
@@ -492,6 +489,9 @@
                                                 "name": "finder_g",
                                                 "value": 0
                                             }
+                                        },
+                                        {
+                                            "key_code": "g"
                                         }
                                     ],
                                     "to_if_canceled": [
@@ -517,9 +517,9 @@
                                         ]
                                     },
                                     {
-                                        "type": "variable_unless",
+                                        "type": "variable_if",
                                         "name": "finder_editing",
-                                        "value": 1
+                                        "value": 0
                                     }
                                 ],
                                 "from": {
@@ -536,6 +536,30 @@
                                 "to": [
                                     {
                                         "key_code": "return_or_enter"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_if",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.finder$"
+                                        ]
+                                    },
+                                    {
+                                        "type": "variable_if",
+                                        "name": "finder_editing",
+                                        "value": 2
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "escape"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "open -g 'hammerspoon://finder-escape'"
                                     }
                                 ]
                             }
