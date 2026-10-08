@@ -134,6 +134,25 @@ chooser:queryChangedCallback(function(query)
 	end
 end)
 
+-- Tab writes the highlighted app name into the input. Only listens while the launcher is open.
+local tabTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+	if event:getKeyCode() ~= hs.keycodes.map.tab or next(event:getFlags()) then
+		return false
+	end
+	local row = chooser:selectedRowContents()
+	if row and row.path then
+		chooser:query(row.text)
+		chooser:choices(filter(row.text))
+	end
+	return true
+end)
+chooser:showCallback(function()
+	tabTap:start()
+end)
+chooser:hideCallback(function()
+	tabTap:stop()
+end)
+
 function M.toggle()
 	if chooser:isVisible() then
 		chooser:hide()

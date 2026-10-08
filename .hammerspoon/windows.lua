@@ -50,6 +50,8 @@ function M.place(pos)
 		cycle(win)
 	elseif pos == "focus" then
 		focus(win)
+	elseif pos == "screen" then
+		win:moveToScreen(win:screen():next(), false, true)
 	elseif units[pos] then
 		win:moveToUnit(units[pos])
 	end

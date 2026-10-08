@@ -20,6 +20,9 @@ Rules live in `karabiner.json`; `assets/complex_modifications/hammerspoon.json` 
 | Opt+Shift+h / l | left / right half | `hammerspoon://win?pos=left` / `right` |
 | Opt+Shift+k / j | top / bottom half | `hammerspoon://win?pos=top` / `bottom` |
 | Opt+Shift+m | cycle: maximized > centered 2/3 > centered 1/2 > maximized (full height) | `hammerspoon://win?pos=cycle` |
+| Opt+h (tap) | move the window to the next screen, wraps around | `hammerspoon://win?pos=screen` |
+
+Hold Opt+h still types `ª` (same tap/hold rule as Opt+m below). Opt+l is not used: it is `@`.
 
 ## Focus toggle (Opt+m)
 
@@ -37,7 +40,7 @@ Hold Opt+m (about 250 ms) still types `µ`, in every app. Karabiner: `to_if_alon
 
 | Key | Action | Backend |
 |---|---|---|
-| Cmd+Space | launcher; type `=` first to calculate, Enter copies the result | `hammerspoon://launcher` |
+| Cmd+Space | launcher; Tab completes the highlighted name; type `=` first to calculate, Enter copies the result | `hammerspoon://launcher` |
 | Hyper+1..6 | go to desktop N (proposal) | see `desktops.md` |
 | Hyper+Shift+1..6 | move window to desktop N (proposal) | see `desktops.md` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |

@@ -308,6 +308,43 @@
                         ]
                     },
                     {
+                        "description": "Windows: tap Opt+h moves the window to the next screen, hold types ª",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "option"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to_if_alone": [
+                                    {
+                                        "shell_command": "open -g 'hammerspoon://win?pos=screen'"
+                                    }
+                                ],
+                                "to_if_held_down": [
+                                    {
+                                        "key_code": "h",
+                                        "modifiers": [
+                                            "left_option"
+                                        ],
+                                        "repeat": false
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 250,
+                                    "basic.to_if_held_down_threshold_milliseconds": 250
+                                }
+                            }
+                        ]
+                    },
+                    {
                         "description": "Open cmdAbl command palette with ':' when Ableton Live is focused",
                         "manipulators": [
                             {
