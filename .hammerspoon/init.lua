@@ -5,7 +5,7 @@ require("hs.ipc") -- enables the `hs` command line tool
 local launcher = require("launcher")
 local windows = require("windows")
 local clipboard = require("clipboard")
-local finder = require("finder") -- also publishes finder_editing to Karabiner
+require("finder") -- publishes finder_editing to Karabiner, leaves empty searches
 
 hs.urlevent.bind("launcher", function()
 	launcher.toggle()
@@ -15,9 +15,6 @@ hs.urlevent.bind("clipboard", function()
 end)
 hs.urlevent.bind("win", function(_, params)
 	windows.place(params.pos)
-end)
-hs.urlevent.bind("finder-escape", function()
-	finder.escape()
 end)
 hs.urlevent.bind("reload", function()
 	hs.reload()

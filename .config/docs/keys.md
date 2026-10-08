@@ -46,11 +46,14 @@ Vim-style keys, only in Finder.
 | G (Shift+g) | jump to the last file | Opt+Down |
 | gg | jump to the first file | Opt+Up |
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
-| Escape in the search field | leave the search and return to the folder | `hammerspoon://finder-escape` (Go > Back) |
+| Escape in an empty search field | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 
 - Hammerspoon (`finder.lua`) watches Finder's focus and sets the Karabiner variable `finder_editing`:
   0 = browsing files, 1 = text field (rename, "Go to folder"), 2 = search field.
-  Y, G, gg and Cmd+r only fire on 0, so the keys type normally in text fields. Escape is only changed on 2.
+  Y, G, gg and Cmd+r only fire on 0, so the keys type normally in text fields.
+- Search exit: when focus leaves an empty search field, `finder.lua` sends Go > Back. It reacts to the focus
+  change, so it works for the Escape key and for Caps Lock tapped as Escape. With text in the field the first
+  Escape clears it, the second one leaves.
 - G and gg work in list and column view, not in icon view (Finder ignores Opt+Up/Down there).
 - `gg`: the first `g` is held back for 250 ms. A single `g` (type-to-select) is therefore slow, and quickly
   typing `g` plus another letter loses the `g`. To get the old behaviour back (first `g` sent at once, selection

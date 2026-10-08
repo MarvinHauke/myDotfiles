@@ -345,7 +345,7 @@
                         ]
                     },
                     {
-                        "description": "Finder: Y copies the path, G last file, gg first file, Cmd+r renames, Escape leaves the search",
+                        "description": "Finder: Y copies the path, G last file, gg first file, Cmd+r renames (not while editing text)",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -536,30 +536,6 @@
                                 "to": [
                                     {
                                         "key_code": "return_or_enter"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "basic",
-                                "conditions": [
-                                    {
-                                        "type": "frontmost_application_if",
-                                        "bundle_identifiers": [
-                                            "^com\\.apple\\.finder$"
-                                        ]
-                                    },
-                                    {
-                                        "type": "variable_if",
-                                        "name": "finder_editing",
-                                        "value": 2
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "escape"
-                                },
-                                "to": [
-                                    {
-                                        "shell_command": "open -g 'hammerspoon://finder-escape'"
                                     }
                                 ]
                             }
