@@ -1,26 +1,44 @@
--- Finder helpers. Called by hammerspoon://finder-yank
+-- Tells Karabiner whether a text field is being edited in Finder (rename, search,
+-- "Go to folder"). The single-key Finder rules (Y, G, gg) check the Karabiner
+-- variable finder_editing and only fire while browsing files.
 local M = {}
 
 local ax = require("hs.axuielement")
+local cli = "/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli"
 
--- true while renaming a file or typing in a search field
-local function editingText()
-	local element = ax.systemWideElement():attributeValue("AXFocusedUIElement")
+M.editing = nil
+
+local function publish(element)
 	local role = element and element:attributeValue("AXRole")
-	return role == "AXTextField" or role == "AXTextArea"
+	local now = (role == "AXTextField" or role == "AXTextArea") and 1 or 0
+	if now ~= M.editing then
+		M.editing = now
+		hs.task.new(cli, nil, { "--set-variables", '{"finder_editing":' .. now .. "}" }):start()
+	end
 end
 
--- Copy the path of the selection (or of the open folder), like Y in vim.
--- Uses Finder's own "Copy as Pathname" (Opt+Cmd+C).
-function M.yank()
-	if editingText() then
-		hs.eventtap.keyStrokes("Y")
+local function watch()
+	local app = hs.application.get("com.apple.finder")
+	if not app then
 		return
 	end
-	hs.eventtap.keyStroke({ "alt", "cmd" }, "c")
-	hs.timer.doAfter(0.2, function()
-		hs.alert.show(hs.pasteboard.getContents() or "nothing copied")
+	local appElement = ax.applicationElement(app)
+	M.observer = ax.observer.new(app:pid())
+	M.observer:addWatcher(appElement, "AXFocusedUIElementChanged")
+	M.observer:callback(function(_, element)
+		publish(element)
 	end)
+	M.observer:start()
+	publish(appElement:attributeValue("AXFocusedUIElement"))
 end
+
+-- Finder gets a new process id when it is relaunched
+M.appWatcher = hs.application.watcher.new(function(_, event, app)
+	if event == hs.application.watcher.launched and app:bundleID() == "com.apple.finder" then
+		watch()
+	end
+end)
+M.appWatcher:start()
+watch()
 
 return M

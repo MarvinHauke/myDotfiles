@@ -38,12 +38,19 @@ Hold Opt+m (about 250 ms) still types `µ`, in every app. Karabiner: `to_if_alon
 
 ## Finder
 
-| Key | Action | Backend |
-|---|---|---|
-| Shift+y (Finder only) | copy the path of the selected files, or of the open folder if nothing is selected | `hammerspoon://finder-yank` (`finder.lua`), uses Finder's own Opt+Cmd+C |
+Vim-style keys, only in Finder and only while browsing files.
 
-While renaming or typing in a search field, Shift+y types a normal `Y`.
-`yy` is not used: a double-tap rule would delay every single `y` (type-to-select) in Finder.
+| Key | Action | Sent to Finder |
+|---|---|---|
+| Y (Shift+y) | copy the path of the selected files | Opt+Cmd+C ("Copy as Pathname") |
+| G (Shift+g) | jump to the last file | Opt+Down |
+| gg | jump to the first file | Opt+Up |
+
+- While renaming or typing in a search field the keys type normally. Hammerspoon (`finder.lua`) watches
+  Finder's focus and sets the Karabiner variable `finder_editing`; the rules check it.
+- G and gg work in list and column view, not in icon view (Finder ignores Opt+Up/Down there).
+- A single `g` reaches Finder 250 ms late, because the rule waits for a second `g`.
+- Karabiner key names follow the US layout: the key labelled Y on the German keyboard is `z` in the rule.
 
 ## OS layer (Hyper)
 
