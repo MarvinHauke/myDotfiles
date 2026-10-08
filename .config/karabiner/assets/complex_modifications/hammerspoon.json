@@ -474,6 +474,9 @@
                     },
                     "to": [
                         {
+                            "key_code": "g"
+                        },
+                        {
                             "set_variable": {
                                 "name": "finder_g",
                                 "value": 1
@@ -487,15 +490,9 @@
                                     "name": "finder_g",
                                     "value": 0
                                 }
-                            },
-                            {
-                                "key_code": "g"
                             }
                         ],
                         "to_if_canceled": [
-                            {
-                                "key_code": "g"
-                            },
                             {
                                 "set_variable": {
                                     "name": "finder_g",

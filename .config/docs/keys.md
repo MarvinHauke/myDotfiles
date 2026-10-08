@@ -49,7 +49,7 @@ Vim-style keys, only in Finder and only while browsing files.
 - While renaming or typing in a search field the keys type normally. Hammerspoon (`finder.lua`) watches
   Finder's focus and sets the Karabiner variable `finder_editing`; the rules check it.
 - G and gg work in list and column view, not in icon view (Finder ignores Opt+Up/Down there).
-- A single `g` reaches Finder 250 ms late, because the rule waits for a second `g`.
+- The first `g` goes to Finder at once (type-to-select), a second `g` within 250 ms jumps to the top. The selection may flash to a file starting with g on the way.
 - Karabiner key names follow the US layout: the key labelled Y on the German keyboard is `z` in the rule.
 
 ## OS layer (Hyper)
