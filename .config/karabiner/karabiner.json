@@ -345,7 +345,7 @@
                         ]
                     },
                     {
-                        "description": "Finder: Y copies the path, G last file, gg first file, Cmd+r renames (not while editing text)",
+                        "description": "Finder: Y copies the path, G last file, gg first file, Cmd+r renames, Ctrl+j jumps from the search field to the results",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -536,6 +536,41 @@
                                 "to": [
                                     {
                                         "key_code": "return_or_enter"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_if",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.finder$"
+                                        ]
+                                    },
+                                    {
+                                        "type": "variable_if",
+                                        "name": "finder_editing",
+                                        "value": 2
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "control"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "tab"
+                                    },
+                                    {
+                                        "key_code": "down_arrow"
                                     }
                                 ]
                             }

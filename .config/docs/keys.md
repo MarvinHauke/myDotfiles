@@ -46,6 +46,7 @@ Vim-style keys, only in Finder.
 | G (Shift+g) | jump to the last file | Opt+Down |
 | gg | jump to the first file | Opt+Up |
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
+| Ctrl+j in the search field | jump to the search results and select the first one | Tab, Down |
 | Escape in an empty search field | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 
 - Hammerspoon (`finder.lua`) watches Finder's focus and sets the Karabiner variable `finder_editing`:
