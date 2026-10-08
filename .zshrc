@@ -60,6 +60,12 @@ conf() { cd "$XDG_CONFIG_HOME/$1" 2>/dev/null || cd "$XDG_CONFIG_HOME" }
 # Zathura PDF viewer (fork and detach from terminal)
 zathura() { command zathura --fork "$@" >/dev/null 2>&1 }
 
+# Pick processes with fzf and kill them, e.g. fkill -9
+fkill() { ps -axo pid,user,%cpu,%mem,comm | fzf -m --header-lines=1 | awk '{print $1}' | xargs kill "$@" }
+
+# Search Homebrew with fzf and install the picks, e.g. fbrew ffm
+fbrew() { { brew formulae; brew casks } | fzf -m --query="$1" --preview 'brew info {}' | xargs brew install }
+
 # Git bare repo management for dotfiles
 dotfiles() {
   git --git-dir="$HOME/.cfg/" --work-tree="$HOME" "$@"

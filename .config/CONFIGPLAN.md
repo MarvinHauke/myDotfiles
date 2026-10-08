@@ -20,10 +20,10 @@ New topic = new file there plus one line here.
 Who calls whom, and where it is configured. `*` = planned, not built yet.
 
     Karabiner: all hotkeys             karabiner/karabiner.json      docs/keys.md
-      |- Hammerspoon *                 ~/.hammerspoon/init.lua       launcher, windows, clipboard
+      |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard
       |- screencapture *               (no config), /tmp/shots       docs/capture.md
       |- macOS Spaces *                System Settings               docs/desktops.md
-      |- tmux pane zoom *, cmdAbl      karabiner/assets/complex_modifications/
+      |- tmux pane zoom, cmdAbl        karabiner/assets/complex_modifications/
 
     Ghostty                            ghostty/config
       |- zsh                           ~/.zshenv > ~/.zprofile > ~/.zshrc
@@ -46,16 +46,12 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
 | Editor | neovim, lazy.nvim, ~40 plugin files | `nvim/` | good |
 | PDF | zathura | `zathura/zathurarc` | good |
 | Keys | karabiner (caps = ctrl/esc, ctrl-hjkl), owns all hotkeys | `karabiner/` | good |
-| Automation | hammerspoon, actions only, no hotkeys | `~/.hammerspoon/init.lua` | empty, ready for part 3 |
+| Automation | hammerspoon: launcher, windows, clipboard (actions only) | `~/.hammerspoon/*.lua` | new, needs daily use |
 | Capture | macOS built-in (`screencapture`, Screenshot.app) | `defaults com.apple.screencapture` (unset) | defaults, saves to Desktop |
-| Launcher | Raycast (closed source), Cmd+Space | encrypted db | replace |
-| Windows | Raycast, AltTab | none | replace |
+| Launcher | hammerspoon `launcher.lua`, Cmd+Space | `~/.hammerspoon/` | new |
+| Windows | hammerspoon `windows.lua`, AltTab | `~/.hammerspoon/` | new |
 | Packages | Homebrew (53 formulae, 9 casks) | `brew/*.txt` | list is stale |
 | Dotfiles | bare repo `~/.cfg` | | clean, 1 commit unpushed |
-
-Raycast usage (2025): ~3,170 opens in 330 days, about 10 per day, 1 action per open, 74 apps.
-So: app launcher first, then window management, sometimes calculator. Extensions installed:
-Translate, Color Picker, Brew, Linear, Kill Process.
 
 ## 1. Fix (broken or wrong today)
 
@@ -81,23 +77,25 @@ Translate, Color Picker, Brew, Linear, Kill Process.
 
 ## 3. Replace Raycast with Hammerspoon
 
-Hotkeys stay in Karabiner. Hammerspoon only exposes actions via `hs.urlevent.bind("launcher", ...)`;
-Karabiner calls them with `shell_command: open -g hammerspoon://launcher`. No `hs.hotkey.bind` in Lua.
+Hotkeys live in Karabiner (`karabiner.json`, catalog copy in `assets/complex_modifications/hammerspoon.json`).
+Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner calls `open -g hammerspoon://<action>`.
 
-- [ ] Move the two existing `hs.hotkey.bind` calls (reload, show app name) to Karabiner rules in `karabiner/assets/complex_modifications/hammerspoon.json`.
-- [ ] App launcher: `hs.chooser`, Karabiner maps Cmd+Space to `hammerspoon://launcher`.
-- [ ] Window management on Opt+Shift: hjkl halves, m cycles maximized/centered sizes (`hs.window`, keys in `docs/keys.md`).
-- [ ] Focus toggle on Opt+m: tmux pane zoom in Ghostty, window maximize/restore elsewhere; hold types `µ` (Karabiner tap/hold).
-- [ ] OS-wide clipboard history (`docs/clipboard.md`).
-- [ ] Calculator: evaluate the query when it starts with `=`. Later, if needed: sub-calculators (electronics etc.) behind a prefix.
-- [ ] Brew and Kill Process: shell functions with fzf (`ps | fzf | kill`).
+- [x] Launcher with calculator (`launcher.lua`, Cmd+Space, `=` prefix calculates).
+- [x] Window keys and focus toggle (`windows.lua`, Opt+Shift+hjkl/m, Opt+m).
+- [x] Clipboard history (`clipboard.lua`, Hyper+v, text only, skips concealed entries).
+- [x] Hyper = right Cmd; reload on Hyper+r, app name on Hyper+i.
+- [x] `fkill` and `fbrew` in `.zshrc` replace the Kill Process and Brew extensions.
+- [x] Raycast quit, login item removed, app and data in the Trash.
+- [ ] Try every key from `docs/keys.md` once; the rules are linted but were not tested with real key presses.
+- [ ] Empty the Trash when everything works.
 - [ ] Translate, Color Picker, Linear: decide, drop or use the web.
-- [ ] Uninstall Raycast, remove login item. Check whether AltTab is still needed.
+- [ ] Check whether AltTab is still needed.
+- [ ] Later, if needed: sub-calculators (electronics etc.) behind a prefix.
 
 ## 4. Track and reproduce
 
 - [ ] Replace `brew/packages.txt` and `cask-packages.txt` (18 entries, wrong names like `rg`, `nvim`) with a `Brewfile` from `brew bundle dump`. Update the install script.
-- [ ] Track `.zshenv`, `.zprofile` and the hammerspoon Lua modules.
+- [ ] Track `.zshenv` and `.zprofile`.
 - [ ] ghostty: move font, keybinds and window settings into `ghostty/config`.
 - [ ] Optional: images in the terminal. Enable `image` in snacks.nvim (uses `magick`, installed), `set -g allow-passthrough on` in tmux. Shell: `chafa` only if needed.
 - [ ] Optional: move zsh into `~/.config/zsh` with `ZDOTDIR` (set in `~/.zshenv`), split `.zshrc` into env / aliases / functions.
@@ -106,7 +104,6 @@ Karabiner calls them with `shell_command: open -g hammerspoon://launcher`. No `h
 
 Details and proposals live in `docs/`. This file only tracks the steps.
 
-- [ ] Decide on the key system in `docs/keys.md` (Hyper = right Cmd as OS layer).
 - [ ] Desktops: set up the 6 fixed desktops, native Spaces first (`docs/desktops.md`).
 - [ ] Capture: Cmd+Shift+3/4 to clipboard, +Opt to `/tmp/shots`, Cmd+Shift+5 records (`docs/capture.md`).
 - [ ] `defaults write com.apple.screencapture show-thumbnail -bool false`, add to the install script.

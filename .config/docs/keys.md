@@ -1,7 +1,8 @@
 # Keys
 
 All hotkeys live in Karabiner (`~/.config/karabiner/`). Tools only expose commands or URLs.
-Status: proposal, not implemented yet.
+Status: layers, window, focus and OS keys are implemented (desktops and capture are still proposals).
+Rules live in `karabiner.json`; `assets/complex_modifications/hammerspoon.json` is the same set as a catalog.
 
 ## Layers
 
@@ -16,9 +17,9 @@ Status: proposal, not implemented yet.
 
 | Key | Action | Backend |
 |---|---|---|
-| Opt+Shift+h / l | left / right half | `hammerspoon://win?pos=left` |
-| Opt+Shift+k / j | top / bottom half | Hammerspoon |
-| Opt+Shift+m | cycle: maximized > centered 2/3 > centered 1/2 > maximized | Hammerspoon |
+| Opt+Shift+h / l | left / right half | `hammerspoon://win?pos=left` / `right` |
+| Opt+Shift+k / j | top / bottom half | `hammerspoon://win?pos=top` / `bottom` |
+| Opt+Shift+m | cycle: maximized > centered 2/3 > centered 1/2 > maximized (full height) | `hammerspoon://win?pos=cycle` |
 
 ## Focus toggle (Opt+m)
 
@@ -36,11 +37,12 @@ Hold Opt+m (about 250 ms) still types `µ`, in every app. Karabiner: `to_if_alon
 
 | Key | Action | Backend |
 |---|---|---|
-| Cmd+Space | launcher | `hammerspoon://launcher` |
-| Hyper+1..6 | go to desktop N | see `desktops.md` |
-| Hyper+Shift+1..6 | move window to desktop N | see `desktops.md` |
+| Cmd+Space | launcher; type `=` first to calculate, Enter copies the result | `hammerspoon://launcher` |
+| Hyper+1..6 | go to desktop N (proposal) | see `desktops.md` |
+| Hyper+Shift+1..6 | move window to desktop N (proposal) | see `desktops.md` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |
 | Hyper+r | reload Hammerspoon | `hammerspoon://reload` |
+| Hyper+i | show the name of the front app | `hammerspoon://appname` |
 
 Desktops are not on Opt+Shift+number, because Option+number types `[ ] | { }` on the German layout.
 
