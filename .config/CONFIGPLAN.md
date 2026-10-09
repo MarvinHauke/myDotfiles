@@ -52,12 +52,12 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
 | Editor | neovim, lazy.nvim, ~40 plugin files | `nvim/` | good |
 | PDF | zathura | `zathura/zathurarc` | good |
 | Keys | karabiner (caps = ctrl/esc, ctrl-hjkl), owns all hotkeys | `karabiner/` | good |
-| Automation | hammerspoon: launcher, windows, clipboard (actions only) | `~/.hammerspoon/*.lua` | new, needs daily use |
+| Automation | hammerspoon: launcher, windows, clipboard, Finder keys, help (actions only) | `~/.hammerspoon/*.lua` | new, needs daily use |
 | Capture | macOS built-in keys + hammerspoon `capture.lua` | `defaults com.apple.screencapture`, `/tmp/shots` | new |
-| Launcher | hammerspoon `launcher.lua`, Cmd+Space | `~/.hammerspoon/` | new |
+| Launcher | hammerspoon `launcher.lua` + `launcher/`, Cmd+Space; `edit` opens files in nvim/tmux | `~/.hammerspoon/`, `~/.local/bin/edit` | new |
 | Windows | hammerspoon `windows.lua`, AltTab | `~/.hammerspoon/` | new |
-| Packages | Homebrew (53 formulae, 9 casks) | `brew/*.txt` | list is stale |
-| Dotfiles | bare repo `~/.cfg` | | clean, 1 commit unpushed |
+| Packages | Homebrew | `brew/Brewfile` | good, `brew bundle dump --force` after changes |
+| Dotfiles | bare repo `~/.cfg`, branch `macos` | | clean |
 
 ## 1. Fix (broken or wrong today)
 
@@ -102,7 +102,7 @@ Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner c
 
 - [x] `brew/Brewfile` replaces the two package lists. Record: `brew bundle dump --force`. Restore: `brew bundle`. Extras: `brew bundle cleanup`.
 - [x] Install script (GitHub gist) runs `brew bundle --file ~/.config/brew/Brewfile`; falls back to `packages.txt` on branches without a Brewfile.
-- [ ] Track `.zshenv` and `.zprofile`.
+- [x] `.zshenv` and `.zprofile` are tracked (`.zshenv` no longer fails without rustup).
 - [ ] ghostty: move font, keybinds and window settings into `ghostty/config`.
 - [ ] Optional: images in the terminal. Enable `image` in snacks.nvim (uses `magick`, installed), `set -g allow-passthrough on` in tmux. Shell: `chafa` only if needed.
 - [ ] Optional: move zsh into `~/.config/zsh` with `ZDOTDIR` (set in `~/.zshenv`), split `.zshrc` into env / aliases / functions.

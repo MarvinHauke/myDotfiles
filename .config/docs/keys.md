@@ -1,7 +1,7 @@
 # Keys
 
 All hotkeys live in Karabiner (`~/.config/karabiner/`). Tools only expose commands or URLs.
-Status: layers, window, focus and OS keys are implemented (desktops and capture are still proposals).
+Status: everything here is implemented, except the desktop keys (marked proposal).
 Rules live in `karabiner.json`, in one place only (profile > complex_modifications > rules).
 
 ## Layers
