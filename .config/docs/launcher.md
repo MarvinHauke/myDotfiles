@@ -4,9 +4,27 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
 
 | Input | Rows | Enter | Cmd+Enter |
 |---|---|---|---|
-| text | apps, places and nv aliases from `.zshrc`, opened here before, recent folders, recent files (8 each at most), then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder |
+| text | apps, places and nv aliases from `.zshrc`, opened before, recent folders and files, ordered as below; then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder |
 | `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep) | `edit` | show in Finder |
 | `=` + expression | calculator | copies the result | |
+
+Order of the rows for a typed text (`launcher.lua`, `launcher/usage.lua`):
+
+| Rank | Rows | Order inside |
+|---|---|---|
+| 1 | the row you picked last time for exactly this text | |
+| 2 | name starts with the text | by use, then apps, places, folders, files |
+| 3 | a word in the name starts with it, or the name contains it | same |
+| 4 | only the path contains it, or scattered letters (apps) | same |
+| 5 | file tree, from 3 typed characters on | as fzf ranks them |
+
+- Every Enter and Cmd+Enter is counted for the row it opened. Use = opens weighted by age: last day 4x,
+  last week 2x, last month 1x, older 0.5x.
+- Rank 1 is learned per typed text: type `tr`, pick Traktor, and `tr` gives Traktor first from then on.
+- Rows that were never opened keep the limit of 8 per list; opened ones are always shown when they match.
+- Empty input: the most used rows of any kind first, then the remaining apps by name.
+- Stored in Hammerspoon's settings under `launcher.usage` (500 entries at most). Reset:
+  `hs -c 'hs.settings.clear("launcher.usage")'`, then reload Hammerspoon.
 
 - Tab completes the highlighted app name. On a folder row it writes `/<folder>/` into the input, so you
   search below that folder.
@@ -16,11 +34,9 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
   (`traktor pro` finds "Traktor" in "Traktor Pro 3").
 - Places and aliases: read from zsh itself every five minutes, so `.zshrc` is the only list. Places are the
   named directories (`hash -d dev=...`), aliases are those of the form `alias nvz='nvim <path>'`. Only the name
-  is matched. Enter on a place opens a shell there, on an alias nvim. A name typed in full goes above apps that
-  match only by scattered letters (`dev` first, but `notes` after the Notes app).
-- Opened here before: the launcher's own history. Every file or folder opened with Enter or shown with Cmd+Enter
-  is remembered (200 entries, newest first), so it is found again without `/`. Stored in Hammerspoon's settings;
-  clear it with `hs -c 'hs.settings.clear("launcher.history")'`. Entries on a drive that is not plugged in are hidden.
+  is matched. Enter on a place opens a shell there, on an alias nvim.
+- Opened before: files and folders you opened through the launcher, taken from the usage table. Entries on a
+  drive that is not plugged in are hidden.
 - File tree rows in the plain list appear from 3 typed characters on, a moment after the other rows.
 - Recent files: nvim's own list (`v:oldfiles`), so text and code files only. No extra log.
 - Recent folders: zoxide's list (`zoxide query -l`), already ranked by use. `Development/.../` paths come from here.
@@ -37,8 +53,9 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
 | File (`~/.hammerspoon/`) | Holds |
 |---|---|
 | `launcher.lua` | the picker: keys (Tab, Cmd+Enter), which source is asked for which input, joining the rows |
-| `launcher/apps.lua` | app scan, match scoring, launch counter |
-| `launcher/paths.lua` | history, recent folders and files, drives, cached file tree and its fzf search, opening with `edit` |
+| `launcher/apps.lua` | app scan, match scoring |
+| `launcher/usage.lua` | what was opened how often, what was picked for which text |
+| `launcher/paths.lua` | places and aliases, opened paths, recent folders and files, drives, cached file tree and its fzf search, opening with `edit` |
 | `launcher/calc.lua` | calculator; the place for sub-calculators |
 
 A new kind of result is a new file in `launcher/` with `rows(query)` and `open(row)`, plus one branch in `launcher.lua`.

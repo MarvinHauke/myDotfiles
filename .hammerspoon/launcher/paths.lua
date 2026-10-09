@@ -1,10 +1,11 @@
 -- Launcher source: files and folders.
--- rows() starts with the places (hash -d) and nv aliases (alias x='nvim <path>') from ~/.zshrc.
--- rows(): what was opened here before, recently used folders (zoxide) and files (nvim).
+-- rows(): places (hash -d) and nv aliases (alias x='nvim <path>') from ~/.zshrc, what was opened here
+-- before, recently used folders (zoxide) and files (nvim). Each row carries its match rank; launcher.lua orders them.
 -- search(): the whole file tree below the home folder and on mounted drives (fd lists, fzf ranks).
 local M = {}
 
 local score = require("launcher.apps").score
+local usage = require("launcher.usage")
 
 local home = os.getenv("HOME")
 local bin = "/opt/homebrew/bin/"
@@ -12,11 +13,9 @@ local edit = home .. "/.local/bin/edit" -- opens files and folders in nvim / tmu
 
 local scannedAt = 0
 local recentFolders, recentFiles = {}, {} -- rows, most used / most recent first
-local maxRecent = 8 -- rows of each kind shown below the apps
+local maxRecent = 8 -- never opened rows shown per list; rows that were opened before are always shown
 local roots = { home } -- where the tree search looks: the home folder and mounted drives
--- files and folders opened through the launcher, newest first: { { path = ..., kind = ... }, ... }
-local history = hs.settings.get("launcher.history") or {}
-local historyRows = {}
+local usedRows = {} -- files and folders opened through the launcher before
 
 -- row for a file or folder; folders are given with a trailing slash or as kind
 local function pathRow(path, kind)
@@ -66,46 +65,38 @@ local function scanRoots()
 	end
 end
 
--- rows for the history entries that still exist (a drive that is not plugged in hides its entries)
-local function loadHistory()
-	historyRows = {}
-	for _, entry in ipairs(history) do
+-- rows for the opened paths that still exist (a drive that is not plugged in hides its entries)
+local function loadUsed()
+	usedRows = {}
+	for _, entry in ipairs(usage.paths()) do
 		if hs.fs.attributes(entry.path, "mode") then
-			historyRows[#historyRows + 1] = pathRow(entry.path, entry.kind)
+			usedRows[#usedRows + 1] = pathRow(entry.path, entry.kind)
 		end
 	end
 end
 
-function M.remember(path, kind)
-	for i, entry in ipairs(history) do
-		if entry.path == path then
-			table.remove(history, i)
-			break
-		end
-	end
-	table.insert(history, 1, { path = path, kind = kind })
-	while #history > 200 do
-		table.remove(history)
-	end
-	hs.settings.set("launcher.history", history)
-	loadHistory()
-end
-
--- best rows of one list: name starts with q, then name contains q, then only the path does.
+-- Adds the matching rows of one list to into, each with its rank:
+-- 1 = name starts with q, 2 = name contains q, 3 = only the path does. Every used row for an empty q.
 -- seen holds the paths that are already listed.
-local function pick(rows, q, into, seen)
-	local ranked = { {}, {}, {} }
+local function pick(rows, q, group, into, seen)
+	local unused = { {}, {}, {} }
 	for _, row in ipairs(rows) do
-		local s = score(row.text:lower(), q)
-		local rank = s == 1 and 1 or (s and s < 4) and 2 or row.match:find(q, 1, true) and 3
+		local used = usage.score(row) > 0
+		local s = q ~= "" and score(row.text:lower(), q)
+		local rank = q == "" and (used and 1) or s == 1 and 1 or (s and s < 4) and 2 or row.match:find(q, 1, true) and 3
 		if rank and not seen[row.file] then
 			seen[row.file] = true
-			table.insert(ranked[rank], row)
+			row.rank, row.group = rank, group
+			if used then
+				into[#into + 1] = row
+			else
+				table.insert(unused[rank], row)
+			end
 		end
 	end
 	local shown = 0
-	for _, group in ipairs(ranked) do
-		for _, row in ipairs(group) do
+	for _, list in ipairs(unused) do
+		for _, row in ipairs(list) do
 			if shown >= maxRecent then
 				return
 			end
@@ -149,17 +140,18 @@ for k v in "${(@kv)aliases}"; do [[ $v == nvim\ * ]] && print -r -- "alias	$k	${
 		:start()
 end
 
--- places and aliases, opened here before, recent folders, recent files; nothing for an empty query.
--- Also returns the set of listed paths, to keep tree rows from repeating them.
+-- places and aliases, opened here before, recent folders, recent files.
+-- For an empty text only what was opened before. Also returns the set of listed paths,
+-- to keep tree rows from repeating them.
 function M.rows(query)
-	local q, choices, seen = query:lower(), {}, {}
+	local q, rows, seen = query:lower(), {}, {}
+	pick(placeRows, q, 2, rows, seen)
+	pick(usedRows, q, 3, rows, seen)
 	if q ~= "" then
-		pick(placeRows, q, choices, seen)
-		pick(historyRows, q, choices, seen)
-		pick(recentFolders, q, choices, seen)
-		pick(recentFiles, q, choices, seen)
+		pick(recentFolders, q, 3, rows, seen)
+		pick(recentFiles, q, 4, rows, seen)
 	end
-	return choices, seen
+	return rows, seen
 end
 
 -- fd writes the tree list once when the launcher opens; fzf then ranks that list on every keystroke.
@@ -221,17 +213,15 @@ function M.refresh()
 		scannedAt = os.time()
 	end
 	scanRoots()
-	loadHistory()
+	loadUsed()
 	listPaths()
 end
 
 function M.open(row)
-	M.remember(row.file, row.kind)
 	hs.task.new(edit, nil, row.editor and { "-e", row.file } or { row.file }):start()
 end
 
 function M.reveal(row)
-	M.remember(row.file, row.kind)
 	hs.task.new("/usr/bin/open", nil, { "-R", row.file }):start()
 end
 
@@ -243,5 +233,5 @@ end
 scanRecent()
 scanPlaces()
 scannedAt = os.time()
-loadHistory()
+loadUsed()
 return M

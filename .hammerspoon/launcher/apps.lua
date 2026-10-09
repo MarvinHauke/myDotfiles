@@ -1,4 +1,4 @@
--- Launcher source: applications. Rows are ranked by match quality, then by how often they were started.
+-- Launcher source: applications. rows() gives every matching app with its match rank; launcher.lua orders them.
 local M = {}
 
 local dirs = {
@@ -8,7 +8,6 @@ local dirs = {
 	"/System/Library/CoreServices/Applications",
 }
 local apps, scannedAt = {}, 0
-local counts = hs.settings.get("launcher.counts") or {}
 
 local function scan()
 	local found, seen = {}, {}
@@ -49,6 +48,9 @@ local function scan()
 		walk(dir, 3) -- some vendors nest: Native Instruments/Traktor Pro 3/Traktor.app
 	end
 	add("/System/Library/CoreServices/Finder.app")
+	table.sort(found, function(a, b)
+		return a.text:lower() < b.text:lower()
+	end)
 	apps, scannedAt = found, os.time()
 end
 
@@ -81,38 +83,21 @@ function M.refresh()
 	end
 end
 
+-- rank: 1 = name starts with the text, 2 = a word starts with it or the name contains it,
+-- 3 = only the letters in order. Every app for an empty text.
 function M.rows(query)
-	local q = query:lower()
-	local hits = {}
+	local q, rows = query:lower(), {}
 	for _, app in ipairs(apps) do
 		local s = q == "" and 1 or M.score(app.match, q)
 		if s then
-			hits[#hits + 1] = { app = app, score = s, count = counts[app.path] or 0 }
+			app.rank, app.group = s == 1 and 1 or s < 4 and 2 or 3, 1
+			rows[#rows + 1] = app
 		end
 	end
-	table.sort(hits, function(a, b)
-		if a.score ~= b.score then
-			return a.score < b.score
-		end
-		if a.count ~= b.count then
-			return a.count > b.count
-		end
-		return a.app.text < b.app.text
-	end)
-	-- strong = how many rows match by prefix, word or substring (the rest only by letters in order)
-	local choices, strong = {}, 0
-	for i, hit in ipairs(hits) do
-		choices[i] = hit.app
-		if hit.score < 4 then
-			strong = strong + 1
-		end
-	end
-	return choices, strong
+	return rows
 end
 
 function M.open(row)
-	counts[row.path] = (counts[row.path] or 0) + 1
-	hs.settings.set("launcher.counts", counts)
 	hs.application.launchOrFocus(row.path)
 end
 
