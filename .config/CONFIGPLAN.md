@@ -71,7 +71,7 @@ Who calls whom, and where it is configured.
 
 - [x] iTerm2 and kitty uninstalled with their settings.
 - [x] MacPorts: PATH block removed from `.zprofile`.
-- [ ] MacPorts files (needs sudo): `sudo rm -rf /opt/local /Applications/MacPorts /Library/Tcl/macports1.0 && sudo dscl . -delete /Users/macports && sudo dscl . -delete /Groups/macports`
+- [x] MacPorts removed: `/opt/local`, the `macports` user and group.
 - [x] Strays trashed: `package.json`, `package-lock.json`, `zsh/`. `gtk-3.0` kept (GTK apps recreate it).
 - [x] `.zshenv`: project venv argcomplete path removed.
 - [x] VimAbl: Hammerspoon requires and `keys` symlink, LaunchAgent `com.vimforlive.osc-bridge`, Remote Script symlink removed.
