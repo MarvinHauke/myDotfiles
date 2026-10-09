@@ -1,7 +1,7 @@
 # Keys
 
 All hotkeys live in Karabiner (`~/.config/karabiner/`). Tools only expose commands or URLs.
-Status: everything here is implemented, except the desktop keys (marked proposal).
+Status: everything here is implemented.
 Rules live in `karabiner.json`, in one place only (profile > complex_modifications > rules).
 
 ## Layers
@@ -11,7 +11,7 @@ Rules live in `karabiner.json`, in one place only (profile > complex_modificatio
 | App | Cmd, Cmd+Shift | left to the apps, never overridden (except capture, see below) |
 | Text | Caps held = Ctrl, tapped = Esc; Ctrl+hjkl = arrows | editing, vim, tmux (exists) |
 | Window | Opt+Shift | placing the focused window (same keys as today in Raycast) |
-| OS | Hyper (right Cmd held = Ctrl+Opt+Cmd+Shift) | desktops, clipboard, reload |
+| OS | Hyper (right Cmd held = Ctrl+Opt+Cmd+Shift) | clipboard, reload, app name |
 
 ## Window layer (Opt+Shift)
 
@@ -77,13 +77,12 @@ Vim-style keys, only in Finder.
 | Key | Action | Backend |
 |---|---|---|
 | Cmd+Space | launcher: apps, recent files and folders; `/` searches all files, `=` calculates; Tab completes, Cmd+Enter shows in Finder | `hammerspoon://launcher`, see `launcher.md` |
-| Hyper+1..6 | go to desktop N (proposal) | see `desktops.md` |
-| Hyper+Shift+1..6 | move window to desktop N (proposal) | see `desktops.md` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |
 | Hyper+r | reload Hammerspoon | `hammerspoon://reload` |
 | Hyper+i | show the name of the front app | `hammerspoon://appname` |
 
-Desktops are not on Opt+Shift+number, because Option+number types `[ ] | { }` on the German layout.
+Free for later: Hyper+1..9. Avoid Opt+Shift+number, Option+number types `[ ] | { }` on the German layout.
+Fixed desktops were considered and dropped (2026-10): AltTab, tmux windows and the launcher cover switching.
 
 ## Capture
 

@@ -1,1 +1,17 @@
+# Ghostty. Only what differs from the defaults.
+# All options with docs: ghostty +show-config --default --docs
+# Reload after a change: Cmd+Shift+,
+
 theme = "Catppuccin Mocha"
+
+# Font: none set. Ghostty's built-in JetBrains Mono already includes the Nerd Font symbols
+# that starship and lsd need, so a new machine needs no font install.
+
+# tmux runs in every window and keeps the sessions alive, so closing a window loses nothing:
+# no "process is running" question, and the app quits with its last window.
+confirm-close-surface = false
+quit-after-last-window-closed = true
+
+mouse-hide-while-typing = true
+
+# Not set on purpose: macos-option-as-alt. Option must keep typing @ [ ] | { } µ on the German layout.

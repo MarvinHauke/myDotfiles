@@ -11,21 +11,19 @@ New topic = new file there plus one line here.
 | Doc | Answers |
 |---|---|
 | `docs/keys.md` | which key does what, which layer a new key belongs to |
-| `docs/desktops.md` | which app lives on which desktop, how tmux fits in |
 | `docs/capture.md` | screenshots and recording: keys, commands, where files go |
 | `docs/launcher.md` | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
 | `docs/clipboard.md` | what feeds the clipboard history, where it is stored, how to pick from it |
 
 ## Structure
 
-Who calls whom, and where it is configured. `*` = planned, not built yet.
+Who calls whom, and where it is configured.
 
     Karabiner: all hotkeys             karabiner/karabiner.json      docs/keys.md
       |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard, help
           |- launcher sources          ~/.hammerspoon/launcher/      apps, paths, calc       docs/launcher.md
           |- edit                      ~/.local/bin/edit             files into nvim/tmux    docs/launcher.md
       |- Finder keys                   finder.lua sets finder_editing docs/keys.md
-      |- macOS Spaces *                System Settings               docs/desktops.md
       |- tmux pane zoom, cmdAbl        karabiner/assets/complex_modifications/
 
     Ghostty                            ghostty/config
@@ -47,7 +45,7 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
 | Area | Tool | Config | State |
 |---|---|---|---|
 | Shell | zsh + zap (11 plugins), starship | `~/.zshrc` | good, starts in 0.12 s |
-| Terminal | ghostty | `ghostty/config` (1 line) | good, config minimal |
+| Terminal | ghostty | `ghostty/config` | good, config minimal |
 | Multiplexer | tmux + tpm (8 plugins) | `tmux/tmux.conf` | good |
 | Editor | neovim, lazy.nvim, ~40 plugin files | `nvim/` | good |
 | PDF | zathura | `zathura/zathurarc` | good |
@@ -95,7 +93,7 @@ Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner c
 - [ ] Try every key from `docs/keys.md` once; the rules are linted but were not tested with real key presses.
 - [ ] Empty the Trash when everything works.
 - [ ] Translate, Color Picker, Linear: decide, drop or use the web.
-- [ ] Check whether AltTab is still needed.
+- [x] AltTab stays (window switching).
 - [ ] Later, if needed: sub-calculators (electronics etc.) behind a prefix.
 
 ## 4. Track and reproduce
@@ -103,15 +101,15 @@ Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner c
 - [x] `brew/Brewfile` replaces the two package lists. Record: `brew bundle dump --force`. Restore: `brew bundle`. Extras: `brew bundle cleanup`.
 - [x] Install script (GitHub gist) runs `brew bundle --file ~/.config/brew/Brewfile`; falls back to `packages.txt` on branches without a Brewfile.
 - [x] `.zshenv` and `.zprofile` are tracked (`.zshenv` no longer fails without rustup).
-- [ ] ghostty: move font, keybinds and window settings into `ghostty/config`.
+- [x] ghostty: `ghostty/config` holds every non-default setting (theme, close without asking, hide mouse). Font and keys are the defaults.
 - [ ] Optional: images in the terminal. Enable `image` in snacks.nvim (uses `magick`, installed), `set -g allow-passthrough on` in tmux. Shell: `chafa` only if needed.
 - [ ] Optional: move zsh into `~/.config/zsh` with `ZDOTDIR` (set in `~/.zshenv`), split `.zshrc` into env / aliases / functions.
 
-## 5. Keys, desktops, capture
+## 5. Keys and capture
 
 Details and proposals live in `docs/`. This file only tracks the steps.
 
-- [ ] Desktops: set up the 6 fixed desktops, native Spaces first (`docs/desktops.md`).
+- [x] Desktops: dropped. AltTab, tmux windows and the launcher cover switching; no fixed desktops.
 - [x] Capture: built-in keys save to `/tmp/shots`, path goes to the clipboard (`capture.lua`, `docs/capture.md`).
 - [x] The install script sets the two `defaults write com.apple.screencapture` lines from `docs/capture.md`.
 
