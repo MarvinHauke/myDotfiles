@@ -15,8 +15,9 @@ local dirs = {
 }
 local apps, scannedAt = {}, 0
 local counts = hs.settings.get("launcher.counts") or {}
-local recent = {} -- file and folder rows, most recently used first
-local maxRecent = 12 -- rows shown below the apps
+local recentFolders, recentFiles = {}, {} -- rows, most used / most recent first
+local maxRecent = 8 -- rows of each kind shown below the apps
+local roots = { home } -- where "/" searches: the home folder and mounted drives
 
 -- row for a file or folder; folders are given with a trailing slash or as kind
 local function pathRow(path, kind)
@@ -44,16 +45,26 @@ end
 local function scanRecent()
 	local files = hs.execute(bin .. "nvim --headless -u NONE -c 'for f in v:oldfiles | echo f | endfor' -c qa 2>&1")
 	local folders = hs.execute(bin .. "zoxide query -l 2>/dev/null")
-	local found = {}
+	recentFiles, recentFolders = {}, {}
 	for _, path in ipairs(lines(files)) do
 		if path:sub(1, 1) == "/" and hs.fs.attributes(path, "mode") == "file" then
-			found[#found + 1] = pathRow(path, "file")
+			recentFiles[#recentFiles + 1] = pathRow(path, "file")
 		end
 	end
 	for _, path in ipairs(lines(folders)) do
-		found[#found + 1] = pathRow(path, "folder")
+		recentFolders[#recentFolders + 1] = pathRow(path, "folder")
 	end
-	recent = found
+end
+
+-- external drives; /Volumes also holds a link back to the system disk, which is skipped
+local function scanRoots()
+	roots = { home }
+	for entry in hs.fs.dir("/Volumes") do
+		local path = "/Volumes/" .. entry
+		if entry:sub(1, 1) ~= "." and hs.fs.symlinkAttributes(path, "mode") == "directory" then
+			roots[#roots + 1] = path
+		end
+	end
 end
 
 local function scan()
@@ -118,6 +129,28 @@ local function score(name, q)
 	return 4
 end
 
+-- best rows of one recent list: name starts with q, then name contains q, then only the path does
+local function pick(rows, q, into)
+	local ranked = { {}, {}, {} }
+	for _, row in ipairs(rows) do
+		local s = score(row.text:lower(), q)
+		local rank = s == 1 and 1 or (s and s < 4) and 2 or row.match:find(q, 1, true) and 3
+		if rank then
+			table.insert(ranked[rank], row)
+		end
+	end
+	local shown = 0
+	for _, group in ipairs(ranked) do
+		for _, row in ipairs(group) do
+			if shown >= maxRecent then
+				return
+			end
+			into[#into + 1] = row
+			shown = shown + 1
+		end
+	end
+end
+
 local function filter(query)
 	local q = query:lower()
 	local hits = {}
@@ -140,47 +173,55 @@ local function filter(query)
 	for i, hit in ipairs(hits) do
 		choices[i] = hit.app
 	end
-	-- recent files and folders after the apps, only once something is typed
+	-- recent folders, then recent files, after the apps; only once something is typed
 	if q ~= "" then
-		local shown = 0
-		for _, row in ipairs(recent) do
-			if shown >= maxRecent then
-				break
-			end
-			-- no letters-in-order matching here, it is too noisy on paths
-			if (score(row.text:lower(), q) or 4) < 4 or row.match:find(q, 1, true) then
-				choices[#choices + 1] = row
-				shown = shown + 1
-			end
-		end
+		pick(recentFolders, q, choices)
+		pick(recentFiles, q, choices)
 	end
 	return choices
 end
 
--- "/text": every file and folder below the home folder, listed by fd and ranked by fzf
+-- "/text": every file and folder below the home folder and on mounted drives.
+-- fd writes the list once when the launcher opens; fzf then ranks that list on every keystroke.
+local pathList = home .. "/.cache/launcher-paths"
+local listTask
+local function listPaths()
+	if listTask and listTask:isRunning() then
+		return
+	end
+	-- the home prefix is cut off so that home rows read like in the shell
+	local cmd = bin .. "fd . \"$@\" --max-depth 7 -E Library -E node_modules -E '*.app' 2>/dev/null"
+		.. ' | sed "s|^$HOME/||" > "$0.new" && mv "$0.new" "$0"'
+	listTask = hs.task.new("/bin/sh", nil, { "-c", cmd, pathList, table.unpack(roots) })
+	listTask:start()
+end
+
 local searchTask, searchTimer
 local chooser
 local function search(query)
 	if searchTimer then
 		searchTimer:stop()
 	end
-	searchTimer = hs.timer.doAfter(0.15, function()
+	searchTimer = hs.timer.doAfter(0.1, function()
 		if searchTask and searchTask:isRunning() then
 			searchTask:terminate()
 		end
-		local cmd = bin .. "fd . --base-directory \"$HOME\" --max-depth 7 -E Library -E node_modules -E '*.app'"
-			.. " | " .. bin .. 'fzf --filter "$1" | head -40'
+		local cmd = bin .. 'fzf --filter "$1" < "$0" | head -40'
 		searchTask = hs.task.new("/bin/sh", function(_, out)
 			if chooser:query() ~= "/" .. query then
 				return -- typed on in the meantime
 			end
 			local rows = {}
-			for _, rel in ipairs(lines(out)) do
-				local folder = rel:sub(-1) == "/"
-				rows[#rows + 1] = pathRow(home .. "/" .. rel:gsub("/$", ""), folder and "folder" or "file")
+			for _, found in ipairs(lines(out)) do
+				local folder = found:sub(-1) == "/"
+				local path = found:gsub("/$", "")
+				if path:sub(1, 1) ~= "/" then
+					path = home .. "/" .. path
+				end
+				rows[#rows + 1] = pathRow(path, folder and "folder" or "file")
 			end
 			chooser:choices(rows)
-		end, { "-c", cmd, "sh", query })
+		end, { "-c", cmd, pathList, query })
 		searchTask:start()
 	end)
 end
@@ -280,6 +321,8 @@ function M.toggle(query)
 		scan()
 		scanRecent()
 	end
+	scanRoots()
+	listPaths()
 	chooser:query(query or "")
 	update(query or "")
 	chooser:show()
