@@ -65,7 +65,8 @@ Who calls whom, and where it is configured.
 - [x] zsh: zoxide warning does not appear in a fresh interactive shell.
 - [x] dotfiles: committed as `79f7d11` on `macos`.
 - [ ] `dotfiles push`.
-- [ ] Delete the unused token files `~/.ssh/GithubTokens` and `~/.config/github/token`, revoke the token on GitHub.
+- [x] Token files `~/.ssh/GithubTokens` and `~/.config/github/` deleted, classic tokens revoked on GitHub.
+- [ ] Check https://github.com/settings/personal-access-tokens once: the fine-grained token from `~/.config/github/token` was not found in the classic list.
 
 ## 2. Remove (fewer tools)
 
