@@ -4,14 +4,18 @@ Opened with Cmd+Space (`hammerspoon://launcher`, code in `~/.hammerspoon/launche
 
 | Input | Rows | Enter | Cmd+Enter |
 |---|---|---|---|
-| text | apps first, then recent folders, then recent files (8 each at most) | app: open. file or folder: `edit` | file or folder: show in Finder |
-| `/` + text | every file and folder below `~` and on external drives (7 levels deep) | `edit` | show in Finder |
+| text | apps, opened here before, recent folders, recent files (8 each at most), then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder |
+| `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep) | `edit` | show in Finder |
 | `=` + expression | calculator | copies the result | |
 
 - Tab completes the highlighted app name. On a folder row it writes `/<folder>/` into the input, so you
   search below that folder.
 - Order inside folders and files: name starts with the text, then name contains it, then only the path contains it.
   `Develop` shows `~/Development` first.
+- Opened here before: the launcher's own history. Every file or folder opened with Enter or shown with Cmd+Enter
+  is remembered (200 entries, newest first), so it is found again without `/`. Stored in Hammerspoon's settings;
+  clear it with `hs -c 'hs.settings.clear("launcher.history")'`. Entries on a drive that is not plugged in are hidden.
+- File tree rows in the plain list appear from 3 typed characters on, a moment after the other rows.
 - Recent files: nvim's own list (`v:oldfiles`), so text and code files only. No extra log.
 - Recent folders: zoxide's list (`zoxide query -l`), already ranked by use. `Development/.../` paths come from here.
 - `/` search: `fd` lists, `fzf --filter` ranks. fzf is the matching engine without its terminal window, so the
@@ -39,7 +43,8 @@ Then tmux switches to that place and Ghostty comes to the front. `-n` skips this
 `[default +1]` when another session is running (prefix + `s` lists them).
 
 - Same project = same git repository. Outside a repository: the nvim or pane sits in a folder above the file.
-- A folder instead of a file gives a shell in that folder (new window).
+- A folder instead of a file gives a shell in that folder (new window). The folder is also added to zoxide,
+  so `z <name>` finds it in the shell.
 - Only plain text goes to nvim, decided by the file's content. Word, Excel, PDFs and images open in their own app.
 - Text types that should still use their own app: the list `default_app` at the top of the script (now empty).
 - CSV files open in nvim; up to 5000 lines the table view (csvview.nvim) switches on by itself, longer files

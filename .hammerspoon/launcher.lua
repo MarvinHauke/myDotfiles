@@ -1,6 +1,6 @@
 -- App launcher and calculator. Opened by hammerspoon://launcher
--- Below the apps it lists recently used files (nvim) and folders (zoxide); a leading "/" searches
--- all files and folders below the home folder. See ~/.config/docs/launcher.md
+-- Below the apps it lists what was opened here before, recently used folders (zoxide) and files (nvim),
+-- then matches from the whole file tree. A leading "/" searches the tree only. See ~/.config/docs/launcher.md
 local M = {}
 
 local home = os.getenv("HOME")
@@ -17,7 +17,11 @@ local apps, scannedAt = {}, 0
 local counts = hs.settings.get("launcher.counts") or {}
 local recentFolders, recentFiles = {}, {} -- rows, most used / most recent first
 local maxRecent = 8 -- rows of each kind shown below the apps
-local roots = { home } -- where "/" searches: the home folder and mounted drives
+local maxTree = 10 -- rows from the file tree at the end of the plain list
+local roots = { home } -- where the tree search looks: the home folder and mounted drives
+-- files and folders opened through the launcher, newest first: { { path = ..., kind = ... }, ... }
+local history = hs.settings.get("launcher.history") or {}
+local historyRows = {}
 
 -- row for a file or folder; folders are given with a trailing slash or as kind
 local function pathRow(path, kind)
@@ -129,13 +133,40 @@ local function score(name, q)
 	return 4
 end
 
--- best rows of one recent list: name starts with q, then name contains q, then only the path does
-local function pick(rows, q, into)
+-- rows for the history entries that still exist (a drive that is not plugged in hides its entries)
+local function loadHistory()
+	historyRows = {}
+	for _, entry in ipairs(history) do
+		if hs.fs.attributes(entry.path, "mode") then
+			historyRows[#historyRows + 1] = pathRow(entry.path, entry.kind)
+		end
+	end
+end
+
+function M.remember(path, kind)
+	for i, entry in ipairs(history) do
+		if entry.path == path then
+			table.remove(history, i)
+			break
+		end
+	end
+	table.insert(history, 1, { path = path, kind = kind })
+	while #history > 200 do
+		table.remove(history)
+	end
+	hs.settings.set("launcher.history", history)
+	loadHistory()
+end
+
+-- best rows of one list: name starts with q, then name contains q, then only the path does.
+-- seen holds the paths that are already listed.
+local function pick(rows, q, into, seen)
 	local ranked = { {}, {}, {} }
 	for _, row in ipairs(rows) do
 		local s = score(row.text:lower(), q)
 		local rank = s == 1 and 1 or (s and s < 4) and 2 or row.match:find(q, 1, true) and 3
-		if rank then
+		if rank and not seen[row.file] then
+			seen[row.file] = true
 			table.insert(ranked[rank], row)
 		end
 	end
@@ -173,12 +204,14 @@ local function filter(query)
 	for i, hit in ipairs(hits) do
 		choices[i] = hit.app
 	end
-	-- recent folders, then recent files, after the apps; only once something is typed
+	-- after the apps: opened here before, recent folders, recent files; only once something is typed
+	local seen = {}
 	if q ~= "" then
-		pick(recentFolders, q, choices)
-		pick(recentFiles, q, choices)
+		pick(historyRows, q, choices, seen)
+		pick(recentFolders, q, choices, seen)
+		pick(recentFiles, q, choices, seen)
 	end
-	return choices
+	return choices, seen
 end
 
 -- "/text": every file and folder below the home folder and on mounted drives.
@@ -198,7 +231,8 @@ end
 
 local searchTask, searchTimer
 local chooser
-local function search(query)
+-- ranks the cached path list with fzf and hands up to limit rows to done, unless the input changed meanwhile
+local function search(query, limit, input, done)
 	if searchTimer then
 		searchTimer:stop()
 	end
@@ -206,9 +240,9 @@ local function search(query)
 		if searchTask and searchTask:isRunning() then
 			searchTask:terminate()
 		end
-		local cmd = bin .. 'fzf --filter "$1" < "$0" | head -40'
+		local cmd = bin .. 'fzf --filter "$1" < "$0" | head -' .. limit
 		searchTask = hs.task.new("/bin/sh", function(_, out)
-			if chooser:query() ~= "/" .. query then
+			if chooser:query() ~= input then
 				return -- typed on in the meantime
 			end
 			local rows = {}
@@ -220,7 +254,7 @@ local function search(query)
 				end
 				rows[#rows + 1] = pathRow(path, folder and "folder" or "file")
 			end
-			chooser:choices(rows)
+			done(rows)
 		end, { "-c", cmd, pathList, query })
 		searchTask:start()
 	end)
@@ -255,6 +289,7 @@ chooser = hs.chooser.new(function(choice)
 		return
 	end
 	if choice.file then
+		M.remember(choice.file, choice.kind)
 		hs.task.new(edit, nil, { choice.file }):start()
 		return
 	end
@@ -268,12 +303,32 @@ local function update(query)
 		chooser:choices(calculate(query:sub(2)))
 	elseif query:sub(1, 1) == "/" then
 		if #query > 1 then
-			search(query:sub(2))
+			search(query:sub(2), 40, query, function(rows)
+				chooser:choices(rows)
+			end)
 		else
 			chooser:choices({})
 		end
 	else
-		chooser:choices(filter(query))
+		local choices, seen = filter(query)
+		chooser:choices(choices)
+		-- from 3 characters on, matches from the whole file tree follow at the end
+		if #query >= 3 then
+			search(query, maxTree + #choices, query, function(rows)
+				local added = 0
+				for _, row in ipairs(rows) do
+					if added < maxTree and not seen[row.file] then
+						choices[#choices + 1] = row
+						added = added + 1
+					end
+				end
+				if added > 0 then
+					chooser:choices(choices)
+				end
+			end)
+		elseif searchTimer then
+			searchTimer:stop()
+		end
 	end
 end
 chooser:queryChangedCallback(update)
@@ -287,6 +342,7 @@ local tabTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(eve
 	if key == hs.keycodes.map["return"] and flags:containExactly({ "cmd" }) then
 		if row and row.file then
 			chooser:hide()
+			M.remember(row.file, row.kind)
 			reveal(row.file)
 		end
 		return true
@@ -322,6 +378,7 @@ function M.toggle(query)
 		scanRecent()
 	end
 	scanRoots()
+	loadHistory()
 	listPaths()
 	chooser:query(query or "")
 	update(query or "")
@@ -330,4 +387,5 @@ end
 
 scan()
 scanRecent()
+loadHistory()
 return M

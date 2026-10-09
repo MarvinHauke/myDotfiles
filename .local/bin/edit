@@ -49,6 +49,7 @@ for arg in "$@"; do
 	path=$(realpath "$arg" 2>/dev/null) || path=$arg
 	if [ -d "$path" ]; then
 		dir=$path file=""
+		zoxide add "$dir" 2>/dev/null # folders opened here also count for `z` in the shell
 	else
 		ext=${path##*.}
 		case " $default_app " in *" $ext "*) open "$path"; continue ;; esac
