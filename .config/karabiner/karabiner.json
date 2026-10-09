@@ -577,6 +577,72 @@
                         ]
                     },
                     {
+                        "description": "Finder: e opens the selected file in nvim, ? shows the Finder keys",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_if",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.finder$"
+                                        ]
+                                    },
+                                    {
+                                        "type": "variable_if",
+                                        "name": "finder_editing",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "e",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "open -g 'hammerspoon://edit'"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_if",
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.finder$"
+                                        ]
+                                    },
+                                    {
+                                        "type": "variable_if",
+                                        "name": "finder_editing",
+                                        "value": 0
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "hyphen",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ],
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "open -g 'hammerspoon://help?topic=Finder'"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
                         "description": "Open cmdAbl command palette with ':' when Ableton Live is focused",
                         "manipulators": [
                             {

@@ -4,6 +4,7 @@
 -- Also leaves an empty search: when focus moves out of an empty search field (Escape),
 -- the window goes back to the folder instead of staying on an empty "Searching ..." view.
 -- Escape twice in the search results does the same.
+-- M.edit() opens the selection in nvim (hammerspoon://edit).
 local M = {}
 
 local ax = require("hs.axuielement")
@@ -79,6 +80,21 @@ local function watch()
 	end)
 	M.observer:start()
 	publish(appElement:attributeValue("AXFocusedUIElement"))
+end
+
+-- Opens the selected files and folders with ~/.local/bin/edit (nvim inside tmux)
+function M.edit()
+	local ok, paths = hs.osascript.applescript([[
+		tell application "Finder"
+			set out to {}
+			repeat with f in (get selection as alias list)
+				set end of out to POSIX path of f
+			end repeat
+			return out
+		end tell]])
+	if ok and type(paths) == "table" and #paths > 0 then
+		hs.task.new(os.getenv("HOME") .. "/.local/bin/edit", nil, paths):start()
+	end
 end
 
 -- Finder gets a new process id when it is relaunched; the Escape listener only runs while Finder is in front
