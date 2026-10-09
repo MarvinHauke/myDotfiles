@@ -4,7 +4,7 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
 
 | Input | Rows | Enter | Cmd+Enter |
 |---|---|---|---|
-| text | apps, opened here before, recent folders, recent files (8 each at most), then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder |
+| text | apps, places and nv aliases from `.zshrc`, opened here before, recent folders, recent files (8 each at most), then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder |
 | `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep) | `edit` | show in Finder |
 | `=` + expression | calculator | copies the result | |
 
@@ -12,6 +12,10 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
   search below that folder.
 - Order inside folders and files: name starts with the text, then name contains it, then only the path contains it.
   `Develop` shows `~/Development` first.
+- Places and aliases: read from zsh itself every five minutes, so `.zshrc` is the only list. Places are the
+  named directories (`hash -d dev=...`), aliases are those of the form `alias nvz='nvim <path>'`. Only the name
+  is matched. Enter on a place opens a shell there, on an alias nvim. A name typed in full goes above apps that
+  match only by scattered letters (`dev` first, but `notes` after the Notes app).
 - Opened here before: the launcher's own history. Every file or folder opened with Enter or shown with Cmd+Enter
   is remembered (200 entries, newest first), so it is found again without `/`. Stored in Hammerspoon's settings;
   clear it with `hs -c 'hs.settings.clear("launcher.history")'`. Entries on a drive that is not plugged in are hidden.
@@ -49,6 +53,7 @@ Used by the shell, by Finder (key `e`) and by the launcher. First match wins:
 | otherwise | new window in the tmux session on screen, named after the folder; for a file, nvim runs in it |
 | tmux is not running | window in the session `default`, the one Ghostty attaches to |
 
+`-e` starts nvim in a folder as well (used for the nv aliases that point to a folder).
 Then tmux switches to that place and Ghostty comes to the front. `-n` skips this and opens in the background.
 `edit` only adds: it never creates a second session and never closes anything. The tmux status bar shows
 `[default +1]` when another session is running (prefix + `s` lists them).

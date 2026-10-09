@@ -97,11 +97,15 @@ function M.rows(query)
 		end
 		return a.app.text < b.app.text
 	end)
-	local choices = {}
+	-- strong = how many rows match by prefix, word or substring (the rest only by letters in order)
+	local choices, strong = {}, 0
 	for i, hit in ipairs(hits) do
 		choices[i] = hit.app
+		if hit.score < 4 then
+			strong = strong + 1
+		end
 	end
-	return choices
+	return choices, strong
 end
 
 function M.open(row)

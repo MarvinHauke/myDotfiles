@@ -1,6 +1,7 @@
 #!/bin/sh
-# edit [-n] <file|folder>...   open in nvim inside tmux, next to the work that is already open.
+# edit [-n] [-e] <file|folder>...   open in nvim inside tmux, next to the work that is already open.
 # -n opens it in the background, without switching to it.
+# -e starts nvim in a folder too (without it a folder gets a plain shell).
 # Called from the shell, from Finder (key e) and from the launcher. See ~/.config/docs/launcher.md
 #
 # First match wins:
@@ -41,8 +42,12 @@ current_session() {
 	tmux list-clients -F '#{client_activity} #{client_session}' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-
 }
 
-focus=yes
-[ "$1" = -n ] && focus=no && shift
+focus=yes editor=no
+while [ "$1" = -n ] || [ "$1" = -e ]; do
+	[ "$1" = -n ] && focus=no
+	[ "$1" = -e ] && editor=yes
+	shift
+done
 
 target=""
 for arg in "$@"; do
@@ -92,6 +97,8 @@ for arg in "$@"; do
 		# nvim is typed into the new window's shell, so the window stays a normal shell after nvim quits
 		if [ -n "$file" ]; then
 			tmux send-keys -t "$target" "nvim -- '$(printf '%s' "$file" | sed "s/'/'\\\\''/g")'" Enter
+		elif [ "$editor" = yes ]; then
+			tmux send-keys -t "$target" "nvim ." Enter
 		fi
 	fi
 done

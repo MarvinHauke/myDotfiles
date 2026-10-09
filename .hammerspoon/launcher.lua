@@ -40,10 +40,15 @@ local function update(query)
 			chooser:choices({})
 		end
 	else
-		local choices = apps.rows(query)
+		local choices, strong = apps.rows(query)
 		local recent, seen = paths.rows(query)
 		for _, row in ipairs(recent) do
-			choices[#choices + 1] = row
+			if row.named and row.text == query then
+				-- a place or alias typed in full goes above apps that only match by scattered letters
+				table.insert(choices, strong + 1, row)
+			else
+				choices[#choices + 1] = row
+			end
 		end
 		chooser:choices(choices)
 		-- from 3 characters on, matches from the whole file tree follow at the end

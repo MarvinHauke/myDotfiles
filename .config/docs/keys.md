@@ -87,6 +87,14 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Right arrow | take the whole suggestion | plugin default |
 | Tab | completion picker (fzf-tab), a different thing from the grey text | |
 
+Places and config shortcuts, defined in `.zshrc` and also listed by the launcher:
+
+| Type | Names | Use |
+|---|---|---|
+| place | `~dev`, `~conf`, `~dl`, `~notes`, `~abl` | `cd ~dev`, just `~dev`, `nvim ~conf/tmux/tmux.conf`; Tab completes below |
+| function | `dev [folder]` | jump to `~/Development[/folder]`, with Tab completion |
+| nvim alias | `nvz` zsh, `nvt` tmux, `nvs` starship, `nvn` nvim, `nvk` Karabiner, `nvh` Hammerspoon, `notes` | open that config in nvim |
+
 - A terminal never sees Cmd, so the two `keybind` lines in `ghostty/config` translate the keys.
 - Caps+l (Ctrl+l) is not available for this: inside tmux it switches panes.
 - Pressing Escape and `l` by hand within 0.25 s (`KEYTIMEOUT=25`) counts as Cmd+l.

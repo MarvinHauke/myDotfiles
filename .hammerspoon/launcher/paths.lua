@@ -1,4 +1,5 @@
 -- Launcher source: files and folders.
+-- rows() starts with the places (hash -d) and nv aliases (alias x='nvim <path>') from ~/.zshrc.
 -- rows(): what was opened here before, recently used folders (zoxide) and files (nvim).
 -- search(): the whole file tree below the home folder and on mounted drives (fd lists, fzf ranks).
 local M = {}
@@ -114,11 +115,46 @@ local function pick(rows, q, into, seen)
 	end
 end
 
--- opened here before, recent folders, recent files; nothing for an empty query.
+-- Places and aliases come from zsh itself, so ~/.zshrc stays the only list.
+-- The shell is started with a dummy TMUX value: without it ~/.zshrc would attach to the tmux session.
+local placeRows = {}
+local function scanPlaces()
+	local script = [=[for k v in "${(@kv)nameddirs}"; do print -r -- "place	$k	$v"; done
+for k v in "${(@kv)aliases}"; do [[ $v == nvim\ * ]] && print -r -- "alias	$k	${(e)v#nvim }"; done]=]
+	hs.task
+		.new("/usr/bin/env", function(_, out)
+			local rows, named = {}, {}
+			-- aliases first: a name that is both (notes) behaves like the alias, as in the shell
+			for _, wanted in ipairs({ "alias", "place" }) do
+				for _, line in ipairs(lines(out)) do
+					local kind, name, path = line:match("(%a%a%a%a%a)\t([^\t]+)\t(/.*)$") -- the first line can start with terminal codes
+					path = path and path:gsub("/%.$", "")
+					local mode = path and hs.fs.attributes(path, "mode")
+					if kind == wanted and mode and not named[name] then
+						named[name] = true
+						local row = pathRow(path, mode == "directory" and "folder" or "file")
+						row.text, row.match = name, name:lower() -- only the name is searched
+						row.subText = row.subText .. (kind == "alias" and "   (nvim alias)" or "   (place)")
+						row.editor = kind == "alias" -- a folder opens in nvim, not as a shell
+						row.named = true
+						rows[#rows + 1] = row
+					end
+				end
+			end
+			table.sort(rows, function(a, b)
+				return a.text < b.text
+			end)
+			placeRows = rows
+		end, { "TMUX=launcher", "TERM=screen-256color", "/bin/zsh", "-ic", script })
+		:start()
+end
+
+-- places and aliases, opened here before, recent folders, recent files; nothing for an empty query.
 -- Also returns the set of listed paths, to keep tree rows from repeating them.
 function M.rows(query)
 	local q, choices, seen = query:lower(), {}, {}
 	if q ~= "" then
+		pick(placeRows, q, choices, seen)
 		pick(historyRows, q, choices, seen)
 		pick(recentFolders, q, choices, seen)
 		pick(recentFiles, q, choices, seen)
@@ -181,6 +217,7 @@ end
 function M.refresh()
 	if os.time() - scannedAt > 300 then
 		scanRecent()
+		scanPlaces()
 		scannedAt = os.time()
 	end
 	scanRoots()
@@ -190,7 +227,7 @@ end
 
 function M.open(row)
 	M.remember(row.file, row.kind)
-	hs.task.new(edit, nil, { row.file }):start()
+	hs.task.new(edit, nil, row.editor and { "-e", row.file } or { row.file }):start()
 end
 
 function M.reveal(row)
@@ -204,6 +241,7 @@ function M.below(row)
 end
 
 scanRecent()
+scanPlaces()
 scannedAt = os.time()
 loadHistory()
 return M
