@@ -12,7 +12,7 @@ local counts = hs.settings.get("launcher.counts") or {}
 
 local function scan()
 	local found, seen = {}, {}
-	local function add(path)
+	local function add(path, folder)
 		local file = path:match("([^/]+)%.app$")
 		if seen[file] then
 			return
@@ -23,11 +23,13 @@ local function scan()
 			text = shown,
 			subText = path,
 			path = path,
-			match = (shown .. " " .. file):lower(),
+			-- folder: "Traktor Pro 3" holds an app that is only called "Traktor"
+			match = (shown .. " " .. file .. (folder and " " .. folder or "")):lower(),
 			image = hs.image.iconForFile(path),
 		}
 	end
-	local function walk(dir, depth)
+	-- folder is the name of the subfolder dir, nil for the app folders themselves
+	local function walk(dir, depth, folder)
 		local ok, iter, state = pcall(hs.fs.dir, dir)
 		if not ok then
 			return
@@ -37,14 +39,14 @@ local function scan()
 			if entry:sub(1, 1) == "." then
 				-- skip
 			elseif entry:sub(-4) == ".app" then
-				add(path)
+				add(path, folder)
 			elseif depth > 0 and hs.fs.attributes(path, "mode") == "directory" then
-				walk(path, depth - 1)
+				walk(path, depth - 1, entry)
 			end
 		end
 	end
 	for _, dir in ipairs(dirs) do
-		walk(dir, 1)
+		walk(dir, 3) -- some vendors nest: Native Instruments/Traktor Pro 3/Traktor.app
 	end
 	add("/System/Library/CoreServices/Finder.app")
 	apps, scannedAt = found, os.time()

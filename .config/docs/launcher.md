@@ -12,6 +12,8 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
   search below that folder.
 - Order inside folders and files: name starts with the text, then name contains it, then only the path contains it.
   `Develop` shows `~/Development` first.
+- Apps are found up to three folders below the app folders; the folder name is searched too
+  (`traktor pro` finds "Traktor" in "Traktor Pro 3").
 - Places and aliases: read from zsh itself every five minutes, so `.zshrc` is the only list. Places are the
   named directories (`hash -d dev=...`), aliases are those of the form `alias nvz='nvim <path>'`. Only the name
   is matched. Enter on a place opens a shell there, on an alias nvim. A name typed in full goes above apps that
