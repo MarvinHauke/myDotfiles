@@ -82,7 +82,8 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Key | Action | How |
 |---|---|---|
 | Cmd+l | take the next word of the suggestion; `/` ends a word, so paths go folder by folder | Ghostty sends Esc l, `.zshrc` binds `accept-suggestion-word` |
-| Cmd+Shift+l | take the whole suggestion; with no suggestion, clear the screen | Ghostty sends Esc L, `.zshrc` binds `accept-suggestion-or-clear` |
+| Cmd+Shift+l | take the whole suggestion | Ghostty sends Esc L, `.zshrc` binds `autosuggest-accept` |
+| Ctrl+Shift+l | clear the screen | |
 | Right arrow | take the whole suggestion | plugin default |
 | Tab | completion picker (fzf-tab), a different thing from the grey text | |
 

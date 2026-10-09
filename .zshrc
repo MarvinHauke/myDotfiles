@@ -140,10 +140,10 @@ zle -N accept-suggestion-or-clear
 ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=(accept-suggestion-or-clear)
 # Bind Ctrl+L to the custom function
 bindkey '^L' accept-suggestion-or-clear
-# Cmd+Shift+l does the same. Ghostty sends it as Esc L (ghostty/config); Ctrl+L itself never
-# arrives inside tmux, where it switches panes.
-bindkey -M viins '^[L' accept-suggestion-or-clear
-bindkey -M vicmd '^[L' accept-suggestion-or-clear
+# Cmd+Shift+l (Ghostty sends Esc L, see ghostty/config): take the whole grey suggestion.
+# Does nothing without a suggestion; Ctrl+Shift+l clears the screen.
+bindkey -M viins '^[L' autosuggest-accept
+bindkey -M vicmd '^[L' autosuggest-accept
 
 # Cmd+l (Ghostty sends Esc l): take the next word of the grey suggestion.
 # "/" ends a word, so a suggested path is taken folder by folder.
