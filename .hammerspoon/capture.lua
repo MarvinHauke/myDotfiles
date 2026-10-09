@@ -13,9 +13,16 @@ end
 local function handle(paths)
 	for _, path in ipairs(paths) do
 		local name = path:match("([^/]+)$")
-		local fresh = name and name:sub(1, 1) ~= "." and not name:match("^%d%d%d%d%-%d%d%-%d%d_%d%d%d%d%d%d%.")
+		local fresh = name and name:sub(1, 1) ~= "." and not name:match("^%d%d%d%d%-%d%d%-%d%d_%d%d%d%d%d%d[%._]")
 		if fresh and hs.fs.attributes(path, "mode") == "file" then
-			local target = string.format("/tmp/shots/%s.%s", os.date("%Y-%m-%d_%H%M%S"), name:match("%.(%w+)$") or "png")
+			local stamp, ext = os.date("%Y-%m-%d_%H%M%S"), name:match("%.(%w+)$") or "png"
+			local target = string.format("/tmp/shots/%s.%s", stamp, ext)
+			-- two screens give two files in the same second
+			local n = 1
+			while hs.fs.attributes(target) do
+				n = n + 1
+				target = string.format("/tmp/shots/%s_%d.%s", stamp, n, ext)
+			end
 			if os.rename(path, target) then
 				-- screenshots go to the clipboard as an image, recordings as their path
 				local image = target:match("%.png$") and hs.image.imageFromPath(target)
