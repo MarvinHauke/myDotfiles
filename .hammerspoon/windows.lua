@@ -8,6 +8,10 @@ local units = {
 	right = { 0.5, 0, 0.5, 1 },
 	top = { 0, 0, 1, 0.5 },
 	bottom = { 0, 0.5, 1, 0.5 },
+	topleft = { 0, 0, 0.5, 0.5 },
+	topright = { 0.5, 0, 0.5, 0.5 },
+	bottomleft = { 0, 0.5, 0.5, 0.5 },
+	bottomright = { 0.5, 0.5, 0.5, 0.5 },
 }
 -- maximized > centered 2/3 > centered 1/2
 local sizes = { { 0, 0, 1, 1 }, { 1 / 6, 0, 2 / 3, 1 }, { 0.25, 0, 0.5, 1 } }

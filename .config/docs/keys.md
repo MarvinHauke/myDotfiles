@@ -19,9 +19,12 @@ Rules live in `karabiner.json`, in one place only (profile > complex_modificatio
 |---|---|---|
 | Opt+Shift+h / l | left / right half | `hammerspoon://win?pos=left` / `right` |
 | Opt+Shift+k / j | top / bottom half | `hammerspoon://win?pos=top` / `bottom` |
+| Opt+Shift+z / o | upper left / upper right quarter | `hammerspoon://win?pos=topleft` / `topright` |
+| Opt+Shift+n / . | lower left / lower right quarter | `hammerspoon://win?pos=bottomleft` / `bottomright` |
 | Opt+Shift+m | cycle: maximized > centered 2/3 > centered 1/2 > maximized (full height) | `hammerspoon://win?pos=cycle` |
 | Opt+h (tap) | move the window to the next screen, wraps around | `hammerspoon://win?pos=screen` |
 
+The corner keys sit around h j k l on the keyboard: z and o in the row above, n and . in the row below.
 Hold Opt+h still types `ª` (same tap/hold rule as Opt+m below). Opt+l is not used: it is `@`.
 
 ## Focus toggle (Opt+m)
