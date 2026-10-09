@@ -1,14 +1,16 @@
 #!/bin/sh
-# edit [-n] <file|folder>...   open in nvim inside tmux, in the place where the project is already open.
+# edit [-n] <file|folder>...   open in nvim inside tmux, next to the work that is already open.
 # -n opens it in the background, without switching to it.
 # Called from the shell, from Finder (key e) and from the launcher. See ~/.config/docs/launcher.md
 #
 # First match wins:
 #   1. an nvim running in the same project   -> the file opens there as a vertical split
-#   2. a tmux pane in the same project        -> new window in that session
-#   3. nothing                                -> new tmux session named after the project
+#   2. otherwise                              -> new window in the tmux session on screen
+#   3. tmux is not running                    -> window in the session "default" (Ghostty attaches to it)
 # "Same project" = same git repository; outside a repository: a folder above the file.
 # Files that are not plain text are handed to `open` and use their own app.
+#
+# It only ever adds: no new sessions next to an existing one, and nothing is closed or killed.
 
 PATH="/opt/homebrew/bin:$PATH"
 
@@ -19,7 +21,7 @@ project_of() { git -C "$1" rev-parse --show-toplevel 2>/dev/null || printf '%s\n
 in_repo() { git -C "$1" rev-parse --show-toplevel >/dev/null 2>&1; }
 inside() { case "$1/" in "$2"/*) return 0 ;; esac; return 1; } # is $1 equal to or below $2
 
-# does a place with working folder $1 belong to the project of the target? prints a rank (longer = closer)
+# does an nvim with working folder $1 belong to the project of the target? prints a rank (longer = closer)
 match() {
 	if [ "$target_repo" = yes ]; then
 		in_repo "$1" && [ "$(project_of "$1")" = "$root" ] && echo 9999
@@ -32,6 +34,11 @@ is_text() {
 	[ -e "$1" ] || return 0 # new file
 	[ -s "$1" ] || return 0 # empty file
 	[ "$(file -b --mime-encoding "$1")" != binary ]
+}
+
+# the session on screen: the one of the most recently used client
+current_session() {
+	tmux list-clients -F '#{client_activity} #{client_session}' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-
 }
 
 focus=yes
@@ -58,8 +65,10 @@ for arg in "$@"; do
 		for sock in "${TMPDIR:-/tmp/}"nvim."$USER"/*/nvim.*.0; do
 			[ -S "$sock" ] || continue
 			cwd=$(nvim --server "$sock" --remote-expr 'getcwd()' 2>/dev/null) || continue
+			# shellcheck disable=SC2016 # $TMUX_PANE is read by nvim, not by this shell
 			pane=$(nvim --server "$sock" --remote-expr '$TMUX_PANE' 2>/dev/null)
-			[ -n "$pane" ] || continue
+			# only an nvim whose pane exists on this tmux server
+			[ -n "$pane" ] && tmux display-message -p -t "$pane" '#{pane_id}' >/dev/null 2>&1 || continue
 			rank=$(match "$cwd")
 			if [ -n "$rank" ] && [ "$rank" -gt "$best" ]; then best=$rank found=$sock target=$pane; fi
 		done
@@ -72,34 +81,23 @@ for arg in "$@"; do
 	fi
 
 	if [ -z "$target" ]; then
-		# what to start in the new window; it stays a normal shell after nvim quits
-		keys=""
-		[ -n "$file" ] && keys="nvim -- '$(printf '%s' "$file" | sed "s/'/'\\\\''/g")'"
-
-		# 2. a tmux pane in the same project
-		best=0 session=""
-		tmux list-panes -a -F '#{session_name}	#{pane_current_path}' 2>/dev/null >"${TMPDIR:-/tmp/}edit.$$"
-		while IFS='	' read -r name panedir; do
-			rank=$(match "$panedir")
-			if [ -n "$rank" ] && [ "$rank" -gt "$best" ]; then best=$rank session=$name; fi
-		done <"${TMPDIR:-/tmp/}edit.$$"
-		rm -f "${TMPDIR:-/tmp/}edit.$$"
-
-		# 3. otherwise a session named after the project
+		# 2. the session on screen, 3. else "default" (created only if tmux has no such session)
+		session=$(current_session)
 		if [ -z "$session" ]; then
-			session=$(basename "$root" | tr '.:' '__')
-			tmux has-session -t "=$session" 2>/dev/null || {
-				target=$(tmux new-session -d -P -F '#{pane_id}' -s "$session" -c "$dir")
-			}
+			session=default
+			tmux has-session -t "=$session" 2>/dev/null || tmux new-session -d -s "$session"
 		fi
-		[ -n "$target" ] || target=$(tmux new-window -P -F '#{pane_id}' -t "=$session:" -c "$dir")
-		[ -n "$keys" ] && tmux send-keys -t "$target" "$keys" Enter
+		target=$(tmux new-window -d -P -F '#{pane_id}' -t "=$session:" -n "$(basename "$dir")" -c "$dir")
+		# nvim is typed into the new window's shell, so the window stays a normal shell after nvim quits
+		if [ -n "$file" ]; then
+			tmux send-keys -t "$target" "nvim -- '$(printf '%s' "$file" | sed "s/'/'\\\\''/g")'" Enter
+		fi
 	fi
 done
 
 [ -n "$target" ] && [ "$focus" = yes ] || exit 0
 
-# show it: Ghostty to the front, tmux to that session, window and pane
+# show it: Ghostty to the front, tmux to that window and pane
 open -a Ghostty
 tries=0
 while [ -z "$(tmux list-clients -F '#{client_name}' 2>/dev/null)" ] && [ "$tries" -lt 30 ]; do
