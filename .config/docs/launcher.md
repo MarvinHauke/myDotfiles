@@ -1,6 +1,6 @@
 # Launcher and opening files
 
-Opened with Cmd+Space (`hammerspoon://launcher`, code in `~/.hammerspoon/launcher.lua`).
+Opened with Cmd+Space (`hammerspoon://launcher`).
 
 | Input | Rows | Enter | Cmd+Enter |
 |---|---|---|---|
@@ -25,6 +25,17 @@ Opened with Cmd+Space (`hammerspoon://launcher`, code in `~/.hammerspoon/launche
 - The file list is written once each time the launcher opens (`~/.cache/launcher-paths`), so a file created
   a moment ago shows up the next time you open it.
 - `hammerspoon://launcher?q=/` opens the launcher directly in the file search (not on a key yet).
+
+## Code
+
+| File (`~/.hammerspoon/`) | Holds |
+|---|---|
+| `launcher.lua` | the picker: keys (Tab, Cmd+Enter), which source is asked for which input, joining the rows |
+| `launcher/apps.lua` | app scan, match scoring, launch counter |
+| `launcher/paths.lua` | history, recent folders and files, drives, cached file tree and its fzf search, opening with `edit` |
+| `launcher/calc.lua` | calculator; the place for sub-calculators |
+
+A new kind of result is a new file in `launcher/` with `rows(query)` and `open(row)`, plus one branch in `launcher.lua`.
 
 ## edit: one script opens everything
 

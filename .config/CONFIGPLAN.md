@@ -22,6 +22,7 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
 
     Karabiner: all hotkeys             karabiner/karabiner.json      docs/keys.md
       |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard, help
+          |- launcher sources          ~/.hammerspoon/launcher/      apps, paths, calc       docs/launcher.md
           |- edit                      ~/.local/bin/edit             files into nvim/tmux    docs/launcher.md
       |- Finder keys                   finder.lua sets finder_editing docs/keys.md
       |- macOS Spaces *                System Settings               docs/desktops.md
