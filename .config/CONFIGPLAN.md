@@ -13,6 +13,7 @@ New topic = new file there plus one line here.
 | `docs/keys.md` | which key does what, which layer a new key belongs to |
 | `docs/desktops.md` | which app lives on which desktop, how tmux fits in |
 | `docs/capture.md` | screenshots and recording: keys, commands, where files go |
+| `docs/launcher.md` | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
 | `docs/clipboard.md` | what feeds the clipboard history, where it is stored, how to pick from it |
 
 ## Structure
@@ -120,6 +121,13 @@ Details and proposals live in `docs/`. This file only tracks the steps.
 
 Until then, from shell history: `cd` 793, `git` 712 (`git commit` 322), `vim` 359, `config` 204
 (old name of `dotfiles`), `brew install` 100, `tmux rename-window` 18.
+
+## 7. Open files and folders (proposal in `docs/launcher.md`)
+
+- [ ] `~/.local/bin/edit <file>`: tmux session for the project + nvim, Ghostty to front.
+- [ ] Finder: a key opens the selected file with `edit`.
+- [ ] Launcher: recent files (nvim) and folders (zoxide) below the apps; `/` searches files and folders with fd + fzf.
+- [ ] Launcher: Enter opens in nvim or Ghostty, Cmd+Enter shows in Finder.
 
 ## Done?
 
