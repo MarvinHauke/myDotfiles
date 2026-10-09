@@ -82,7 +82,7 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
 
 ## 3. Replace Raycast with Hammerspoon
 
-Hotkeys live in Karabiner (`karabiner.json`, catalog copy in `assets/complex_modifications/hammerspoon.json`).
+Hotkeys live in Karabiner (`karabiner.json` only, no catalog copy).
 Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner calls `open -g hammerspoon://<action>`.
 
 - [x] Launcher with calculator (`launcher.lua`, Cmd+Space, `=` prefix calculates).

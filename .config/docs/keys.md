@@ -2,7 +2,7 @@
 
 All hotkeys live in Karabiner (`~/.config/karabiner/`). Tools only expose commands or URLs.
 Status: layers, window, focus and OS keys are implemented (desktops and capture are still proposals).
-Rules live in `karabiner.json`; `assets/complex_modifications/hammerspoon.json` is the same set as a catalog.
+Rules live in `karabiner.json`, in one place only (profile > complex_modifications > rules).
 
 ## Layers
 
