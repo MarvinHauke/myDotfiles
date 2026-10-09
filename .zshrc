@@ -21,6 +21,9 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export EDITOR=nvim
 export VISUAL=nvim
 
+# Brewfile used by `brew bundle` (dump --force records, no argument restores)
+export HOMEBREW_BUNDLE_FILE="$HOME/.config/brew/Brewfile"
+
 # Development paths
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"

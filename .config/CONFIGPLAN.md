@@ -36,7 +36,7 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
     macOS screenshot keys              defaults com.apple.screencapture   docs/capture.md
       |- Hammerspoon capture.lua       watches /tmp/shots, path to clipboard
 
-    Homebrew installs all of it        brew/
+    Homebrew installs all of it        brew/Brewfile (HOMEBREW_BUNDLE_FILE in ~/.zshrc)
     dotfiles (~/.cfg, branch macos) tracks all of it
 
 ## State
@@ -97,7 +97,8 @@ Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner c
 
 ## 4. Track and reproduce
 
-- [ ] Replace `brew/packages.txt` and `cask-packages.txt` (18 entries, wrong names like `rg`, `nvim`) with a `Brewfile` from `brew bundle dump`. Update the install script.
+- [x] `brew/Brewfile` replaces the two package lists. Record: `brew bundle dump --force`. Restore: `brew bundle`. Extras: `brew bundle cleanup`.
+- [ ] Install script (GitHub gist): replace the two `brew install` loops with `brew bundle --file ~/.config/brew/Brewfile`.
 - [ ] Track `.zshenv` and `.zprofile`.
 - [ ] ghostty: move font, keybinds and window settings into `ghostty/config`.
 - [ ] Optional: images in the terminal. Enable `image` in snacks.nvim (uses `magick`, installed), `set -g allow-passthrough on` in tmux. Shell: `chafa` only if needed.

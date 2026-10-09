@@ -15,8 +15,7 @@ The script will:
 1. Clone the bare repo to `~/.cfg`
 2. Back up any conflicting files to `~/.dotfiles-backup`
 3. Check out the `macos` branch
-4. Install Homebrew packages from `~/.config/brew/packages.txt`
-5. Install Homebrew cask packages from `~/.config/brew/cask-packages.txt`
+4. Install everything listed in `~/.config/brew/Brewfile` (`brew bundle`)
 
 ## Config files
 
@@ -75,5 +74,7 @@ The script will:
 
 | File | Contents |
 |---|---|
-| `~/.config/brew/packages.txt` | CLI tools via `brew install` |
-| `~/.config/brew/cask-packages.txt` | GUI apps via `brew install --cask` |
+| `~/.config/brew/Brewfile` | taps, CLI tools, GUI apps, global go/cargo/npm tools |
+
+`brew bundle dump --force` records the installed state, `brew bundle` restores it,
+`brew bundle cleanup` lists what is installed but not in the file.
