@@ -15,7 +15,7 @@ One OS-wide history. Everything that reaches the macOS clipboard lands in it.
 - Use: Hyper+v opens the picker, type to filter, Enter pastes into the front app (key in `keys.md`).
 - Copied content is kept as text only. Entries marked as concealed or transient (password managers) are skipped.
 - Picture rows exist only for screenshots. They point at the file in `/tmp/shots` and disappear from the list
-  when macOS has cleaned the file away. They are not counted against the 100 text entries limit being trimmed first.
+  when macOS has cleaned the file away. They count towards the 100 entries.
 - Clear: `echo '[]' > ~/.local/state/clipboard.json`, then Hyper+r.
 
 Open point: check that a password copied from KeePassXC does not show up.
