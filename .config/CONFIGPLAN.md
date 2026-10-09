@@ -98,7 +98,7 @@ Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner c
 ## 4. Track and reproduce
 
 - [x] `brew/Brewfile` replaces the two package lists. Record: `brew bundle dump --force`. Restore: `brew bundle`. Extras: `brew bundle cleanup`.
-- [ ] Install script (GitHub gist): replace the two `brew install` loops with `brew bundle --file ~/.config/brew/Brewfile`.
+- [x] Install script (GitHub gist) runs `brew bundle --file ~/.config/brew/Brewfile`; falls back to `packages.txt` on branches without a Brewfile.
 - [ ] Track `.zshenv` and `.zprofile`.
 - [ ] ghostty: move font, keybinds and window settings into `ghostty/config`.
 - [ ] Optional: images in the terminal. Enable `image` in snacks.nvim (uses `magick`, installed), `set -g allow-passthrough on` in tmux. Shell: `chafa` only if needed.
@@ -110,7 +110,7 @@ Details and proposals live in `docs/`. This file only tracks the steps.
 
 - [ ] Desktops: set up the 6 fixed desktops, native Spaces first (`docs/desktops.md`).
 - [x] Capture: built-in keys save to `/tmp/shots`, path goes to the clipboard (`capture.lua`, `docs/capture.md`).
-- [ ] Add the two `defaults write com.apple.screencapture` lines from `docs/capture.md` to the install script.
+- [x] The install script sets the two `defaults write com.apple.screencapture` lines from `docs/capture.md`.
 
 ## 6. Usage log (lowest priority)
 
