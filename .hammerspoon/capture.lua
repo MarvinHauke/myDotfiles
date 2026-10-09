@@ -1,6 +1,6 @@
 -- Screenshots and recordings. macOS saves them to /tmp/shots (com.apple.screencapture
--- location). Each new file gets a short name without spaces. A screenshot is also put
--- on the clipboard as an image; for a recording its path is copied.
+-- location). Each new file gets a short name without spaces and its path is copied to
+-- the clipboard, ready to paste into a terminal.
 local M = {}
 
 local dir = "/private/tmp/shots" -- /tmp is a symlink; the watcher needs the real path
@@ -24,13 +24,7 @@ local function handle(paths)
 				target = string.format("/tmp/shots/%s_%d.%s", stamp, n, ext)
 			end
 			if os.rename(path, target) then
-				-- screenshots go to the clipboard as an image, recordings as their path
-				local image = target:match("%.png$") and hs.image.imageFromPath(target)
-				if image then
-					hs.pasteboard.writeObjects(image)
-				else
-					hs.pasteboard.setContents(target)
-				end
+				hs.pasteboard.setContents(target)
 				hs.alert.show(target)
 			end
 		end

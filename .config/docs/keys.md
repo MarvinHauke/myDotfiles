@@ -83,4 +83,5 @@ Desktops are not on Opt+Shift+number, because Option+number types `[ ] | { }` on
 ## Capture
 
 The built-in macOS keys, unchanged: Cmd+Shift+3 (screen), Cmd+Shift+4 (selection), Cmd+Shift+5 (toolbar, recording).
-Files go to `/tmp/shots` and screenshots also land on the clipboard as an image. Details in `capture.md`.
+Files go to `/tmp/shots` and the path lands on the clipboard. Add Ctrl for the image on the clipboard instead.
+Details in `capture.md`.

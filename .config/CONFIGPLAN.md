@@ -34,7 +34,7 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
                   |- zathura           zathura/zathurarc (PDFs opened from nvim)
 
     macOS screenshot keys              defaults com.apple.screencapture   docs/capture.md
-      |- Hammerspoon capture.lua       watches /tmp/shots, image to clipboard
+      |- Hammerspoon capture.lua       watches /tmp/shots, path to clipboard
 
     Homebrew installs all of it        brew/
     dotfiles (~/.cfg, branch macos) tracks all of it
@@ -108,7 +108,7 @@ Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner c
 Details and proposals live in `docs/`. This file only tracks the steps.
 
 - [ ] Desktops: set up the 6 fixed desktops, native Spaces first (`docs/desktops.md`).
-- [x] Capture: built-in keys save to `/tmp/shots`, screenshot image goes to the clipboard (`capture.lua`, `docs/capture.md`).
+- [x] Capture: built-in keys save to `/tmp/shots`, path goes to the clipboard (`capture.lua`, `docs/capture.md`).
 - [ ] Add the two `defaults write com.apple.screencapture` lines from `docs/capture.md` to the install script.
 
 ## 6. Usage log (lowest priority)
