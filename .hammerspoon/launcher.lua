@@ -1,14 +1,60 @@
 -- App launcher and calculator. Opened by hammerspoon://launcher
+-- Below the apps it lists recently used files (nvim) and folders (zoxide); a leading "/" searches
+-- all files and folders below the home folder. See ~/.config/docs/launcher.md
 local M = {}
+
+local home = os.getenv("HOME")
+local bin = "/opt/homebrew/bin/"
+local edit = home .. "/.local/bin/edit" -- opens files and folders in nvim / tmux
 
 local dirs = {
 	"/Applications",
-	os.getenv("HOME") .. "/Applications",
+	home .. "/Applications",
 	"/System/Applications",
 	"/System/Library/CoreServices/Applications",
 }
 local apps, scannedAt = {}, 0
 local counts = hs.settings.get("launcher.counts") or {}
+local recent = {} -- file and folder rows, most recently used first
+local maxRecent = 12 -- rows shown below the apps
+
+-- row for a file or folder; folders are given with a trailing slash or as kind
+local function pathRow(path, kind)
+	local short = path:gsub("^" .. home, "~")
+	return {
+		text = path:match("([^/]+)/?$") or path,
+		subText = short,
+		file = path,
+		kind = kind,
+		match = short:lower(),
+		image = kind == "folder" and hs.image.iconForFileType("public.folder")
+			or hs.image.iconForFileType(path:match("%.(%w+)$") or "public.text"),
+	}
+end
+
+local function lines(text)
+	local out = {}
+	for line in (text or ""):gmatch("[^\r\n]+") do
+		out[#out + 1] = line
+	end
+	return out
+end
+
+-- nvim's own list of recent files, then zoxide's list of folders
+local function scanRecent()
+	local files = hs.execute(bin .. "nvim --headless -u NONE -c 'for f in v:oldfiles | echo f | endfor' -c qa 2>&1")
+	local folders = hs.execute(bin .. "zoxide query -l 2>/dev/null")
+	local found = {}
+	for _, path in ipairs(lines(files)) do
+		if path:sub(1, 1) == "/" and hs.fs.attributes(path, "mode") == "file" then
+			found[#found + 1] = pathRow(path, "file")
+		end
+	end
+	for _, path in ipairs(lines(folders)) do
+		found[#found + 1] = pathRow(path, "folder")
+	end
+	recent = found
+end
 
 local function scan()
 	local found, seen = {}, {}
@@ -94,7 +140,53 @@ local function filter(query)
 	for i, hit in ipairs(hits) do
 		choices[i] = hit.app
 	end
+	-- recent files and folders after the apps, only once something is typed
+	if q ~= "" then
+		local shown = 0
+		for _, row in ipairs(recent) do
+			if shown >= maxRecent then
+				break
+			end
+			-- no letters-in-order matching here, it is too noisy on paths
+			if (score(row.text:lower(), q) or 4) < 4 or row.match:find(q, 1, true) then
+				choices[#choices + 1] = row
+				shown = shown + 1
+			end
+		end
+	end
 	return choices
+end
+
+-- "/text": every file and folder below the home folder, listed by fd and ranked by fzf
+local searchTask, searchTimer
+local chooser
+local function search(query)
+	if searchTimer then
+		searchTimer:stop()
+	end
+	searchTimer = hs.timer.doAfter(0.15, function()
+		if searchTask and searchTask:isRunning() then
+			searchTask:terminate()
+		end
+		local cmd = bin .. "fd . --base-directory \"$HOME\" --max-depth 7 -E Library -E node_modules -E '*.app'"
+			.. " | " .. bin .. 'fzf --filter "$1" | head -40'
+		searchTask = hs.task.new("/bin/sh", function(_, out)
+			if chooser:query() ~= "/" .. query then
+				return -- typed on in the meantime
+			end
+			local rows = {}
+			for _, rel in ipairs(lines(out)) do
+				local folder = rel:sub(-1) == "/"
+				rows[#rows + 1] = pathRow(home .. "/" .. rel:gsub("/$", ""), folder and "folder" or "file")
+			end
+			chooser:choices(rows)
+		end, { "-c", cmd, "sh", query })
+		searchTask:start()
+	end)
+end
+
+local function reveal(path)
+	hs.task.new("/usr/bin/open", nil, { "-R", path }):start()
 end
 
 local calcEnv = { pi = math.pi, ln = math.log }
@@ -113,7 +205,7 @@ local function calculate(expr)
 	return { { text = text, subText = "Enter copies the result", calc = true } }
 end
 
-local chooser = hs.chooser.new(function(choice)
+chooser = hs.chooser.new(function(choice)
 	if not choice then
 		return
 	end
@@ -121,28 +213,53 @@ local chooser = hs.chooser.new(function(choice)
 		hs.pasteboard.setContents(choice.text)
 		return
 	end
+	if choice.file then
+		hs.task.new(edit, nil, { choice.file }):start()
+		return
+	end
 	counts[choice.path] = (counts[choice.path] or 0) + 1
 	hs.settings.set("launcher.counts", counts)
 	hs.application.launchOrFocus(choice.path)
 end)
 
-chooser:queryChangedCallback(function(query)
+local function update(query)
 	if query:sub(1, 1) == "=" then
 		chooser:choices(calculate(query:sub(2)))
+	elseif query:sub(1, 1) == "/" then
+		if #query > 1 then
+			search(query:sub(2))
+		else
+			chooser:choices({})
+		end
 	else
 		chooser:choices(filter(query))
 	end
-end)
+end
+chooser:queryChangedCallback(update)
 
--- Tab writes the highlighted app name into the input. Only listens while the launcher is open.
+-- Keys the picker does not handle itself. Only listens while the launcher is open.
+-- Tab: writes the highlighted app name into the input; on a folder its path, to search below it.
+-- Cmd+Enter: shows the highlighted file or folder in Finder.
 local tabTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
-	if event:getKeyCode() ~= hs.keycodes.map.tab or next(event:getFlags()) then
+	local key, flags = event:getKeyCode(), event:getFlags()
+	local row = chooser:selectedRowContents()
+	if key == hs.keycodes.map["return"] and flags:containExactly({ "cmd" }) then
+		if row and row.file then
+			chooser:hide()
+			reveal(row.file)
+		end
+		return true
+	end
+	if key ~= hs.keycodes.map.tab or next(flags) then
 		return false
 	end
-	local row = chooser:selectedRowContents()
 	if row and row.path then
 		chooser:query(row.text)
-		chooser:choices(filter(row.text))
+		update(row.text)
+	elseif row and row.kind == "folder" then
+		local below = "/" .. row.file:gsub("^" .. home .. "/?", "") .. "/"
+		chooser:query(below)
+		update(below)
 	end
 	return true
 end)
@@ -153,18 +270,21 @@ chooser:hideCallback(function()
 	tabTap:stop()
 end)
 
-function M.toggle()
+-- query: text to start with, e.g. "/" for the file search (hammerspoon://launcher?q=/)
+function M.toggle(query)
 	if chooser:isVisible() then
 		chooser:hide()
 		return
 	end
 	if os.time() - scannedAt > 300 then
 		scan()
+		scanRecent()
 	end
-	chooser:query("")
-	chooser:choices(filter(""))
+	chooser:query(query or "")
+	update(query or "")
 	chooser:show()
 end
 
 scan()
+scanRecent()
 return M
