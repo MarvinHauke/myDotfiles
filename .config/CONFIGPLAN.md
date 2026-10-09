@@ -8,12 +8,12 @@ Status: [ ] open, [x] done. Keep one line per item. Delete done items after a wh
 This file: overview, state, open steps. Details live in `docs/`, one file per topic.
 New topic = new file there plus one line here.
 
-| Doc | Answers |
-|---|---|
-| `docs/keys.md` | which key does what, which layer a new key belongs to |
-| `docs/capture.md` | screenshots and recording: keys, commands, where files go |
-| `docs/launcher.md` | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
-| `docs/clipboard.md` | what feeds the clipboard history, where it is stored, how to pick from it |
+| Doc                 | Answers                                                                              |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| `docs/keys.md`      | which key does what, which layer a new key belongs to                                |
+| `docs/capture.md`   | screenshots and recording: keys, commands, where files go                            |
+| `docs/launcher.md`  | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
+| `docs/clipboard.md` | what feeds the clipboard history, where it is stored, how to pick from it            |
 
 ## Structure
 
@@ -46,20 +46,20 @@ Secrets go in `~/.env` or `~/.zshrc.local` (both ignored by git), never in a tra
 
 ## State
 
-| Area | Tool | Config | State |
-|---|---|---|---|
-| Shell | zsh + zap (11 plugins), starship | `~/.zshrc` | good, starts in 0.12 s |
-| Terminal | ghostty | `ghostty/config` | good, config minimal |
-| Multiplexer | tmux + tpm (8 plugins) | `tmux/tmux.conf` | good |
-| Editor | neovim, lazy.nvim, ~40 plugin files | `nvim/` | good |
-| PDF | zathura | `zathura/zathurarc` | good |
-| Keys | karabiner (caps = ctrl/esc, ctrl-hjkl), owns all hotkeys | `karabiner/` | good |
-| Automation | hammerspoon: launcher, windows, clipboard, Finder keys, help (actions only) | `~/.hammerspoon/*.lua` | new, needs daily use |
-| Capture | macOS built-in keys + hammerspoon `capture.lua` | `defaults com.apple.screencapture`, `/tmp/shots` | new |
-| Launcher | hammerspoon `launcher.lua` + `launcher/`, Cmd+Space; `edit` opens files in nvim/tmux | `~/.hammerspoon/`, `~/.local/bin/edit` | new |
-| Windows | hammerspoon `windows.lua`, AltTab | `~/.hammerspoon/` | new |
-| Packages | Homebrew | `brew/Brewfile` | good. Record: `brew bundle dump --force`. Restore: `brew bundle`. Extras: `brew bundle cleanup` |
-| Dotfiles | bare repo `~/.cfg`, branch `macos` | | clean |
+| Area        | Tool                                                                                 | Config                                           | State                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| Shell       | zsh + zap (11 plugins), starship                                                     | `~/.zshrc`                                       | good, starts in 0.12 s                                                                          |
+| Terminal    | ghostty                                                                              | `ghostty/config`                                 | good, config minimal                                                                            |
+| Multiplexer | tmux + tpm (8 plugins)                                                               | `tmux/tmux.conf`                                 | good                                                                                            |
+| Editor      | neovim, lazy.nvim, ~40 plugin files                                                  | `nvim/`                                          | good                                                                                            |
+| PDF         | zathura                                                                              | `zathura/zathurarc`                              | good                                                                                            |
+| Keys        | karabiner (caps = ctrl/esc, ctrl-hjkl), owns all hotkeys                             | `karabiner/`                                     | good                                                                                            |
+| Automation  | hammerspoon: launcher, windows, clipboard, Finder keys, help (actions only)          | `~/.hammerspoon/*.lua`                           | new, needs daily use                                                                            |
+| Capture     | macOS built-in keys + hammerspoon `capture.lua`                                      | `defaults com.apple.screencapture`, `/tmp/shots` | new                                                                                             |
+| Launcher    | hammerspoon `launcher.lua` + `launcher/`, Cmd+Space; `edit` opens files in nvim/tmux | `~/.hammerspoon/`, `~/.local/bin/edit`           | new                                                                                             |
+| Windows     | hammerspoon `windows.lua`, AltTab                                                    | `~/.hammerspoon/`                                | new                                                                                             |
+| Packages    | Homebrew                                                                             | `brew/Brewfile`                                  | good. Record: `brew bundle dump --force`. Restore: `brew bundle`. Extras: `brew bundle cleanup` |
+| Dotfiles    | bare repo `~/.cfg`, branch `macos`                                                   |                                                  | clean                                                                                           |
 
 ## 1. Chores (by hand)
 
@@ -72,9 +72,9 @@ Secrets go in `~/.env` or `~/.zshrc.local` (both ignored by git), never in a tra
 
 Built and tested through the command line, not yet pressed. Working so far: window keys, Finder `e`.
 
-- [ ] Finder: `?` shows the keys, any key closes the panel.
-- [ ] Launcher: Enter and Cmd+Enter on a file row, Tab on a folder row.
-- [ ] Shell: Cmd+l takes the next word of the grey suggestion, Cmd+Shift+l all of it.
+- [x] Finder: `?` shows the keys, any key closes the panel.
+- [x] Launcher: Enter and Cmd+Enter on a file row, Tab on a folder row.
+- [x] Shell: Cmd+l takes the next word of the grey suggestion, Cmd+Shift+l all of it.
 - [ ] Clipboard picker: right-click deletes a row.
 - [ ] Every other key from `docs/keys.md` once.
 
