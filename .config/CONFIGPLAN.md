@@ -127,7 +127,9 @@ Until then, from shell history: `cd` 793, `git` 712 (`git commit` 322), `vim` 35
 - [x] `~/.local/bin/edit <file>`: split in a running nvim of the project, else a tmux window or session. Ghostty to front.
 - [x] Finder: `e` opens the selection with `edit`, `?` shows the Finder keys (read from `docs/keys.md`).
 - [x] Launcher: recent files (nvim) and folders (zoxide) below the apps; `/` searches with fd + fzf; Cmd+Enter shows in Finder.
-- [ ] Try the real keys: `e` and `?` in Finder, Enter and Cmd+Enter on a file row, Tab on a folder row.
+- [x] `e` in Finder works (tried with real keys).
+- [ ] Try the real keys: `?` in Finder, Enter and Cmd+Enter on a file row, Tab on a folder row.
+- [ ] Idea: when a tmux pane or window already sits in the chosen path, `edit` asks: focus the existing one or open a new window.
 - [ ] Later: `?` for the other layers (for example Hyper+?), a key for `hammerspoon://launcher?q=/`.
 
 ## Done?
