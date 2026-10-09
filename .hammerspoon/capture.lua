@@ -1,6 +1,6 @@
 -- Screenshots and recordings. macOS saves them to /tmp/shots (com.apple.screencapture
 -- location). Each new file gets a short name without spaces and its path is copied to
--- the clipboard, ready to paste into a terminal.
+-- the clipboard, ready to paste into a terminal. The picture is offered in the clipboard history.
 local M = {}
 
 local dir = "/private/tmp/shots" -- /tmp is a symlink; the watcher needs the real path
@@ -24,6 +24,10 @@ local function handle(paths)
 				target = string.format("/tmp/shots/%s_%d.%s", stamp, n, ext)
 			end
 			if os.rename(path, target) then
+				-- path for a normal paste, the picture itself as an extra entry in the clipboard history
+				if ext == "png" then
+					require("clipboard").addImage(target)
+				end
 				hs.pasteboard.setContents(target)
 				hs.alert.show(target)
 			end

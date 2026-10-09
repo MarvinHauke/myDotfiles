@@ -1,4 +1,5 @@
--- OS-wide clipboard history (text only). Opened by hammerspoon://clipboard
+-- OS-wide clipboard history. Opened by hammerspoon://clipboard
+-- Entries are copied text, or { image = path } for screenshots (added by capture.lua).
 local M = {}
 
 local file = os.getenv("HOME") .. "/.local/state/clipboard.json"
@@ -38,11 +39,32 @@ local function add(text)
 	save()
 end
 
+-- Offer an image file in the history without touching the clipboard itself.
+function M.addImage(path)
+	for i, old in ipairs(history) do
+		if type(old) == "table" and old.image == path then
+			table.remove(history, i)
+			break
+		end
+	end
+	table.insert(history, 1, { image = path })
+	save()
+end
+
 local chooser = hs.chooser.new(function(choice)
 	if not choice then
 		return
 	end
-	hs.pasteboard.setContents(history[choice.index])
+	local entry = history[choice.index]
+	if type(entry) == "table" then
+		local image = hs.image.imageFromPath(entry.image)
+		if not image then
+			return
+		end
+		hs.pasteboard.writeObjects(image)
+	else
+		hs.pasteboard.setContents(entry)
+	end
 	hs.timer.doAfter(0.1, function()
 		hs.eventtap.keyStroke({ "cmd" }, "v")
 	end)
@@ -50,13 +72,21 @@ end)
 
 local function choices()
 	local rows = {}
-	for i, text in ipairs(history) do
-		local _, breaks = text:gsub("\n", "\n")
-		rows[i] = {
-			text = (text:match("[^\n]*%S[^\n]*") or ""):gsub("^%s+", ""):sub(1, 120),
-			subText = breaks > 0 and (breaks + 1) .. " lines" or nil,
-			index = i,
-		}
+	for i, entry in ipairs(history) do
+		if type(entry) == "table" then
+			-- image files in /tmp/shots disappear after a while; then the row is left out
+			local image = hs.image.imageFromPath(entry.image)
+			if image then
+				rows[#rows + 1] = { text = "Image " .. entry.image:match("[^/]+$"), subText = "pastes the picture", image = image, index = i }
+			end
+		else
+			local _, breaks = entry:gsub("\n", "\n")
+			rows[#rows + 1] = {
+				text = (entry:match("[^\n]*%S[^\n]*") or ""):gsub("^%s+", ""):sub(1, 120),
+				subText = breaks > 0 and (breaks + 1) .. " lines" or nil,
+				index = i,
+			}
+		end
 	end
 	return rows
 end

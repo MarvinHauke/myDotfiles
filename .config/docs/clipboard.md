@@ -9,11 +9,13 @@ One OS-wide history. Everything that reaches the macOS clipboard lands in it.
 | Any app | Cmd+C |
 | nvim | `clipboard=unnamedplus` (`nvim/lua/core/options.lua`): yanks and `dd`/`x`/`c` |
 | tmux copy mode | `y` pipes to `pbcopy` (`tmux/tmux.conf`) |
-| Screenshots | Cmd+Shift+3/4 (see `capture.md`) |
+| Screenshots | Cmd+Shift+3/4 (see `capture.md`): the path as text, plus a picture row |
 
 - Store: Hammerspoon pasteboard watcher, last 100 text entries in `~/.local/state/clipboard.json` (mode 600). Copying an old entry again moves it to the top.
 - Use: Hyper+v opens the picker, type to filter, Enter pastes into the front app (key in `keys.md`).
-- Text only. Entries marked as concealed or transient (password managers) are skipped.
+- Copied content is kept as text only. Entries marked as concealed or transient (password managers) are skipped.
+- Picture rows exist only for screenshots. They point at the file in `/tmp/shots` and disappear from the list
+  when macOS has cleaned the file away. They are not counted against the 100 text entries limit being trimmed first.
 - Clear: `echo '[]' > ~/.local/state/clipboard.json`, then Hyper+r.
 
 Open point: check that a password copied from KeePassXC does not show up.
