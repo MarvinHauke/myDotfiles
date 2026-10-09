@@ -58,7 +58,6 @@ load_env() {
 
 # Quick directory navigation
 dev() { cd "$HOME/Development/$1" 2>/dev/null || cd "$HOME/Development" }
-conf() { cd "$XDG_CONFIG_HOME/$1" 2>/dev/null || cd "$XDG_CONFIG_HOME" }
 
 # Zathura PDF viewer (fork and detach from terminal)
 zathura() { command zathura --fork "$@" >/dev/null 2>&1 }
@@ -245,15 +244,25 @@ alias lt='lsd --tree'
 alias vim='nvim'
 alias vi='nvim'
 
-# Quick navigation
-alias cdl='cd $HOME/Downloads'
-alias cdt='cd $XDG_CONFIG_HOME/tmux'
+# Places: a name stands for a folder. Use as ~name anywhere: `cd ~dev`, just `~dev`,
+# `nvim ~conf/tmux/tmux.conf`. Tab completes below the name. The launcher (Cmd+Space) lists them too.
+hash -d dl=$HOME/Downloads
+hash -d dev=$HOME/Development
+hash -d conf=$XDG_CONFIG_HOME
+hash -d notes=$HOME/Notizen
+hash -d abl="/Volumes/ExterneSSD/Ableton Projekte"
 
-# Config editing shortcuts
-alias nvc='nvim $XDG_CONFIG_HOME/nvim/.'
+# Tab completion for `dev <folder>` (the function is defined at the top)
+_dev() { _files -W "$HOME/Development" -/ }
+(( $+functions[compdef] )) && compdef _dev dev
+
+# Config editing shortcuts: nv + first letter of the tool. The launcher lists them too.
+alias nvn='nvim $XDG_CONFIG_HOME/nvim/.'
 alias nvt='nvim $XDG_CONFIG_HOME/tmux/tmux.conf'
 alias nvz='nvim $ZSHRC'
 alias nvs='nvim $STARSHIP_CONFIG'
+alias nvk='nvim $XDG_CONFIG_HOME/karabiner/karabiner.json'
+alias nvh='nvim $HOME/.hammerspoon/.'
 alias src='source $ZSHRC'
 alias notes='nvim $HOME/Notizen'
 
