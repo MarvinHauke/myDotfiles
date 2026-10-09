@@ -46,13 +46,18 @@ Vim-style keys, only in Finder.
 | G (Shift+g) | jump to the last file | Opt+Down |
 | gg | jump to the first file | Opt+Up |
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
+| e | open the selected file in nvim, a folder in Ghostty | `hammerspoon://edit` runs `~/.local/bin/edit`, see `launcher.md` |
+| ? | show this table as a panel, any key closes it | `hammerspoon://help?topic=Finder` |
 | Ctrl+j in the search field | jump to the search results and select the first one | Tab, Down |
 | Escape twice in the search results | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 | Escape in an empty search field | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 
 - Hammerspoon (`finder.lua`) watches Finder's focus and sets the Karabiner variable `finder_editing`:
   0 = browsing files, 1 = text field (rename, "Go to folder"), 2 = search field.
-  Y, G, gg and Cmd+r only fire on 0, so the keys type normally in text fields.
+  Y, G, gg, Cmd+r, e and ? only fire on 0, so the keys type normally in text fields.
+- `?` reads this table from this file (`help.lua`): edit a row here and the panel changes with it. Any `## heading`
+  with a table works as a topic, for example `hammerspoon://help?topic=OS layer`.
+- `e` takes type-to-select for names starting with e. Files that are not plain text open in their own app.
 - Search exit: when focus leaves an empty search field, `finder.lua` sends Go > Back. It reacts to the focus
   change, so it works for the Escape key and for Caps Lock tapped as Escape. With text in the field the first
   Escape clears it, the second one leaves.
@@ -71,7 +76,7 @@ Vim-style keys, only in Finder.
 
 | Key | Action | Backend |
 |---|---|---|
-| Cmd+Space | launcher; Tab completes the highlighted name; type `=` first to calculate, Enter copies the result | `hammerspoon://launcher` |
+| Cmd+Space | launcher: apps, recent files and folders; `/` searches all files, `=` calculates; Tab completes, Cmd+Enter shows in Finder | `hammerspoon://launcher`, see `launcher.md` |
 | Hyper+1..6 | go to desktop N (proposal) | see `desktops.md` |
 | Hyper+Shift+1..6 | move window to desktop N (proposal) | see `desktops.md` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |

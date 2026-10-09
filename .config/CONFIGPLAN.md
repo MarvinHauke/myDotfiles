@@ -21,7 +21,8 @@ New topic = new file there plus one line here.
 Who calls whom, and where it is configured. `*` = planned, not built yet.
 
     Karabiner: all hotkeys             karabiner/karabiner.json      docs/keys.md
-      |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard
+      |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard, help
+          |- edit                      ~/.local/bin/edit             files into nvim/tmux    docs/launcher.md
       |- Finder keys                   finder.lua sets finder_editing docs/keys.md
       |- macOS Spaces *                System Settings               docs/desktops.md
       |- tmux pane zoom, cmdAbl        karabiner/assets/complex_modifications/
@@ -122,12 +123,13 @@ Details and proposals live in `docs/`. This file only tracks the steps.
 Until then, from shell history: `cd` 793, `git` 712 (`git commit` 322), `vim` 359, `config` 204
 (old name of `dotfiles`), `brew install` 100, `tmux rename-window` 18.
 
-## 7. Open files and folders (proposal in `docs/launcher.md`)
+## 7. Open files and folders (`docs/launcher.md`)
 
-- [ ] `~/.local/bin/edit <file>`: tmux session for the project + nvim, Ghostty to front.
-- [ ] Finder: a key opens the selected file with `edit`.
-- [ ] Launcher: recent files (nvim) and folders (zoxide) below the apps; `/` searches files and folders with fd + fzf.
-- [ ] Launcher: Enter opens in nvim or Ghostty, Cmd+Enter shows in Finder.
+- [x] `~/.local/bin/edit <file>`: split in a running nvim of the project, else a tmux window or session. Ghostty to front.
+- [x] Finder: `e` opens the selection with `edit`, `?` shows the Finder keys (read from `docs/keys.md`).
+- [x] Launcher: recent files (nvim) and folders (zoxide) below the apps; `/` searches with fd + fzf; Cmd+Enter shows in Finder.
+- [ ] Try the real keys: `e` and `?` in Finder, Enter and Cmd+Enter on a file row, Tab on a folder row.
+- [ ] Later: `?` for the other layers (for example Hyper+?), a key for `hammerspoon://launcher?q=/`.
 
 ## Done?
 
