@@ -14,4 +14,9 @@ quit-after-last-window-closed = true
 
 mouse-hide-while-typing = true
 
+# Keys for the grey shell suggestion (zsh-autosuggestions). A terminal never sees Cmd, so these
+# send a sequence that ~/.zshrc binds: Cmd+l = next word, Cmd+Shift+l = whole suggestion or clear screen.
+keybind = super+l=text:\x1bl
+keybind = super+shift+l=text:\x1bL
+
 # Not set on purpose: macos-option-as-alt. Option must keep typing @ [ ] | { } µ on the German layout.

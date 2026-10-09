@@ -75,6 +75,21 @@ Vim-style keys, only in Finder.
 - The search exit relies on English Finder texts (window title "Searching ...", menu "Go > Back").
 - Karabiner key names follow the US layout: the key labelled Y on the German keyboard is `z` in the rule.
 
+## Shell (Ghostty + zsh)
+
+The grey text after the cursor is a suggestion from your history (zsh-autosuggestions).
+
+| Key | Action | How |
+|---|---|---|
+| Cmd+l | take the next word of the suggestion; `/` ends a word, so paths go folder by folder | Ghostty sends Esc l, `.zshrc` binds `accept-suggestion-word` |
+| Cmd+Shift+l | take the whole suggestion; with no suggestion, clear the screen | Ghostty sends Esc L, `.zshrc` binds `accept-suggestion-or-clear` |
+| Right arrow | take the whole suggestion | plugin default |
+| Tab | completion picker (fzf-tab), a different thing from the grey text | |
+
+- A terminal never sees Cmd, so the two `keybind` lines in `ghostty/config` translate the keys.
+- Caps+l (Ctrl+l) is not available for this: inside tmux it switches panes.
+- Pressing Escape and `l` by hand within 0.25 s (`KEYTIMEOUT=25`) counts as Cmd+l.
+
 ## OS layer (Hyper)
 
 | Key | Action | Backend |
