@@ -4,8 +4,30 @@ local M = {}
 
 local file = os.getenv("HOME") .. "/.local/state/clipboard.json"
 local limit = 100
--- password managers mark secrets with these types (nspasteboard.org)
-local skip = { ["org.nspasteboard.ConcealedType"] = true, ["org.nspasteboard.TransientType"] = true }
+-- Secrets stay out of the history. They can still be pasted normally with Cmd+V.
+-- 1. anything copied while one of these apps is in front
+local secretApps = {
+	["com.apple.Passwords"] = true,
+	["com.apple.keychainaccess"] = true,
+	["org.keepassxc.keepassxc"] = true,
+}
+-- 2. anything a password manager marks as secret (nspasteboard.org types and similar)
+local secretTypes = { "concealed", "transient", "sensitive", "password" }
+
+local function isSecret()
+	local front = hs.application.frontmostApplication()
+	if front and secretApps[front:bundleID()] then
+		return true
+	end
+	for _, uti in ipairs(hs.pasteboard.contentTypes() or {}) do
+		for _, word in ipairs(secretTypes) do
+			if uti:lower():find(word, 1, true) then
+				return true
+			end
+		end
+	end
+	return false
+end
 
 local history = hs.fs.attributes(file) and hs.json.read(file) or {}
 
@@ -21,10 +43,8 @@ local function add(text)
 	if not text or text:match("^%s*$") then
 		return
 	end
-	for _, uti in ipairs(hs.pasteboard.contentTypes() or {}) do
-		if skip[uti] then
-			return
-		end
+	if isSecret() then
+		return
 	end
 	for i, old in ipairs(history) do
 		if old == text then
@@ -70,7 +90,19 @@ local chooser = hs.chooser.new(function(choice)
 	end)
 end)
 
-local function choices()
+local choices
+
+-- right-click a row to delete it from the history
+chooser:rightClickCallback(function(row)
+	local choice = chooser:selectedRowContents(row)
+	if choice and choice.index then
+		table.remove(history, choice.index)
+		save()
+		chooser:choices(choices())
+	end
+end)
+
+function choices()
 	local rows = {}
 	for i, entry in ipairs(history) do
 		if type(entry) == "table" then
