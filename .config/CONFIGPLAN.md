@@ -21,7 +21,7 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
 
     Karabiner: all hotkeys             karabiner/karabiner.json      docs/keys.md
       |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard
-      |- screencapture *               (no config), /tmp/shots       docs/capture.md
+      |- Finder keys                   finder.lua sets finder_editing docs/keys.md
       |- macOS Spaces *                System Settings               docs/desktops.md
       |- tmux pane zoom, cmdAbl        karabiner/assets/complex_modifications/
 
@@ -32,6 +32,9 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
           |- tmux                      tmux/tmux.conf (tpm plugins)
               |- nvim                  nvim/ (lazy.nvim), panes shared via vim-tmux-navigator
                   |- zathura           zathura/zathurarc (PDFs opened from nvim)
+
+    macOS screenshot keys              defaults com.apple.screencapture   docs/capture.md
+      |- Hammerspoon capture.lua       watches /tmp/shots, image to clipboard
 
     Homebrew installs all of it        brew/
     dotfiles (~/.cfg, branch macos) tracks all of it
@@ -47,7 +50,7 @@ Who calls whom, and where it is configured. `*` = planned, not built yet.
 | PDF | zathura | `zathura/zathurarc` | good |
 | Keys | karabiner (caps = ctrl/esc, ctrl-hjkl), owns all hotkeys | `karabiner/` | good |
 | Automation | hammerspoon: launcher, windows, clipboard (actions only) | `~/.hammerspoon/*.lua` | new, needs daily use |
-| Capture | macOS built-in (`screencapture`, Screenshot.app) | `defaults com.apple.screencapture` (unset) | defaults, saves to Desktop |
+| Capture | macOS built-in keys + hammerspoon `capture.lua` | `defaults com.apple.screencapture`, `/tmp/shots` | new |
 | Launcher | hammerspoon `launcher.lua`, Cmd+Space | `~/.hammerspoon/` | new |
 | Windows | hammerspoon `windows.lua`, AltTab | `~/.hammerspoon/` | new |
 | Packages | Homebrew (53 formulae, 9 casks) | `brew/*.txt` | list is stale |
@@ -105,8 +108,8 @@ Hammerspoon only exposes actions (`hs.urlevent.bind` in `init.lua`); Karabiner c
 Details and proposals live in `docs/`. This file only tracks the steps.
 
 - [ ] Desktops: set up the 6 fixed desktops, native Spaces first (`docs/desktops.md`).
-- [ ] Capture: Cmd+Shift+3/4 to clipboard, +Opt to `/tmp/shots`, Cmd+Shift+5 records (`docs/capture.md`).
-- [ ] `defaults write com.apple.screencapture show-thumbnail -bool false`, add to the install script.
+- [x] Capture: built-in keys save to `/tmp/shots`, screenshot image goes to the clipboard (`capture.lua`, `docs/capture.md`).
+- [ ] Add the two `defaults write com.apple.screencapture` lines from `docs/capture.md` to the install script.
 
 ## 6. Usage log (lowest priority)
 

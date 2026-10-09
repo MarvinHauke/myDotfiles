@@ -80,15 +80,7 @@ Vim-style keys, only in Finder.
 
 Desktops are not on Opt+Shift+number, because Option+number types `[ ] | { }` on the German layout.
 
-## Capture (keeps the macOS numbers)
+## Capture
 
-Number = what, modifier = where.
-
-| Key | What | Where |
-|---|---|---|
-| Cmd+Shift+3 | full screen | clipboard |
-| Cmd+Shift+4 | selection | clipboard |
-| Cmd+Shift+5 | record selection | `/tmp/shots/*.mov` |
-| add Opt to 3 or 4 | same | file in `/tmp/shots/*.png` |
-
-Details in `capture.md`.
+The built-in macOS keys, unchanged: Cmd+Shift+3 (screen), Cmd+Shift+4 (selection), Cmd+Shift+5 (toolbar, recording).
+Files go to `/tmp/shots` and screenshots also land on the clipboard as an image. Details in `capture.md`.

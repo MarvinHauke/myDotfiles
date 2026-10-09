@@ -6,6 +6,7 @@ local launcher = require("launcher")
 local windows = require("windows")
 local clipboard = require("clipboard")
 require("finder") -- publishes finder_editing to Karabiner, leaves empty searches
+require("capture") -- copies the path of each new screenshot in /tmp/shots
 
 hs.urlevent.bind("launcher", function()
 	launcher.toggle()
