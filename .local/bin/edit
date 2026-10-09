@@ -1,0 +1,110 @@
+#!/bin/sh
+# edit [-n] <file|folder>...   open in nvim inside tmux, in the place where the project is already open.
+# -n opens it in the background, without switching to it.
+# Called from the shell, from Finder (key e) and from the launcher. See ~/.config/docs/launcher.md
+#
+# First match wins:
+#   1. an nvim running in the same project   -> the file opens there as a vertical split
+#   2. a tmux pane in the same project        -> new window in that session
+#   3. nothing                                -> new tmux session named after the project
+# "Same project" = same git repository; outside a repository: a folder above the file.
+# Files that are not plain text are handed to `open` and use their own app.
+
+PATH="/opt/homebrew/bin:$PATH"
+
+# text types that should still open in their default app, separated by spaces
+default_app="csv"
+
+project_of() { git -C "$1" rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$1"; }
+in_repo() { git -C "$1" rev-parse --show-toplevel >/dev/null 2>&1; }
+inside() { case "$1/" in "$2"/*) return 0 ;; esac; return 1; } # is $1 equal to or below $2
+
+# does a place with working folder $1 belong to the project of the target? prints a rank (longer = closer)
+match() {
+	if [ "$target_repo" = yes ]; then
+		in_repo "$1" && [ "$(project_of "$1")" = "$root" ] && echo 9999
+	else
+		inside "$dir" "$1" && echo "${#1}"
+	fi
+}
+
+is_text() {
+	[ -e "$1" ] || return 0 # new file
+	[ -s "$1" ] || return 0 # empty file
+	[ "$(file -b --mime-encoding "$1")" != binary ]
+}
+
+focus=yes
+[ "$1" = -n ] && focus=no && shift
+
+target=""
+for arg in "$@"; do
+	path=$(realpath "$arg" 2>/dev/null) || path=$arg
+	if [ -d "$path" ]; then
+		dir=$path file=""
+	else
+		ext=${path##*.}
+		case " $default_app " in *" $ext "*) open "$path"; continue ;; esac
+		if ! is_text "$path"; then open "$path"; continue; fi
+		dir=$(dirname "$path") file=$path
+	fi
+	root=$(project_of "$dir")
+	if in_repo "$dir"; then target_repo=yes; else target_repo=no; fi
+	target=""
+
+	# 1. a running nvim in the same project
+	if [ -n "$file" ]; then
+		best=0
+		for sock in "${TMPDIR:-/tmp/}"nvim."$USER"/*/nvim.*.0; do
+			[ -S "$sock" ] || continue
+			cwd=$(nvim --server "$sock" --remote-expr 'getcwd()' 2>/dev/null) || continue
+			pane=$(nvim --server "$sock" --remote-expr '$TMUX_PANE' 2>/dev/null)
+			[ -n "$pane" ] || continue
+			rank=$(match "$cwd")
+			if [ -n "$rank" ] && [ "$rank" -gt "$best" ]; then best=$rank found=$sock target=$pane; fi
+		done
+		if [ -n "$target" ]; then
+			quoted=$(printf '%s' "$file" | sed "s/'/''/g")
+			nvim --server "$found" --remote-send '<C-\><C-N>' >/dev/null
+			# jump to the file if it is already visible, otherwise split
+			nvim --server "$found" --remote-expr "bufwinid(bufadd('$quoted')) > 0 ? win_gotoid(bufwinid(bufadd('$quoted'))) : execute('vsplit ' . fnameescape('$quoted'))" >/dev/null
+		fi
+	fi
+
+	if [ -z "$target" ]; then
+		# what to start in the new window; it stays a normal shell after nvim quits
+		keys=""
+		[ -n "$file" ] && keys="nvim -- '$(printf '%s' "$file" | sed "s/'/'\\\\''/g")'"
+
+		# 2. a tmux pane in the same project
+		best=0 session=""
+		tmux list-panes -a -F '#{session_name}	#{pane_current_path}' 2>/dev/null >"${TMPDIR:-/tmp/}edit.$$"
+		while IFS='	' read -r name panedir; do
+			rank=$(match "$panedir")
+			if [ -n "$rank" ] && [ "$rank" -gt "$best" ]; then best=$rank session=$name; fi
+		done <"${TMPDIR:-/tmp/}edit.$$"
+		rm -f "${TMPDIR:-/tmp/}edit.$$"
+
+		# 3. otherwise a session named after the project
+		if [ -z "$session" ]; then
+			session=$(basename "$root" | tr '.:' '__')
+			tmux has-session -t "=$session" 2>/dev/null || {
+				target=$(tmux new-session -d -P -F '#{pane_id}' -s "$session" -c "$dir")
+			}
+		fi
+		[ -n "$target" ] || target=$(tmux new-window -P -F '#{pane_id}' -t "=$session:" -c "$dir")
+		[ -n "$keys" ] && tmux send-keys -t "$target" "$keys" Enter
+	fi
+done
+
+[ -n "$target" ] && [ "$focus" = yes ] || exit 0
+
+# show it: Ghostty to the front, tmux to that session, window and pane
+open -a Ghostty
+tries=0
+while [ -z "$(tmux list-clients -F '#{client_name}' 2>/dev/null)" ] && [ "$tries" -lt 30 ]; do
+	sleep 0.1
+	tries=$((tries + 1))
+done
+client=$(tmux list-clients -F '#{client_activity} #{client_name}' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
+[ -n "$client" ] && tmux switch-client -c "$client" -t "$target"
