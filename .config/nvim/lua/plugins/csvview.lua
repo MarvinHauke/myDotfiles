@@ -19,4 +19,24 @@ return {
 		},
 	},
 	cmd = { "CsvViewEnable", "CsvViewDisable", "CsvViewToggle" },
+	ft = { "csv", "tsv" },
+	config = function(_, opts)
+		local csvview = require("csvview")
+		csvview.setup(opts)
+		-- The table view switches on by itself for short files. Long ones stay plain text (:CsvViewToggle).
+		local max_lines = 5000
+		local function enable(buf)
+			local ft = vim.bo[buf].filetype
+			if (ft == "csv" or ft == "tsv") and not csvview.is_enabled(buf) and vim.api.nvim_buf_line_count(buf) <= max_lines then
+				csvview.enable(buf)
+			end
+		end
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "csv", "tsv" },
+			callback = function(args)
+				enable(args.buf)
+			end,
+		})
+		enable(vim.api.nvim_get_current_buf()) -- the file that loaded the plugin
+	end,
 }

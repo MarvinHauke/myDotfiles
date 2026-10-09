@@ -34,5 +34,7 @@ Then tmux switches to that place and Ghostty comes to the front. `-n` skips this
 - Same project = same git repository. Outside a repository: the nvim or pane sits in a folder above the file.
 - A folder instead of a file gives a shell in that folder (rule 2 or 3).
 - Only plain text goes to nvim, decided by the file's content. Word, Excel, PDFs and images open in their own app.
-- Text types that should still use their own app: the list `default_app` at the top of the script (now: `csv`).
+- Text types that should still use their own app: the list `default_app` at the top of the script (now empty).
+- CSV files open in nvim; up to 5000 lines the table view (csvview.nvim) switches on by itself, longer files
+  stay plain text until `:CsvViewToggle` (`nvim/lua/plugins/csvview.lua`).
 - An nvim that is in insert mode is put back into normal mode first.

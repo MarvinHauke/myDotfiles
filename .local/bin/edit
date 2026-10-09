@@ -12,8 +12,8 @@
 
 PATH="/opt/homebrew/bin:$PATH"
 
-# text types that should still open in their default app, separated by spaces
-default_app="csv"
+# text types that should still open in their default app, separated by spaces (e.g. "csv svg")
+default_app=""
 
 project_of() { git -C "$1" rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$1"; }
 in_repo() { git -C "$1" rev-parse --show-toplevel >/dev/null 2>&1; }
