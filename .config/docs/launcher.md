@@ -62,7 +62,7 @@ A new kind of result is a new file in `launcher/` with `rows(query)` and `open(r
 
 ## edit: one script opens everything
 
-    ~/.local/bin/edit [-n] <file|folder>...
+    ~/.local/bin/edit [-n] [-e] [-w] <file|folder>...
 
 Used by the shell, by Finder (key `e`) and by the launcher. First match wins:
 
@@ -80,6 +80,10 @@ Then tmux switches to that place and Ghostty comes to the front. `-n` skips this
 - Same project = same git repository. Outside a repository: the nvim or pane sits in a folder above the file.
 - A folder instead of a file gives a shell in that folder (new window). The folder is also added to zoxide,
   so `z <name>` finds it in the shell.
+- A folder that is already open: when a pane sits in exactly that folder (any session, not the pane `edit`
+  was typed in), a tmux menu lists those panes and "New window". Enter takes the first pane, `1`-`9` pick
+  one, `n` opens a new window, Escape does nothing. With `-e` only panes that run nvim there count.
+  No menu with `-w` (always a new window), with `-n`, or with several targets.
 - Only plain text goes to nvim, decided by the file's content. Word, Excel, PDFs and images open in their own app.
 - Text types that should still use their own app: the list `default_app` at the top of the script (now empty).
 - CSV files open in nvim; up to 5000 lines the table view (csvview.nvim) switches on by itself, longer files

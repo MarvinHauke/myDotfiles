@@ -75,12 +75,13 @@ Built and tested through the command line, not yet pressed. Working so far: wind
 - [x] Finder: `?` shows the keys, any key closes the panel.
 - [x] Launcher: Enter and Cmd+Enter on a file row, Tab on a folder row.
 - [x] Shell: Cmd+l takes the next word of the grey suggestion, Cmd+Shift+l all of it.
+- [ ] `edit` menu: open the same folder twice from the launcher (for example `dev`), the second time the menu appears.
 - [ ] Clipboard picker: right-click deletes a row.
 - [ ] Every other key from `docs/keys.md` once.
 
 ## 3. Build next
 
-- [ ] `edit`: when a tmux pane or window already sits in the chosen path, ask: focus the existing one or open a new window.
+- [x] `edit`: a folder that a tmux pane already sits in brings up a menu: go there or open a new window (`docs/launcher.md`).
 - [ ] `?` for the other layers (for example Hyper+?), a key for `hammerspoon://launcher?q=/`.
 - [ ] Optional: images in the terminal. Enable `image` in snacks.nvim (uses `magick`, installed), `set -g allow-passthrough on` in tmux. Shell: `chafa` only if needed.
 - [ ] Optional: move zsh into `~/.config/zsh` with `ZDOTDIR` (set in `~/.zshenv`), split `.zshrc` into env / aliases / functions.
