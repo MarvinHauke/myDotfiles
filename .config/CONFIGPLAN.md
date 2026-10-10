@@ -77,6 +77,7 @@ Built and tested through the command line, not yet pressed. Working so far: wind
 - [x] Shell: Cmd+l takes the next word of the grey suggestion, Cmd+Shift+l all of it.
 - [x] `edit` menu: open the same folder twice from the launcher (for example `dev`), the second time the menu appears.
 - [x] Finder: Ctrl+h in the leftmost column goes up to the parent folder; in the second column it still moves left.
+- [ ] Finder `a`: `test.md` + Enter makes a file and selects it; `folder/` makes a folder; an existing name is refused.
 - [ ] Clipboard picker: right-click deletes a row.
 - [ ] Every other key from `docs/keys.md` once.
 

@@ -50,6 +50,7 @@ Vim-style keys, only in Finder.
 | gg | jump to the first file | Opt+Up |
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
 | e | open the selected file in nvim, a folder in Ghostty | `hammerspoon://edit` runs `~/.local/bin/edit`, see `launcher.md` |
+| a | add here: asks for a name, `name` makes a file, `name/` a folder, `dir/name` both | `hammerspoon://add` runs `finder.add()` |
 | ? | show this table as a panel, any key closes it | `hammerspoon://help?topic=Finder` |
 | Ctrl+h in the leftmost column | go up to the parent folder (in other columns Ctrl+h stays Left) | Cmd+Up ("Enclosing Folder") |
 | Ctrl+j in the search field | jump to the search results and select the first one | Tab, Down |
@@ -58,12 +59,15 @@ Vim-style keys, only in Finder.
 
 - Hammerspoon (`finder.lua`) watches Finder's focus and sets the Karabiner variable `finder_editing`:
   0 = browsing files, 1 = text field (rename, "Go to folder"), 2 = search field.
-  Y, G, gg, Cmd+r, e and ? only fire on 0, so the keys type normally in text fields.
+  Y, G, gg, Cmd+r, e, a and ? only fire on 0, so the keys type normally in text fields.
 - It also sets `finder_first_column` (0/1): 1 while the leftmost column of the column view has the focus.
   Only there Ctrl+h sends Cmd+Up; everywhere else the general Ctrl+hjkl rule sends Left.
 - `?` reads this table from this file (`help.lua`): edit a row here and the panel changes with it. Any `## heading`
   with a table works as a topic, for example `hammerspoon://help?topic=OS layer`.
-- `e` takes type-to-select for names starting with e. Files that are not plain text open in their own app.
+- `a` creates next to the selected item (the column you are in); with nothing selected, in the folder the
+  window shows. The row under the input says what Enter will create, or why not. Nothing is overwritten;
+  the new item is selected afterwards. Finder's own Cmd+Shift+N (new folder) is unchanged.
+- `e` and `a` take type-to-select for names starting with e and a. Files that are not plain text open in their own app.
 - Search exit: when focus leaves an empty search field, `finder.lua` sends Go > Back. It reacts to the focus
   change, so it works for the Escape key and for Caps Lock tapped as Escape. With text in the field the first
   Escape clears it, the second one leaves.

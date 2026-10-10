@@ -7,6 +7,7 @@
 -- the window goes back to the folder instead of staying on an empty "Searching ..." view.
 -- Escape twice in the search results does the same.
 -- M.edit() opens the selection in nvim (hammerspoon://edit).
+-- M.add() asks for a name and creates a file, or a folder when the name ends in / (hammerspoon://add).
 local M = {}
 
 local ax = require("hs.axuielement")
@@ -114,6 +115,123 @@ function M.edit()
 	if ok and type(paths) == "table" and #paths > 0 then
 		hs.task.new(os.getenv("HOME") .. "/.local/bin/edit", nil, paths):start()
 	end
+end
+
+-- The folder a new item goes into: next to the selection, else the folder the window shows.
+-- nil where there is none ("Computer", search results without a selection).
+function M.folder()
+	local ok, path = hs.osascript.applescript([[
+		tell application "Finder"
+			set picked to (get selection)
+			if picked is {} then
+				return POSIX path of ((target of front Finder window) as alias)
+			end if
+			return POSIX path of ((container of item 1 of picked) as alias)
+		end tell]])
+	if not ok or type(path) ~= "string" then
+		return nil
+	end
+	return path == "/" and path or (path:gsub("/$", ""))
+end
+
+-- What the name would create in dir, without doing it:
+-- { path, folder = true for a folder, missing = folders to create first, text = for the prompt }
+-- or nil and the reason. A name ending in / is a folder; a/b.txt also creates a.
+function M.plan(dir, name)
+	name = name:gsub("^%s+", ""):gsub("%s+$", "")
+	if name == "" then
+		return nil, "Type a name. End it with / for a folder"
+	end
+	if name:sub(1, 1) == "/" or name:find(":", 1, true) or name:find("//", 1, true) then
+		return nil, "A name inside this folder, without a leading / or a :"
+	end
+	local folder = name:sub(-1) == "/"
+	local parts = {}
+	for part in name:gmatch("[^/]+") do
+		if part == "." or part == ".." then
+			return nil, ". and .. are not allowed"
+		end
+		parts[#parts + 1] = part
+	end
+	local path, missing = dir:gsub("/$", ""), {}
+	for i, part in ipairs(parts) do
+		path = path .. "/" .. part
+		local mode = hs.fs.attributes(path, "mode")
+		if i == #parts then
+			if mode then
+				return nil, part .. " already exists"
+			end
+		elseif not mode then
+			missing[#missing + 1] = path
+		elseif mode ~= "directory" then
+			return nil, part .. " is a file, not a folder"
+		end
+	end
+	local text = "Create " .. (folder and "folder " or "file ") .. parts[#parts]
+	if #missing > 0 then
+		text = text .. " and folder " .. missing[1]:match("[^/]+$") .. (#missing > 1 and " (+" .. (#missing - 1) .. ")" or "")
+	end
+	return { path = path, folder = folder, missing = missing, text = text }
+end
+
+-- Creates it; returns the new path, or nil and the reason. Never overwrites.
+function M.create(dir, name)
+	local plan, why = M.plan(dir, name)
+	if not plan then
+		return nil, why
+	end
+	for _, path in ipairs(plan.missing) do
+		if not hs.fs.mkdir(path) then
+			return nil, "Could not create " .. path
+		end
+	end
+	if plan.folder then
+		if not hs.fs.mkdir(plan.path) then
+			return nil, "Could not create " .. plan.path
+		end
+	else
+		local file = io.open(plan.path, "a") -- "a" leaves the content alone should the file appear meanwhile
+		if not file then
+			return nil, "Could not create " .. plan.path
+		end
+		file:close()
+	end
+	return plan.path
+end
+
+-- The prompt: a picker with one row that says what Enter will create
+local addDir
+local adder = hs.chooser.new(function(choice)
+	if not choice then
+		return
+	end
+	local path, why = M.create(addDir, choice.name)
+	if not path then
+		hs.alert.show(why)
+		return
+	end
+	local quoted = path:gsub("\\", "\\\\"):gsub('"', '\\"')
+	hs.osascript.applescript('tell application "Finder" to reveal (POSIX file "' .. quoted .. '" as alias)')
+end)
+adder:rows(1)
+adder:placeholderText("name, or name/ for a folder")
+local function preview(query)
+	local plan, why = M.plan(addDir, query)
+	local shown = addDir:gsub("^" .. os.getenv("HOME"), "~")
+	adder:choices({ { text = plan and plan.text or why, subText = "in " .. shown, name = query } })
+end
+adder:queryChangedCallback(preview)
+
+function M.add()
+	local dir = M.folder()
+	if not dir then
+		hs.alert.show("No folder here to add to")
+		return
+	end
+	addDir = dir
+	adder:query("")
+	preview("")
+	adder:show()
 end
 
 -- Finder gets a new process id when it is relaunched; the Escape listener only runs while Finder is in front
