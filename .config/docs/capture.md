@@ -21,7 +21,7 @@ How it works:
 - Keepers are moved out of `/tmp/shots` by hand.
 
 Notes:
-- Cmd+V pastes the path. The picture itself is offered in the clipboard history (right Cmd+v, row "Image ...");
+- Cmd+V pastes the path. The picture itself is offered in the clipboard history (Hyper+v, row "Image ...");
   picking it pastes the picture (`clipboard.md`).
 - For the image itself on the clipboard, add Ctrl to the key (Ctrl+Cmd+Shift+4). That is the macOS default; it
   saves no file.

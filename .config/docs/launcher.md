@@ -25,11 +25,11 @@ Order of the rows for a typed text (`launcher.lua`, `launcher/usage.lua`):
 - Empty input: the most used rows of any kind first, then the remaining apps by name.
 - Stored in Hammerspoon's settings under `launcher.usage` (500 entries at most). Reset:
   `hs -c 'hs.settings.clear("launcher.usage")'`, then reload Hammerspoon.
-
 - Tab completes the highlighted app name. On a folder row it writes `/<folder>/` into the input, so you
   search below that folder.
-- Order inside folders and files: name starts with the text, then name contains it, then only the path contains it.
-  `Develop` shows `~/Development` first.
+
+Where the rows come from:
+
 - Apps are found up to three folders below the app folders; the folder name is searched too
   (`traktor pro` finds "Traktor" in "Traktor Pro 3").
 - Places and aliases: read from zsh itself every five minutes, so `.zshrc` is the only list. Places are the
@@ -68,22 +68,28 @@ Used by the shell, by Finder (key `e`) and by the launcher. First match wins:
 
 | Situation | Result |
 |---|---|
-| an nvim is running in the same project | the file opens there as a vertical split (or the cursor jumps to it if it is already visible) |
+| file, and an nvim is running in the same project | the file opens there as a vertical split (or the cursor jumps to it if it is already visible) |
+| folder, and a tmux pane already sits in it | a menu: go to that pane or open a new window |
 | otherwise | new window in the tmux session on screen, named after the folder; for a file, nvim runs in it |
 | tmux is not running | window in the session `default`, the one Ghostty attaches to |
 
-`-e` starts nvim in a folder as well (used for the nv aliases that point to a folder).
-Then tmux switches to that place and Ghostty comes to the front. `-n` skips this and opens in the background.
+| Flag | Effect |
+|---|---|
+| `-n` | open in the background: no switch to the new place, Ghostty stays where it is |
+| `-e` | start nvim in a folder too (used for the nv aliases that point to a folder) |
+| `-w` | always a new window for a folder, no menu |
+
+Without `-n`, tmux switches to that place and Ghostty comes to the front.
 `edit` only adds: it never creates a second session and never closes anything. The tmux status bar shows
 `[default +1]` when another session is running (prefix + `s` lists them).
 
 - Same project = same git repository. Outside a repository: the nvim or pane sits in a folder above the file.
 - A folder instead of a file gives a shell in that folder (new window). The folder is also added to zoxide,
   so `z <name>` finds it in the shell.
-- A folder that is already open: when a pane sits in exactly that folder (any session, not the pane `edit`
-  was typed in), a tmux menu lists those panes and "New window". Enter takes the first pane, `1`-`9` pick
-  one, `n` opens a new window, Escape does nothing. With `-e` only panes that run nvim there count.
-  No menu with `-w` (always a new window), with `-n`, or with several targets.
+- The menu: shown when a pane sits in exactly that folder (any session, not the pane `edit` was typed in).
+  It lists those panes and "New window". Enter takes the first pane, `1`-`9` pick one, `n` opens a new
+  window, Escape does nothing. With `-e` only panes that run nvim there count.
+  No menu with `-w`, with `-n`, or with several targets. `edit` waits until you have chosen.
 - Only plain text goes to nvim, decided by the file's content. Word, Excel, PDFs and images open in their own app.
 - Text types that should still use their own app: the list `default_app` at the top of the script (now empty).
 - CSV files open in nvim; up to 5000 lines the table view (csvview.nvim) switches on by itself, longer files

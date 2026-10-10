@@ -24,7 +24,8 @@ Who calls whom, and where it is configured.
           |- launcher sources          ~/.hammerspoon/launcher/      apps, paths, calc, usage  docs/launcher.md
           |- edit                      ~/.local/bin/edit             files into nvim/tmux    docs/launcher.md
       |- Finder keys                   finder.lua (state), finder/add.lua  docs/keys.md
-      |- tmux pane zoom, cmdAbl        karabiner/assets/complex_modifications/
+      |- tmux pane zoom (Opt+m)        sends the tmux prefix and m           docs/keys.md
+      |- Ableton, cmdAbl               rules imported from karabiner/assets/complex_modifications/
 
     Ghostty                            ghostty/config
       |- zsh                           ~/.zshenv > ~/.zprofile > ~/.zshrc
@@ -70,20 +71,15 @@ Secrets go in `~/.env` or `~/.zshrc.local` (both ignored by git), never in a tra
 
 ## 2. Try with real keys
 
-Built and tested through the command line, not yet pressed. Working so far: window keys, Finder `e`.
+Built and tested through the command line, not yet pressed. Confirmed so far: window keys, launcher keys,
+shell suggestion keys, the `edit` menu, Finder `e`, `?`, `a`, Ctrl+h.
 
-- [x] Finder: `?` shows the keys, any key closes the panel.
-- [x] Launcher: Enter and Cmd+Enter on a file row, Tab on a folder row.
-- [x] Shell: Cmd+l takes the next word of the grey suggestion, Cmd+Shift+l all of it.
-- [x] `edit` menu: open the same folder twice from the launcher (for example `dev`), the second time the menu appears.
-- [x] Finder: Ctrl+h in the leftmost column goes up to the parent folder; in the second column it still moves left.
-- [ ] Finder `a`: `test.md` + Enter makes a file and selects it; `folder/` makes a folder; an existing name is refused.
+- [ ] Finder `a` inside an empty folder: the item lands in that folder, not one level up.
 - [ ] Clipboard picker: right-click deletes a row.
 - [ ] Every other key from `docs/keys.md` once.
 
 ## 3. Build next
 
-- [x] `edit`: a folder that a tmux pane already sits in brings up a menu: go there or open a new window (`docs/launcher.md`).
 - [ ] `?` for the other layers (for example Hyper+?), a key for `hammerspoon://launcher?q=/`.
 - [ ] Optional: images in the terminal. Enable `image` in snacks.nvim (uses `magick`, installed), `set -g allow-passthrough on` in tmux. Shell: `chafa` only if needed.
 - [ ] Optional: move zsh into `~/.config/zsh` with `ZDOTDIR` (set in `~/.zshenv`), split `.zshrc` into env / aliases / functions.
