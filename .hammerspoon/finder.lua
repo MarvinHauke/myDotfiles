@@ -181,23 +181,45 @@ function M.plan(dir, name)
 	return { path = path, folder = folder, missing = missing, text = text }
 end
 
+local function quote(text) -- for an AppleScript string
+	return (text:gsub("\\", "\\\\"):gsub('"', '\\"'))
+end
+
+-- Lets Finder create one item. Finder then shows it after about 0.3 s; an item made behind its
+-- back turns up anywhere between 0.03 and 1.4 s later (measured).
+local function finderMake(kind, path)
+	local dir, name = path:match("^(.*)/([^/]+)$")
+	return hs.osascript.applescript(
+		('tell application "Finder" to make new %s at (POSIX file "%s" as alias) with properties {name:"%s"}'):format(
+			kind,
+			quote(dir == "" and "/" or dir),
+			quote(name)
+		)
+	)
+end
+
 -- Creates it; returns the new path, or nil and the reason. Never overwrites.
+-- The part that lands in dir itself is made by Finder (it is the one to be selected), the rest directly.
 function M.create(dir, name)
 	local plan, why = M.plan(dir, name)
 	if not plan then
 		return nil, why
 	end
+	local top = plan.missing[1] or plan.path
+	if top:match("^(.*)/[^/]+$") == dir:gsub("/$", "") then
+		finderMake((top ~= plan.path or plan.folder) and "folder" or "file", top)
+	end
 	for _, path in ipairs(plan.missing) do
-		if not hs.fs.mkdir(path) then
+		if not hs.fs.attributes(path, "mode") and not hs.fs.mkdir(path) then
 			return nil, "Could not create " .. path
 		end
 	end
 	if plan.folder then
-		if not hs.fs.mkdir(plan.path) then
+		if not hs.fs.attributes(plan.path, "mode") and not hs.fs.mkdir(plan.path) then
 			return nil, "Could not create " .. plan.path
 		end
 	else
-		local file = io.open(plan.path, "a") -- "a" leaves the content alone should the file appear meanwhile
+		local file = io.open(plan.path, "a") -- "a" leaves the content alone should the file exist by now
 		if not file then
 			return nil, "Could not create " .. plan.path
 		end
@@ -210,16 +232,16 @@ end
 -- Not "reveal" or "select": those open another window when the front one does not show the item,
 -- this does nothing then. (A list, {item}, selects nothing.)
 function M.select(path)
-	local quoted = path:gsub("\\", "\\\\"):gsub('"', '\\"')
 	return hs.osascript.applescript(([[
 		tell application "Finder"
 			set added to (POSIX file "%s" as alias)
 			set selection to added
-		end tell]]):format(quoted))
+		end tell]]):format(quote(path)))
 end
 
 -- Selects the new item name in the column it was made in. Finder needs a moment to show a new
--- item, so this looks again a few times. Stays in that column: no window is opened or raised.
+-- item, so this looks again every 50 ms. Stays in that column: no window is opened or raised.
+local selectTimer
 local function selectIn(list, dir, name, tries)
 	if not list or list:attributeValue("AXRole") ~= "AXList" then
 		M.select(dir:gsub("/$", "") .. "/" .. name) -- not the column view
@@ -234,7 +256,7 @@ local function selectIn(list, dir, name, tries)
 		end
 	end
 	if tries > 0 then
-		hs.timer.doAfter(0.2, function()
+		selectTimer = hs.timer.doAfter(0.05, function()
 			selectIn(list, dir, name, tries - 1)
 		end)
 	end
@@ -245,7 +267,7 @@ end
 function M.make(dir, list, name)
 	local path, why = M.create(dir, name)
 	if path then
-		selectIn(list, dir, path:sub(#dir:gsub("/$", "") + 2):match("[^/]+"), 15)
+		selectIn(list, dir, path:sub(#dir:gsub("/$", "") + 2):match("[^/]+"), 40)
 	end
 	return path, why
 end
