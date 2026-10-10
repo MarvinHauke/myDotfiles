@@ -5,7 +5,8 @@ require("hs.ipc") -- enables the `hs` command line tool
 local launcher = require("launcher")
 local windows = require("windows")
 local clipboard = require("clipboard")
-local finder = require("finder") -- publishes finder_editing to Karabiner, leaves empty searches
+local finder = require("finder") -- tells Karabiner what is focused in Finder, leaves empty searches
+local finderAdd = require("finder.add")
 local help = require("help")
 require("capture") -- copies the path of each new screenshot in /tmp/shots
 
@@ -22,7 +23,7 @@ hs.urlevent.bind("edit", function()
 	finder.edit()
 end)
 hs.urlevent.bind("add", function()
-	finder.add()
+	finderAdd.show()
 end)
 hs.urlevent.bind("help", function(_, params)
 	help.toggle(params.topic)

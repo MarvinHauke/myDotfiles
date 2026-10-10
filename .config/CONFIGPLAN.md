@@ -23,7 +23,7 @@ Who calls whom, and where it is configured.
       |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard, help
           |- launcher sources          ~/.hammerspoon/launcher/      apps, paths, calc, usage  docs/launcher.md
           |- edit                      ~/.local/bin/edit             files into nvim/tmux    docs/launcher.md
-      |- Finder keys                   finder.lua sets finder_editing docs/keys.md
+      |- Finder keys                   finder.lua (state), finder/add.lua  docs/keys.md
       |- tmux pane zoom, cmdAbl        karabiner/assets/complex_modifications/
 
     Ghostty                            ghostty/config

@@ -50,7 +50,7 @@ Vim-style keys, only in Finder.
 | gg | jump to the first file | Opt+Up |
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
 | e | open the selected file in nvim, a folder in Ghostty | `hammerspoon://edit` runs `~/.local/bin/edit`, see `launcher.md` |
-| a | add here: asks for a name, `name` makes a file, `name/` a folder, `dir/name` both | `hammerspoon://add` runs `finder.add()` |
+| a | add here: asks for a name, `name` makes a file, `name/` a folder, `dir/name` both | `hammerspoon://add` runs `finder/add.lua` |
 | ? | show this table as a panel, any key closes it | `hammerspoon://help?topic=Finder` |
 | Ctrl+h in the leftmost column | go up to the parent folder (in other columns Ctrl+h stays Left) | Cmd+Up ("Enclosing Folder") |
 | Ctrl+j in the search field | jump to the search results and select the first one | Tab, Down |
