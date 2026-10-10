@@ -67,6 +67,27 @@ function M.isFirstColumn(element)
 	return (columns:attributeValue("AXChildren") or {})[1] == column
 end
 
+-- Hands the variables to Karabiner one call after the other. Two calls at once can arrive in the
+-- wrong order, and the older values would win (the search field then counts as "browsing").
+local sending, waiting
+local function send(vars)
+	if sending then
+		waiting = vars -- only the newest values matter
+		return
+	end
+	sending = hs.task.new(cli, function()
+		sending = nil
+		if waiting then
+			local nextVars = waiting
+			waiting = nil
+			send(nextVars)
+		end
+	end, { "--set-variables", vars })
+	if not sending:start() then
+		sending = nil
+	end
+end
+
 local function publish(element)
 	local role = element and element:attributeValue("AXRole")
 	local now = 0
@@ -83,7 +104,7 @@ local function publish(element)
 		end
 		M.editing, M.firstColumn = now, first
 		local vars = '{"finder_editing":' .. now .. ',"finder_first_column":' .. first .. "}"
-		hs.task.new(cli, nil, { "--set-variables", vars }):start()
+		send(vars)
 	end
 end
 
