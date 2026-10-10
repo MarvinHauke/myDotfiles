@@ -1,6 +1,8 @@
 -- Tells Karabiner what is focused in Finder through the variable finder_editing:
 -- 0 = browsing files, 1 = text field (rename, "Go to folder"), 2 = search field.
 -- The single-key Finder rules (Y, G, gg) only fire on 0.
+-- A second variable, finder_first_column (0/1), says whether the leftmost column of the column view
+-- has the focus: there Ctrl+h goes up to the parent folder instead of sending Left.
 -- Also leaves an empty search: when focus moves out of an empty search field (Escape),
 -- the window goes back to the folder instead of staying on an empty "Searching ..." view.
 -- Escape twice in the search results does the same.
@@ -11,6 +13,7 @@ local ax = require("hs.axuielement")
 local cli = "/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli"
 
 M.editing = nil
+M.firstColumn = nil
 local searchField
 
 -- back to the folder the search was started from
@@ -49,21 +52,37 @@ M.escapeTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(even
 	return false
 end)
 
+-- is this the file list of the leftmost column? (list > column > columns > browser)
+function M.isFirstColumn(element)
+	if not element or element:attributeValue("AXRole") ~= "AXList" then
+		return false
+	end
+	local column = element:attributeValue("AXParent")
+	local columns = column and column:attributeValue("AXParent")
+	local browser = columns and columns:attributeValue("AXParent")
+	if not browser or browser:attributeValue("AXRole") ~= "AXBrowser" then
+		return false
+	end
+	return (columns:attributeValue("AXChildren") or {})[1] == column
+end
+
 local function publish(element)
 	local role = element and element:attributeValue("AXRole")
 	local now = 0
+	local first = M.isFirstColumn(element) and 1 or 0
 	if role == "AXTextField" or role == "AXTextArea" then
 		now = element:attributeValue("AXSubrole") == "AXSearchField" and 2 or 1
 	end
 	if now == 2 then
 		searchField = element
 	end
-	if now ~= M.editing then
-		if M.editing == 2 then
+	if now ~= M.editing or first ~= M.firstColumn then
+		if M.editing == 2 and now ~= 2 then
 			leaveEmptySearch()
 		end
-		M.editing = now
-		hs.task.new(cli, nil, { "--set-variables", '{"finder_editing":' .. now .. "}" }):start()
+		M.editing, M.firstColumn = now, first
+		local vars = '{"finder_editing":' .. now .. ',"finder_first_column":' .. first .. "}"
+		hs.task.new(cli, nil, { "--set-variables", vars }):start()
 	end
 end
 

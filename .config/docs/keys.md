@@ -51,6 +51,7 @@ Vim-style keys, only in Finder.
 | Cmd+r | rename the selected file or folder | Return (Finder's own rename key) |
 | e | open the selected file in nvim, a folder in Ghostty | `hammerspoon://edit` runs `~/.local/bin/edit`, see `launcher.md` |
 | ? | show this table as a panel, any key closes it | `hammerspoon://help?topic=Finder` |
+| Ctrl+h in the leftmost column | go up to the parent folder (in other columns Ctrl+h stays Left) | Cmd+Up ("Enclosing Folder") |
 | Ctrl+j in the search field | jump to the search results and select the first one | Tab, Down |
 | Escape twice in the search results | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 | Escape in an empty search field | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
@@ -58,6 +59,8 @@ Vim-style keys, only in Finder.
 - Hammerspoon (`finder.lua`) watches Finder's focus and sets the Karabiner variable `finder_editing`:
   0 = browsing files, 1 = text field (rename, "Go to folder"), 2 = search field.
   Y, G, gg, Cmd+r, e and ? only fire on 0, so the keys type normally in text fields.
+- It also sets `finder_first_column` (0/1): 1 while the leftmost column of the column view has the focus.
+  Only there Ctrl+h sends Cmd+Up; everywhere else the general Ctrl+hjkl rule sends Left.
 - `?` reads this table from this file (`help.lua`): edit a row here and the panel changes with it. Any `## heading`
   with a table works as a topic, for example `hammerspoon://help?topic=OS layer`.
 - `e` takes type-to-select for names starting with e. Files that are not plain text open in their own app.
