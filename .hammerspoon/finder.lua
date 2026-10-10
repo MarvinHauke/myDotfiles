@@ -213,7 +213,7 @@ local adder = hs.chooser.new(function(choice)
 	local quoted = path:gsub("\\", "\\\\"):gsub('"', '\\"')
 	hs.osascript.applescript('tell application "Finder" to reveal (POSIX file "' .. quoted .. '" as alias)')
 end)
-adder:rows(1)
+adder:rows(2) -- with 1 the picker cuts its only row off
 adder:placeholderText("name, or name/ for a folder")
 local function preview(query)
 	local plan, why = M.plan(addDir, query)
