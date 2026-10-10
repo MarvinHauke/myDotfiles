@@ -64,9 +64,10 @@ Vim-style keys, only in Finder.
   Only there Ctrl+h sends Cmd+Up; everywhere else the general Ctrl+hjkl rule sends Left.
 - `?` reads this table from this file (`help.lua`): edit a row here and the panel changes with it. Any `## heading`
   with a table works as a topic, for example `hammerspoon://help?topic=OS layer`.
-- `a` creates next to the selected item (the column you are in); with nothing selected, in the folder the
-  window shows. The row under the input says what Enter will create, or why not. Nothing is overwritten;
-  the new item is selected afterwards. Finder's own Cmd+Shift+N (new folder) is unchanged.
+- `a` creates next to the selected item (the column you are in); in a column without a selection (an empty
+  folder), in that folder. The row under the input says what Enter will create, or why not. Nothing is
+  overwritten. The new item is then selected in the same column (through accessibility, not Finder's
+  "reveal", which opens a second window). Finder's own Cmd+Shift+N (new folder) is unchanged.
 - `e` and `a` take type-to-select for names starting with e and a. Files that are not plain text open in their own app.
 - Search exit: when focus leaves an empty search field, `finder.lua` sends Go > Back. It reacts to the focus
   change, so it works for the Escape key and for Caps Lock tapped as Escape. With text in the field the first

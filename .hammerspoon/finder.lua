@@ -117,21 +117,28 @@ function M.edit()
 	end
 end
 
--- The folder a new item goes into: next to the selection, else the folder the window shows.
+-- The folder a new item goes into: the column that has the focus. That is the folder of the selected
+-- item; in a column without a selection (an empty folder) it is the folder the window shows, because
+-- Finder then reports the folder itself as the selection.
 -- nil where there is none ("Computer", search results without a selection).
+-- Second result: the element that has the focus (in column view the list of that column).
 function M.folder()
-	local ok, path = hs.osascript.applescript([[
+	local app = hs.application.get("com.apple.finder")
+	local focused = app and ax.applicationElement(app):attributeValue("AXFocusedUIElement")
+	local picked = focused and focused:attributeValue("AXSelectedChildren")
+	local empty = picked ~= nil and #picked == 0
+	local ok, path = hs.osascript.applescript(([[
 		tell application "Finder"
 			set picked to (get selection)
-			if picked is {} then
+			if %s or picked is {} then
 				return POSIX path of ((target of front Finder window) as alias)
 			end if
 			return POSIX path of ((container of item 1 of picked) as alias)
-		end tell]])
+		end tell]]):format(tostring(empty)))
 	if not ok or type(path) ~= "string" then
 		return nil
 	end
-	return path == "/" and path or (path:gsub("/$", ""))
+	return path == "/" and path or (path:gsub("/$", "")), focused
 end
 
 -- What the name would create in dir, without doing it:
@@ -199,19 +206,60 @@ function M.create(dir, name)
 	return plan.path
 end
 
+-- Selects an item of the folder the front window shows (list and icon view).
+-- Not "reveal" or "select": those open another window when the front one does not show the item,
+-- this does nothing then. (A list, {item}, selects nothing.)
+function M.select(path)
+	local quoted = path:gsub("\\", "\\\\"):gsub('"', '\\"')
+	return hs.osascript.applescript(([[
+		tell application "Finder"
+			set added to (POSIX file "%s" as alias)
+			set selection to added
+		end tell]]):format(quoted))
+end
+
+-- Selects the new item name in the column it was made in. Finder needs a moment to show a new
+-- item, so this looks again a few times. Stays in that column: no window is opened or raised.
+local function selectIn(list, dir, name, tries)
+	if not list or list:attributeValue("AXRole") ~= "AXList" then
+		M.select(dir:gsub("/$", "") .. "/" .. name) -- not the column view
+		return
+	end
+	for _, row in ipairs(list:attributeValue("AXChildren") or {}) do
+		for _, part in ipairs(row:attributeValue("AXChildren") or {}) do
+			if part:attributeValue("AXFilename") == name then
+				list:setAttributeValue("AXSelectedChildren", { row })
+				return
+			end
+		end
+	end
+	if tries > 0 then
+		hs.timer.doAfter(0.2, function()
+			selectIn(list, dir, name, tries - 1)
+		end)
+	end
+end
+
+-- Creates name in dir and selects it in list (the column that had the focus).
+-- Of a/b.txt the part that sits in this folder is selected: a
+function M.make(dir, list, name)
+	local path, why = M.create(dir, name)
+	if path then
+		selectIn(list, dir, path:sub(#dir:gsub("/$", "") + 2):match("[^/]+"), 15)
+	end
+	return path, why
+end
+
 -- The prompt: a picker with one row that says what Enter will create
-local addDir
+local addDir, addList -- folder and focused column of the window the prompt was opened for
 local adder = hs.chooser.new(function(choice)
 	if not choice then
 		return
 	end
-	local path, why = M.create(addDir, choice.name)
+	local path, why = M.make(addDir, addList, choice.name)
 	if not path then
 		hs.alert.show(why)
-		return
 	end
-	local quoted = path:gsub("\\", "\\\\"):gsub('"', '\\"')
-	hs.osascript.applescript('tell application "Finder" to reveal (POSIX file "' .. quoted .. '" as alias)')
 end)
 adder:rows(2) -- with 1 the picker cuts its only row off
 adder:placeholderText("name, or name/ for a folder")
@@ -223,12 +271,12 @@ end
 adder:queryChangedCallback(preview)
 
 function M.add()
-	local dir = M.folder()
+	local dir, focused = M.folder()
 	if not dir then
 		hs.alert.show("No folder here to add to")
 		return
 	end
-	addDir = dir
+	addDir, addList = dir, focused
 	adder:query("")
 	preview("")
 	adder:show()
