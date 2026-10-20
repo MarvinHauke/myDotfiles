@@ -2,13 +2,15 @@
 -- This file is the picker: it asks the sources for rows and joins them. See ~/.config/docs/launcher.md
 --   text      apps, files and folders, ordered by match and by use (launcher/usage.lua), then the file tree
 --   /text     file tree only                                                    launcher/paths.lua
---   =expr     calculator                                                        launcher/calc.lua
+--   =expr     calculator; plain text that looks like math also gets it on top    launcher/calc.lua
+--             the result also shows as grey ghost text after the input            launcher/ghost.lua
 local M = {}
 
 local apps = require("launcher.apps")
 local paths = require("launcher.paths")
 local calc = require("launcher.calc")
 local usage = require("launcher.usage")
+local ghost = require("launcher.ghost")
 
 local maxTree = 10 -- rows from the file tree at the end of the plain list
 local typed -- the plain text in the input, lower case; nil while "/" or "=" is used
@@ -65,8 +67,13 @@ local function update(query)
 		return chooser:query() == query
 	end
 	typed = nil
+	ghost.show(query, nil)
 	if query:sub(1, 1) == "=" then
-		chooser:choices(calc.rows(query:sub(2)))
+		local rows = calc.rows(query:sub(2))
+		chooser:choices(rows)
+		if rows[1] then
+			ghost.show(query, (rows[1].warn and "⚠ " or "= ") .. rows[1].text)
+		end
 	elseif query:sub(1, 1) == "/" then
 		if #query > 1 then
 			paths.search(query:sub(2), 40, wanted, function(rows)
@@ -78,6 +85,11 @@ local function update(query)
 	else
 		typed = query:lower()
 		local choices, seen = ranked(query)
+		local result = calc.looksLikeMath(query) and calc.rows(query)[1]
+		if result then
+			table.insert(choices, 1, result)
+			ghost.show(query, (result.warn and "⚠ " or "= ") .. result.text)
+		end
 		chooser:choices(choices)
 		-- from 3 characters on, matches from the whole file tree follow at the end
 		if #query >= 3 then
@@ -142,6 +154,7 @@ chooser:showCallback(function()
 end)
 chooser:hideCallback(function()
 	tabTap:stop()
+	ghost.hide()
 end)
 
 -- query: text to start with, e.g. "/" for the file search (hammerspoon://launcher?q=/)

@@ -4,9 +4,24 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
 
 | Input | Rows | Enter | Cmd+Enter | Cmd+Y |
 |---|---|---|---|---|
-| text | apps, places and nv aliases from `.zshrc`, opened before, recent folders and files, ordered as below; then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder | copies the path (apps too) |
+| text | apps, places and nv aliases from `.zshrc`, opened before, recent folders and files, ordered as below; then up to 10 matches from the whole file tree. When the text looks like math (a digit and an operator or bracket), a calculator row on top | app: open. file or folder: `edit`. calculator: copies the result | file or folder: show in Finder | copies the path (apps too) |
 | `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep) | `edit` | show in Finder | copies the path |
-| `=` + expression | calculator | copies the result | | |
+| `=` + expression | calculator, also without an operator (`=pi`) | copies the result | | |
+
+Calculator (`launcher/calc.lua`, `launcher/ghost.lua`):
+
+- The calculator row has a calculator icon, so it is clear whether Enter calculates or opens the app or file below.
+- The result also shows in grey right after the typed text. `launcher/ghost.lua` places it;
+  tune `fontSize` and `gap` there if it sits off.
+- A result that is probably not what was meant gets a warning icon, `⚠` in the grey text, and the reason:
+
+| Case | Shown |
+|---|---|
+| `2,5*3` (comma as decimal point) | calculated as `2.5*3`, "comma read as decimal point" |
+| `%` | "% is modulo, not percent" |
+| `sin(90)` (argument above 2π) | "sin/cos/tan take radians" |
+| `1/0`, `0/0` | "division by zero or undefined" |
+| result of 2^53 or more | "beyond the exact integer range" |
 
 Order of the rows for a typed text (`launcher.lua`, `launcher/usage.lua`):
 
