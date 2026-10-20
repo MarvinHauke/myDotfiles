@@ -12,6 +12,7 @@ curl -fsSL https://gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e/
 ```
 
 The script will:
+
 1. Clone the bare repo to `~/.cfg`
 2. Back up any conflicting files to `~/.dotfiles-backup`
 3. Check out the `macos` branch
@@ -20,51 +21,61 @@ The script will:
 ## Config files
 
 ### Zsh
+
 ```
 ~/.zshrc
 ```
 
 ### Neovim
+
 ```
 ~/.config/nvim/
 ```
+
 - `init.lua` — bootstraps Lazy.nvim
 - `lua/plugins/` — full plugin set (LSP, DAP, formatting, AI, etc.)
 - `lua/plugins/lsp/` — per-language LSP configs (bash, C, Python, Rust, JS, Lua, web)
 - `ftplugin/` — filetype-specific settings
 
 ### Starship
+
 ```
 ~/.config/starship/starship.toml
 ```
 
 ### Tmux
+
 ```
 ~/.config/tmux/tmux.conf
 ```
 
 ### Ghostty
+
 ```
 ~/.config/ghostty/config
 ```
 
 ### Karabiner-Elements
+
 ```
 ~/.config/karabiner/karabiner.json
 ~/.config/karabiner/assets/complex_modifications/
 ```
 
 ### Hammerspoon
+
 ```
 ~/.hammerspoon/init.lua
 ```
 
 ### Zathura
+
 ```
 ~/.config/zathura/zathurarc
 ```
 
 ### VS Code
+
 ```
 ~/.config/Code/User/settings.json
 ~/.config/Code/User/keybindings.json
@@ -72,8 +83,8 @@ The script will:
 
 ## Package lists
 
-| File | Contents |
-|---|---|
+| File                      | Contents                                             |
+| ------------------------- | ---------------------------------------------------- |
 | `~/.config/brew/Brewfile` | taps, CLI tools, GUI apps, global go/cargo/npm tools |
 
 `brew bundle dump --force` records the installed state, `brew bundle` restores it,
