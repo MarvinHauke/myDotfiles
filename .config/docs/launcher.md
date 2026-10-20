@@ -2,11 +2,11 @@
 
 Opened with Cmd+Space (`hammerspoon://launcher`).
 
-| Input | Rows | Enter | Cmd+Enter |
-|---|---|---|---|
-| text | apps, places and nv aliases from `.zshrc`, opened before, recent folders and files, ordered as below; then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder |
-| `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep) | `edit` | show in Finder |
-| `=` + expression | calculator | copies the result | |
+| Input | Rows | Enter | Cmd+Enter | Cmd+Y |
+|---|---|---|---|---|
+| text | apps, places and nv aliases from `.zshrc`, opened before, recent folders and files, ordered as below; then up to 10 matches from the whole file tree | app: open. file or folder: `edit` | file or folder: show in Finder | copies the path (apps too) |
+| `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep) | `edit` | show in Finder | copies the path |
+| `=` + expression | calculator | copies the result | | |
 
 Order of the rows for a typed text (`launcher.lua`, `launcher/usage.lua`):
 

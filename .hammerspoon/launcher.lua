@@ -103,6 +103,7 @@ chooser:queryChangedCallback(update)
 -- Keys the picker does not handle itself. Only listens while the launcher is open.
 -- Tab: writes the highlighted app name into the input; on a folder its path, to search below it.
 -- Cmd+Enter: shows the highlighted file or folder in Finder.
+-- Cmd+Y: copies the path of the highlighted row.
 local tabTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
 	local key, flags = event:getKeyCode(), event:getFlags()
 	local row = chooser:selectedRowContents()
@@ -111,6 +112,15 @@ local tabTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(eve
 			chooser:hide()
 			usage.record(row, typed)
 			paths.reveal(row)
+		end
+		return true
+	end
+	if key == hs.keycodes.map.y and flags:containExactly({ "cmd" }) then
+		local path = row and (row.file or row.path)
+		if path then
+			chooser:hide()
+			hs.pasteboard.setContents(path)
+			hs.alert.show(path)
 		end
 		return true
 	end

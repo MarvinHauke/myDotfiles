@@ -134,7 +134,7 @@ Places and config shortcuts, defined in `.zshrc` and also listed by the launcher
 
 | Key | Action | Backend |
 |---|---|---|
-| Cmd+Space | launcher: apps, places, files and folders, most used first; `/` searches all files, `=` calculates; Tab completes, Cmd+Enter shows in Finder | `hammerspoon://launcher`, see `launcher.md` |
+| Cmd+Space | launcher: apps, places, files and folders, most used first; `/` searches all files, `=` calculates; Tab completes, Cmd+Enter shows in Finder, Cmd+Y copies the path | `hammerspoon://launcher`, see `launcher.md` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |
 | Hyper+r | reload Hammerspoon | `hammerspoon://reload` |
 | Hyper+i | show the name of the front app | `hammerspoon://appname` |
