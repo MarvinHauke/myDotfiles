@@ -52,24 +52,30 @@ fi
 cfg_git branch --set-upstream-to="origin/$branch" "$branch"
 cfg_git pull --ff-only
 
+# Secret check before each dotfiles commit (gitleaks), on branches that track the hook
+if [[ -x "$HOME/.config/git/hooks/pre-commit" ]]; then
+    cfg_git config core.hooksPath "$HOME/.config/git/hooks"
+fi
+
 # Install Homebrew packages (macOS / linux only)
+# A Brewfile (taps, formulae, casks) is preferred; packages.txt is the older format
 if [[ "$branch" == "macos" || "$branch" == "linux" ]]; then
-    if [[ -f "$HOME/.config/brew/packages.txt" ]]; then
+    if [[ -f "$HOME/.config/brew/Brewfile" ]]; then
+        echo "Installing packages from the Brewfile..."
+        brew bundle --file "$HOME/.config/brew/Brewfile"
+    elif [[ -f "$HOME/.config/brew/packages.txt" ]]; then
         echo "Installing Brew packages..."
         xargs brew install <"$HOME/.config/brew/packages.txt"
     else
-        echo "No package list found at ~/.config/brew/packages.txt"
+        echo "No Brewfile or package list found in ~/.config/brew"
     fi
 fi
 
-# Install Homebrew cask packages (macOS only)
+# macOS settings
 if [[ "$branch" == "macos" ]]; then
-    if [[ -f "$HOME/.config/brew/cask-packages.txt" ]]; then
-        echo "Installing Brew Cask packages..."
-        xargs brew install --cask <"$HOME/.config/brew/cask-packages.txt"
-    else
-        echo "No cask package list found at ~/.config/brew/cask-packages.txt"
-    fi
+    # Screenshots go to /tmp/shots without the floating thumbnail (see ~/.config/docs/capture.md)
+    defaults write com.apple.screencapture location /tmp/shots
+    defaults write com.apple.screencapture show-thumbnail -bool false
 fi
 
 # Install apt packages + tools (raspbian only)
@@ -80,6 +86,21 @@ if [[ "$branch" == "raspbian" ]]; then
     else
         echo "No package list found at ~/.config/apt/packages.txt"
     fi
+
+    echo "Installing neovim stable (arm64)..."
+    curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux-arm64.tar.gz
+    tar -xzf nvim-linux-arm64.tar.gz
+    sudo rm -rf /opt/nvim
+    sudo mv nvim-linux-arm64 /opt/nvim
+    rm nvim-linux-arm64.tar.gz
+    grep -qF '/opt/nvim/bin' "$shell_config" \
+        || echo 'export PATH="/opt/nvim/bin:$PATH"' >>"$shell_config"
+    export PATH="/opt/nvim/bin:$PATH"
+
+    echo "Configuring npm global prefix (~/.local to avoid permission errors)..."
+    npm config set prefix "$HOME/.local"
+    echo "Installing global npm packages (neovim provider, tree-sitter-cli)..."
+    npm install -g neovim tree-sitter-cli
 
     echo "Installing starship..."
     curl -sS https://starship.rs/install.sh | sh -s -- --yes
