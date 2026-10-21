@@ -1,7 +1,7 @@
 -- Launcher. Opened by hammerspoon://launcher
 -- This file is the picker: it asks the sources for rows and joins them. See ~/.config/docs/launcher.md
 --   text      apps, files and folders, ordered by match and by use (launcher/usage.lua), then the file tree
---   /text     file tree only                                                    launcher/paths.lua
+--   /text     file tree only; a path that exists as typed (/tmp, /etc/) comes first    launcher/paths.lua
 --   =expr     calculator; plain text that looks like math also gets it on top    launcher/calc.lua
 --             the result also shows as grey ghost text after the input            launcher/ghost.lua
 local M = {}
@@ -76,8 +76,22 @@ local function update(query)
 		end
 	elseif query:sub(1, 1) == "/" then
 		if #query > 1 then
+			-- a path that exists as typed ("/tmp") comes first, the tree matches follow
+			local exact = paths.exact(query, 40)
+			if exact[1] then
+				chooser:choices(exact)
+			end
 			paths.search(query:sub(2), 40, wanted, function(rows)
-				chooser:choices(rows)
+				local choices, seen = {}, {}
+				for _, row in ipairs(exact) do
+					choices[#choices + 1], seen[row.file] = row, true
+				end
+				for _, row in ipairs(rows) do
+					if not seen[row.file] then
+						choices[#choices + 1] = row
+					end
+				end
+				chooser:choices(choices)
 			end)
 		else
 			chooser:choices({})

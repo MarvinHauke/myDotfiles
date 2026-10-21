@@ -40,6 +40,8 @@ brew "gh"
 brew "tesseract"
 # Distributed revision control system
 brew "git"
+# Audit git repos for secrets
+brew "gitleaks"
 # Configurable static site generator
 brew "hugo"
 # Tools and libraries to manipulate images in select formats

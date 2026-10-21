@@ -199,6 +199,35 @@ function M.search(query, limit, wanted, done)
 	end)
 end
 
+-- rows for a typed path that exists ("/tmp", "/etc/hosts"): the tree search only knows the home folder
+-- and the drives. With a trailing slash ("/etc/") the folder's entries follow, hidden ones left out.
+function M.exact(query, limit)
+	local path = query:gsub("^/+", "/")
+	local mode = hs.fs.attributes(path, "mode")
+	if not mode then
+		return {}
+	end
+	local rows = { pathRow((path:gsub("(.)/$", "%1")), mode == "directory" and "folder" or "file") }
+	if mode == "directory" and path:sub(-1) == "/" then
+		local names = {}
+		pcall(function() -- a folder that cannot be read lists nothing
+			for entry in hs.fs.dir(path) do
+				if entry:sub(1, 1) ~= "." then
+					names[#names + 1] = entry
+				end
+			end
+		end)
+		table.sort(names, function(a, b)
+			return a:lower() < b:lower()
+		end)
+		for i = 1, math.min(#names, limit) do
+			local child = path .. names[i]
+			rows[#rows + 1] = pathRow(child, hs.fs.attributes(child, "mode") == "directory" and "folder" or "file")
+		end
+	end
+	return rows
+end
+
 function M.cancel()
 	if searchTimer then
 		searchTimer:stop()

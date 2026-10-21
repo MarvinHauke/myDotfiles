@@ -1,0 +1,5 @@
+#!/bin/sh
+# Dotfiles (~/.cfg) only: blocks a commit whose staged changes contain a secret (token, key, password).
+# Set up per machine with: dotfiles config core.hooksPath ~/.config/git/hooks
+# A false alarm: add `gitleaks:allow` as a comment on that line, or skip once with `dotfiles commit --no-verify`.
+exec /opt/homebrew/bin/gitleaks git --pre-commit --staged --redact --no-banner -v
