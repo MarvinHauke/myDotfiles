@@ -4,8 +4,8 @@ Opened with Cmd+Space (`hammerspoon://launcher`).
 
 | Input | Rows | Enter | Cmd+Enter | Cmd+Y |
 |---|---|---|---|---|
-| text | apps, places and nv aliases from `.zshrc`, opened before, recent folders and files, ordered as below; then up to 10 matches from the whole file tree. When the text looks like math (a digit and an operator or bracket), a calculator row on top | app: open. file or folder: `edit`. calculator: copies the result | file or folder: show in Finder | copies the path (apps too) |
-| `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep); a path that exists as typed (`/tmp`, `/etc/hosts`) comes first, with a trailing slash (`/etc/`) also its entries | `edit` | show in Finder | copies the path |
+| text | apps, places and nv aliases from `.zshrc`, opened before, recent folders and files, ordered as below; then up to 10 matches from the whole file tree. When the text looks like math (a digit and an operator or bracket), a calculator row on top | app: open. file or folder: `edit`. calculator: copies the result | folder: opens it in Finder; file: shows it selected in its folder | copies the path (apps too) |
+| `/` + text | file tree only: every file and folder below `~` and on external drives (7 levels deep); a path that exists as typed (`/tmp`, `/etc/hosts`) comes first, with a trailing slash (`/etc/`) also its entries | `edit` | folder: opens it in Finder; file: shows it selected in its folder | copies the path |
 | `=` + expression | calculator, also without an operator (`=pi`) | copies the result | | |
 
 Calculator (`launcher/calc.lua`, `launcher/ghost.lua`):
@@ -41,7 +41,9 @@ Order of the rows for a typed text (`launcher.lua`, `launcher/usage.lua`):
 - Stored in Hammerspoon's settings under `launcher.usage` (500 entries at most). Reset:
   `hs -c 'hs.settings.clear("launcher.usage")'`, then reload Hammerspoon.
 - Tab completes the highlighted app name. On a folder row it writes `/<folder>/` into the input, so you
-  search below that folder.
+  search below that folder. A folder outside `~` keeps its full path (`/dev/`).
+- Cmd+Enter on `/dev` or anything in it only shows a note: Finder can't display that folder (device entries,
+  not files on disk). The launcher reads such mounts (type `devfs`) from `mount`; `/home` (autofs) opens normally.
 
 Where the rows come from:
 

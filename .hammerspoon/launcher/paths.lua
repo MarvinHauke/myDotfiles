@@ -250,12 +250,29 @@ function M.open(row)
 	hs.task.new(edit, nil, row.editor and { "-e", row.file } or { row.file }):start()
 end
 
-function M.reveal(row)
-	hs.task.new("/usr/bin/open", nil, { "-R", row.file }):start()
+-- devfs mounts (/dev): device entries made by the kernel, which Finder does not show; open does nothing there.
+-- Read from mount once, so the launcher needs no list of its own. Other virtual mounts (autofs /home) do open.
+local hiddenMounts = {}
+for point in (hs.execute("/sbin/mount -t devfs") or ""):gmatch(" on (/%S*) %(") do
+	hiddenMounts[#hiddenMounts + 1] = point
 end
 
--- input text that searches below a folder row
+-- a folder opens in Finder (also a hidden one like /tmp), a file shows selected in its folder
+function M.reveal(row)
+	for _, point in ipairs(hiddenMounts) do
+		if row.file == point or row.file:sub(1, #point + 1) == point .. "/" then
+			hs.alert.show("Finder can't show " .. point)
+			return
+		end
+	end
+	hs.task.new("/usr/bin/open", nil, row.kind == "folder" and { row.file } or { "-R", row.file }):start()
+end
+
+-- input text that searches below a folder row; a folder outside home keeps its full path (/dev/)
 function M.below(row)
+	if row.file ~= home and row.file:sub(1, #home + 1) ~= home .. "/" then
+		return row.file .. "/"
+	end
 	return "/" .. row.file:gsub("^" .. home .. "/?", "") .. "/"
 end
 
