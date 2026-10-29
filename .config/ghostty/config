@@ -15,7 +15,7 @@ quit-after-last-window-closed = true
 mouse-hide-while-typing = true
 
 # Shell keys. A terminal never sees Cmd, so these send Esc + letter, which ~/.zshrc binds
-# (list: ~/.config/docs/keys.md, Shell). Cmd+l / Cmd+Shift+l = next word / whole grey suggestion,
+# (list: ~/.config/docs/keys.md, Shell). Cmd+l = next word of the grey suggestion, Cmd+Shift+l = completion list,
 # Cmd+k / Cmd+j = fzf history, Cmd+Shift+k = jump to a known folder, Cmd+Shift+j = dive into a subfolder.
 # Replaces Ghostty's defaults for Cmd+k (clear screen), Cmd+j and Cmd+Shift+j (paste screen as file).
 keybind = super+l=text:\x1bl

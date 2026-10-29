@@ -42,6 +42,8 @@ shell suggestion keys, the `edit` menu, Finder `e`, `?`, `a`, Ctrl+h.
 - [ ] Shell keys (2026-10-29): Cmd+k/j and Ctrl+R (Enter runs, Tab fills), Cmd+Shift+k/j, Esc then Space,
       fzf input on top, Cmd+Shift+j no longer pastes a file path.
 - [ ] Key help: Cmd+Shift+Space in Ghostty, Finder, Ableton; VS Code keeps its own Cmd+Shift+Space; Space in the empty launcher.
+- [ ] Tab (2026-10-29): takes the grey suggestion, completes without one (also on an empty line); Cmd+Shift+l completes;
+      Cmd+j/k and Tab inside the completion list; `vim **` Tab; Opt+Backspace deletes one word; `help`, `?`, `help finder`.
 - [ ] Every other key from `docs/keys.md` once.
 
 ## 3. Build next

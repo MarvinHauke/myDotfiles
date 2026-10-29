@@ -113,15 +113,16 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Key | Action | How |
 |---|---|---|
 | Cmd+l | take the next word of the suggestion; `/` ends a word, so paths go folder by folder | Ghostty sends Esc l, `.zshrc` binds `accept-suggestion-word` |
-| Cmd+Shift+l | take the whole suggestion | Ghostty sends Esc L, `.zshrc` binds `autosuggest-accept` |
+| Tab | take the whole suggestion when one is shown (cursor at the end); otherwise the completion list (fzf-tab) | `tab-accept-or-complete` |
+| Cmd+Shift+l | completion list (fzf-tab), also while a suggestion is shown | Ghostty sends Esc L, `complete-word-fzf` |
 | Ctrl+Shift+l | clear the screen | |
+| Opt+Backspace | delete the word before the cursor; `/` ends a word | Ghostty sends Esc Backspace, `backward-kill-path-word` |
 | Right arrow | take the whole suggestion | plugin default |
-| Tab | completion picker (fzf-tab), a different thing from the grey text | |
 | Cmd+k / Cmd+j, Ctrl+R | history in fzf, the typed text is the query: Enter runs, Tab fills the prompt; without fzf: older / newer command containing the text | Esc k / Esc j, `history-older` / `history-newer` |
 | Cmd+Shift+k | jump to a folder visited before (zoxide list in fzf) | Esc K, `folder-jump` |
 | Cmd+Shift+j | dive into a folder below the current one (fd list in fzf) | Esc J, `folder-dive` |
-| Cmd+j / k / l in any fzf list | down / up / take the entry | `FZF_DEFAULT_OPTS` in `.zshrc` |
-| Space in normal mode (after Esc) | this key help | `key-help` |
+| Cmd+j / k / l in any fzf list | down / up / take the entry; in history and completion lists Tab takes it too | `FZF_DEFAULT_OPTS`, `fzf-bindings` zstyle for fzf-tab |
+| Space in normal mode (after Esc), `help`, `?` | this key help; `help finder` shows another topic | `key-help`, `help` |
 
 Places and config shortcuts, defined in `.zshrc` and also listed by the launcher:
 

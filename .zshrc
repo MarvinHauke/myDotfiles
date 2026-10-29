@@ -143,10 +143,6 @@ zle -N accept-suggestion-or-clear
 ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=(accept-suggestion-or-clear)
 # Bind Ctrl+L to the custom function
 bindkey '^L' accept-suggestion-or-clear
-# Cmd+Shift+l (Ghostty sends Esc L, see ghostty/config): take the whole grey suggestion.
-# Does nothing without a suggestion; Ctrl+Shift+l clears the screen.
-bindkey -M viins '^[L' autosuggest-accept
-bindkey -M vicmd '^[L' autosuggest-accept
 
 # Cmd+l (Ghostty sends Esc l): take the next word of the grey suggestion.
 # "/" ends a word, so a suggested path is taken folder by folder.
@@ -160,16 +156,28 @@ ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(accept-suggestion-word)
 bindkey -M viins '^[l' accept-suggestion-word
 bindkey -M vicmd '^[l' accept-suggestion-word
 
+# Opt+Backspace (Ghostty sends Esc Backspace): delete the word before the cursor, "/" ends a word
+backward-kill-path-word() {
+    local WORDCHARS=${WORDCHARS//\//}
+    zle .backward-kill-word
+}
+zle -N backward-kill-path-word
+bindkey -M viins '^[^?' backward-kill-path-word
+
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case-insensitive
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"     # Colored completions
 zstyle ':completion:*' menu select                        # Menu selection
+zstyle ':completion:*' insert-tab false                   # Tab on an empty line completes instead of typing a tab
 zstyle ':completion:*' group-name ''                      # Group completions
-zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+zstyle ':completion:*:descriptions' format '[%d]'            # group names; fzf-tab can't show %F colors
 
 zstyle ':fzf-tab:*' fzf-flags --height=50% --reverse --border
 zstyle ':fzf-tab:*' continuous-trigger 'right'
+zstyle ':fzf-tab:*' switch-group '<' '>' # show one group at a time: < and > switch
+# fzf-tab ignores FZF_DEFAULT_OPTS: same keys as the history list. Cmd+j/k move, Tab or Cmd+l takes the pick.
+zstyle ':fzf-tab:*' fzf-bindings 'alt-j:down' 'alt-k:up' 'alt-l:accept' 'tab:accept'
 
 # =============================================================================
 # ZSH OPTIONS
@@ -346,8 +354,30 @@ folder-dive() {
   cd-as-typed "$(fd --type d --hidden --exclude .git | fzf --query="$LBUFFER" --preview 'lsd --tree --depth=1 {}')"
 }
 
-# Space in normal mode (after Esc): key help panel, like which-key in nvim
-key-help() { open -g 'hammerspoon://help?topic=Shell' }
+# Key help panel (Hammerspoon). `help` or `?` shows the Shell keys, `help finder` another heading of docs/keys.md.
+# Space in normal mode (after Esc) opens it too, like which-key in nvim.
+help() { open -g "hammerspoon://help?topic=${${*:-Shell}// /%20}" }
+alias '?'=help
+key-help() { help }
+
+# Tab: take the whole grey suggestion when one is shown and the cursor is at the end,
+# otherwise complete (fzf's ** trigger, which hands everything else to fzf-tab).
+# Cmd+Shift+l (Ghostty sends Esc L): always complete, also while a suggestion is shown.
+complete-word-fzf() {
+  if (( $+widgets[fzf-completion] )); then zle fzf-completion
+  elif (( $+widgets[fzf-tab-complete] )); then zle fzf-tab-complete
+  else zle expand-or-complete; fi
+}
+tab-accept-or-complete() {
+  if [[ -n $POSTDISPLAY && $CURSOR -eq ${#BUFFER} ]]; then zle autosuggest-accept
+  else complete-word-fzf; fi
+}
+# like accept-suggestion-or-clear: only on this list does the widget see the suggestion
+ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=(tab-accept-or-complete)
+zle -N complete-word-fzf
+zle -N tab-accept-or-complete
+bindkey -M viins '^I' tab-accept-or-complete
+for keymap in viins vicmd; do bindkey -M $keymap '^[L' complete-word-fzf; done
 
 zle -N history-fzf
 zle -N history-older
