@@ -39,6 +39,9 @@ shell suggestion keys, the `edit` menu, Finder `e`, `?`, `a`, Ctrl+h.
 
 - [ ] Finder `a` inside an empty folder: the item lands in that folder, not one level up.
 - [ ] Clipboard picker: right-click deletes a row.
+- [ ] Shell keys (2026-10-29): Cmd+k/j and Ctrl+R (Enter runs, Tab fills), Cmd+Shift+k/j, Esc then Space,
+      fzf input on top, Cmd+Shift+j no longer pastes a file path.
+- [ ] Key help: Cmd+Shift+Space in Ghostty, Finder, Ableton; VS Code keeps its own Cmd+Shift+Space; Space in the empty launcher.
 - [ ] Every other key from `docs/keys.md` once.
 
 ## 3. Build next
