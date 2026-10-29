@@ -349,6 +349,7 @@ folder-dive() {
 # Space in normal mode (after Esc): key help panel, like which-key in nvim
 key-help() { open -g 'hammerspoon://help?topic=Shell' }
 
+zle -N history-fzf
 zle -N history-older
 zle -N history-newer
 zle -N folder-jump
@@ -361,6 +362,10 @@ for keymap in viins vicmd; do
   bindkey -M $keymap '^[J' folder-dive
 done
 bindkey -M vicmd ' ' key-help
+# Ctrl+R: same history list as Cmd+k (Enter runs, Tab fills), replacing fzf's own Ctrl+R
+if (( $+widgets[fzf-history-widget] )); then
+  for keymap in emacs viins vicmd; do bindkey -M $keymap '^R' history-fzf; done
+fi
 
 # =============================================================================
 # TMUX AUTO-START

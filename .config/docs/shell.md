@@ -47,7 +47,9 @@ Ghostty turns Cmd keys into Esc + letter (`ghostty/config`), `.zshrc` binds thos
 
 `FZF_DEFAULT_OPTS` sets the layout for every fzf list (input on top, list below it, half the screen high) and
 binds alt-j / alt-k / alt-l, so Cmd+j/k/l move and accept. In history the newest command is at the top.
-fzf's own keys from `fzf --zsh`: Ctrl+R history, Ctrl+T files. Its Alt+C can't be typed (Option is not Alt), Cmd+Shift+k replaces it.
+Ctrl+R opens the same history list (`history-fzf`). Only history lists run on Enter: in Ctrl+T, `fkill` and `fbrew`
+Enter takes the pick and Tab marks several entries; Tab completion (fzf-tab) is unchanged.
+fzf's own keys from `fzf --zsh`: Ctrl+T files. Its Alt+C can't be typed (Option is not Alt), Cmd+Shift+k replaces it.
 
 ## Places, functions, aliases
 

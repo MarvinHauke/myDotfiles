@@ -117,7 +117,7 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Ctrl+Shift+l | clear the screen | |
 | Right arrow | take the whole suggestion | plugin default |
 | Tab | completion picker (fzf-tab), a different thing from the grey text | |
-| Cmd+k / Cmd+j | history in fzf, the typed text is the query: Enter runs, Tab fills the prompt; without fzf: older / newer command containing the text | Esc k / Esc j, `history-older` / `history-newer` |
+| Cmd+k / Cmd+j, Ctrl+R | history in fzf, the typed text is the query: Enter runs, Tab fills the prompt; without fzf: older / newer command containing the text | Esc k / Esc j, `history-older` / `history-newer` |
 | Cmd+Shift+k | jump to a folder visited before (zoxide list in fzf) | Esc K, `folder-jump` |
 | Cmd+Shift+j | dive into a folder below the current one (fd list in fzf) | Esc J, `folder-dive` |
 | Cmd+j / k / l in any fzf list | down / up / take the entry | `FZF_DEFAULT_OPTS` in `.zshrc` |
