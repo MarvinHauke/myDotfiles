@@ -54,3 +54,9 @@ identical to `.config/myDotfiles_install.sh` on `main`): clone to `~/.cfg`, back
 
 The skill `~/.claude/skills/dotfiles-docs` holds the doc rules and which doc belongs to which config.
 Other sessions only see its one-line description.
+
+Status line: `~/.claude/statusline.sh` (model, session and weekly limits, context). With vim mode on it shows a
+yellow NORMAL block or a grey "insert", and sets the cursor shape (block in normal mode, bar in insert mode) by
+writing to `/dev/tty`, since Claude Code leaves the cursor as the shell set it.
+`~/.claude/settings.json` is not tracked; on a new machine add
+`"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}` and `"editorMode": "vim"` there.
