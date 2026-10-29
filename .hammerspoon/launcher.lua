@@ -4,6 +4,7 @@
 --   /text     file tree only; a path that exists as typed (/tmp, /etc/) comes first    launcher/paths.lua
 --   =expr     calculator; plain text that looks like math also gets it on top    launcher/calc.lua
 --             the result also shows as grey ghost text after the input            launcher/ghost.lua
+--   Space     as the first character: the launcher keys (keys.md, Launcher); typing on searches
 local M = {}
 
 local apps = require("launcher.apps")
@@ -11,12 +12,13 @@ local paths = require("launcher.paths")
 local calc = require("launcher.calc")
 local usage = require("launcher.usage")
 local ghost = require("launcher.ghost")
+local help = require("help")
 
 local maxTree = 10 -- rows from the file tree at the end of the plain list
 local typed -- the plain text in the input, lower case; nil while "/" or "=" is used
 
 local chooser = hs.chooser.new(function(choice)
-	if not choice then
+	if not choice or choice.help then
 		return
 	end
 	if choice.calc then
@@ -63,12 +65,19 @@ local function ranked(query)
 end
 
 local function update(query)
+	local asked = query
 	local function wanted()
-		return chooser:query() == query
+		return chooser:query() == asked
 	end
 	typed = nil
 	ghost.show(query, nil)
-	if query:sub(1, 1) == "=" then
+	if query == " " then
+		local rows = {}
+		for _, row in ipairs(help.rows("Launcher")) do
+			rows[#rows + 1] = { text = row[1], subText = row[2], help = true }
+		end
+		chooser:choices(rows)
+	elseif query:sub(1, 1) == "=" then
 		local rows = calc.rows(query:sub(2))
 		chooser:choices(rows)
 		if rows[1] then
@@ -97,12 +106,14 @@ local function update(query)
 			chooser:choices({})
 		end
 	else
+		local raw = query -- the ghost text is placed after the input as typed
+		query = query:gsub("^%s+", "") -- after the help Space, typing on searches
 		typed = query:lower()
 		local choices, seen = ranked(query)
 		local result = calc.looksLikeMath(query) and calc.rows(query)[1]
 		if result then
 			table.insert(choices, 1, result)
-			ghost.show(query, (result.warn and "⚠ " or "= ") .. result.text)
+			ghost.show(raw, (result.warn and "⚠ " or "= ") .. result.text)
 		end
 		chooser:choices(choices)
 		-- from 3 characters on, matches from the whole file tree follow at the end

@@ -24,6 +24,10 @@ export VISUAL=nvim
 # Brewfile used by `brew bundle` (dump --force records, no argument restores)
 export HOMEBREW_BUNDLE_FILE="$HOME/.config/brew/Brewfile"
 
+# fzf lists open below the prompt with the input on top, newest entry first.
+# Inside them: Cmd+j/k move, Cmd+l takes the entry (Ghostty sends Esc j/k/l = alt-j/k/l)
+export FZF_DEFAULT_OPTS="--layout=reverse --height=50% --border=top --bind=alt-j:down,alt-k:up,alt-l:accept"
+
 # Development paths
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
@@ -297,6 +301,66 @@ alias xournal="open -a Xournal++"
 
 # Zoxide (smart cd) - init last, before the tmux block (which may return early)
 command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
+
+# =============================================================================
+# SHELL KEYS (Ghostty sends Esc + letter for Cmd keys, see ghostty/config and docs/keys.md)
+# =============================================================================
+
+# fzf history (fzf's Ctrl+R widget) where Enter runs the command and Tab (or Cmd+l) only fills the prompt.
+# Enter leaves a marker file before accepting; finding it afterwards means: run.
+history-fzf() {
+  local marker=${TMPDIR:-/tmp}/zsh-history-run.$$
+  local FZF_CTRL_R_OPTS="${FZF_CTRL_R_OPTS-} --bind=tab:accept --bind='enter:execute-silent(touch $marker)+accept'"
+  rm -f $marker
+  zle fzf-history-widget
+  [[ -e $marker ]] && { rm -f $marker; zle accept-line }
+}
+
+# Cmd+k / Cmd+j: fzf history with the typed text as query.
+# Without fzf: older / newer command that contains the typed text.
+history-older() {
+  if (( $+widgets[fzf-history-widget] )); then history-fzf
+  else zle history-substring-search-up; fi
+}
+history-newer() {
+  if (( $+widgets[fzf-history-widget] )); then history-fzf
+  else zle history-substring-search-down; fi
+}
+
+# Runs `cd <dir>` as if typed, so the prompt redraws and the cd lands in the history
+cd-as-typed() {
+  [[ -n $1 ]] || { zle reset-prompt; return }
+  BUFFER="cd ${(q)1}"
+  zle accept-line
+}
+
+# Cmd+Shift+k: jump to a folder visited before (zoxide list in fzf)
+folder-jump() {
+  (( $+commands[zoxide] && $+commands[fzf] )) || return
+  cd-as-typed "$(zoxide query -i -- $LBUFFER)"
+}
+
+# Cmd+Shift+j: dive into a folder below the current one
+folder-dive() {
+  (( $+commands[fd] && $+commands[fzf] )) || return
+  cd-as-typed "$(fd --type d --hidden --exclude .git | fzf --query="$LBUFFER" --preview 'lsd --tree --depth=1 {}')"
+}
+
+# Space in normal mode (after Esc): key help panel, like which-key in nvim
+key-help() { open -g 'hammerspoon://help?topic=Shell' }
+
+zle -N history-older
+zle -N history-newer
+zle -N folder-jump
+zle -N folder-dive
+zle -N key-help
+for keymap in viins vicmd; do
+  bindkey -M $keymap '^[k' history-older
+  bindkey -M $keymap '^[j' history-newer
+  bindkey -M $keymap '^[K' folder-jump
+  bindkey -M $keymap '^[J' folder-dive
+done
+bindkey -M vicmd ' ' key-help
 
 # =============================================================================
 # TMUX AUTO-START

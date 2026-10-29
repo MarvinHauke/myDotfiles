@@ -14,9 +14,15 @@ quit-after-last-window-closed = true
 
 mouse-hide-while-typing = true
 
-# Keys for the grey shell suggestion (zsh-autosuggestions). A terminal never sees Cmd, so these
-# send a sequence that ~/.zshrc binds: Cmd+l = next word, Cmd+Shift+l = whole suggestion.
+# Shell keys. A terminal never sees Cmd, so these send Esc + letter, which ~/.zshrc binds
+# (list: ~/.config/docs/keys.md, Shell). Cmd+l / Cmd+Shift+l = next word / whole grey suggestion,
+# Cmd+k / Cmd+j = fzf history, Cmd+Shift+k = jump to a known folder, Cmd+Shift+j = dive into a subfolder.
+# Replaces Ghostty's defaults for Cmd+k (clear screen), Cmd+j and Cmd+Shift+j (paste screen as file).
 keybind = super+l=text:\x1bl
 keybind = super+shift+l=text:\x1bL
+keybind = super+k=text:\x1bk
+keybind = super+j=text:\x1bj
+keybind = super+shift+k=text:\x1bK
+keybind = super+shift+j=text:\x1bJ
 
 # Not set on purpose: macos-option-as-alt. Option must keep typing @ [ ] | { } µ on the German layout.

@@ -18,68 +18,18 @@ The script will:
 3. Check out the `macos` branch
 4. Install everything listed in `~/.config/brew/Brewfile` (`brew bundle`)
 
-## Config files
+## Docs
 
-### Zsh
+How each part is set up, which key does what and who calls whom: [`.config/docs/`](.config/docs/README.md).
 
-```
-~/.zshrc
-```
-
-### Neovim
-
-```
-~/.config/nvim/
-```
-
-- `init.lua` — bootstraps Lazy.nvim
-- `lua/plugins/` — full plugin set (LSP, DAP, formatting, AI, etc.)
-- `lua/plugins/lsp/` — per-language LSP configs (bash, C, Python, Rust, JS, Lua, web)
-- `ftplugin/` — filetype-specific settings
-
-### Starship
-
-```
-~/.config/starship/starship.toml
-```
-
-### Tmux
-
-```
-~/.config/tmux/tmux.conf
-```
-
-### Ghostty
-
-```
-~/.config/ghostty/config
-```
-
-### Karabiner-Elements
-
-```
-~/.config/karabiner/karabiner.json
-~/.config/karabiner/assets/complex_modifications/
-```
-
-### Hammerspoon
-
-```
-~/.hammerspoon/init.lua
-```
-
-### Zathura
-
-```
-~/.config/zathura/zathurarc
-```
-
-### VS Code
-
-```
-~/.config/Code/User/settings.json
-~/.config/Code/User/keybindings.json
-```
+| Doc | Covers |
+|---|---|
+| [keys](.config/docs/keys.md) | every hotkey, by layer |
+| [shell](.config/docs/shell.md) | zsh, plugins, shell keys, starship |
+| [terminal](.config/docs/terminal.md) | Ghostty, tmux |
+| [nvim](.config/docs/nvim.md) | neovim layout, plugins, LSP |
+| [hammerspoon](.config/docs/hammerspoon.md) | launcher, windows, clipboard, key help |
+| [dotfiles](.config/docs/dotfiles.md) | this repo, branches, Homebrew, secrets |
 
 ## Package lists
 

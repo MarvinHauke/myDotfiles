@@ -100,6 +100,32 @@
                         ]
                     },
                     {
+                        "description": "Help: Cmd+Shift+Space shows the keys of the front app, only in Ghostty, Finder and Ableton (VS Code, Arduino IDE and STM32CubeIDE use the key themselves)",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.mitchellh\\.ghostty$",
+                                            "^com\\.apple\\.finder$",
+                                            "^com\\.ableton\\.live$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": ["command", "shift"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -g 'hammerspoon://help'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Windows: Opt+Shift+h/j/k/l halves, z/o/n/. corners, Opt+Shift+m cycles maximized and centered sizes",
                         "manipulators": [
                             {

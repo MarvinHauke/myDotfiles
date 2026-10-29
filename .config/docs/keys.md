@@ -10,7 +10,7 @@ Everything here is implemented.
 
 | Layer | Modifier | Used for |
 |---|---|---|
-| App | Cmd, Cmd+Shift | left to the apps, never overridden (Cmd+Space is the one exception: launcher) |
+| App | Cmd, Cmd+Shift | left to the apps, never overridden. Exceptions: Cmd+Space (launcher) and Cmd+Shift+Space (key help, only in Ghostty, Finder, Ableton) |
 | Text | Caps held = Ctrl, tapped = Esc; Ctrl+hjkl = arrows (not in Ghostty: there tmux and nvim use them) | editing, vim, tmux |
 | Window | Opt+Shift | placing the focused window |
 | OS | Hyper (right Cmd held = Ctrl+Opt+Cmd+Shift) | clipboard, reload, app name |
@@ -117,6 +117,11 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Ctrl+Shift+l | clear the screen | |
 | Right arrow | take the whole suggestion | plugin default |
 | Tab | completion picker (fzf-tab), a different thing from the grey text | |
+| Cmd+k / Cmd+j | history in fzf, the typed text is the query: Enter runs, Tab fills the prompt; without fzf: older / newer command containing the text | Esc k / Esc j, `history-older` / `history-newer` |
+| Cmd+Shift+k | jump to a folder visited before (zoxide list in fzf) | Esc K, `folder-jump` |
+| Cmd+Shift+j | dive into a folder below the current one (fd list in fzf) | Esc J, `folder-dive` |
+| Cmd+j / k / l in any fzf list | down / up / take the entry | `FZF_DEFAULT_OPTS` in `.zshrc` |
+| Space in normal mode (after Esc) | this key help | `key-help` |
 
 Places and config shortcuts, defined in `.zshrc` and also listed by the launcher:
 
@@ -126,15 +131,33 @@ Places and config shortcuts, defined in `.zshrc` and also listed by the launcher
 | function | `dev [folder]` | jump to `~/Development[/folder]`, with Tab completion |
 | nvim alias | `nvz` zsh, `nvt` tmux, `nvs` starship, `nvn` nvim, `nvk` Karabiner, `nvh` Hammerspoon, `notes` | open that config in nvim |
 
-- A terminal never sees Cmd, so the two `keybind` lines in `ghostty/config` translate the keys.
+- A terminal never sees Cmd, so the `keybind` lines in `ghostty/config` translate the keys into Esc + letter.
+- Ghostty's own defaults for Cmd+k (clear screen), Cmd+j and Cmd+Shift+j (paste the screen as a file) are replaced.
 - Caps+l (Ctrl+l) is not available for this: inside tmux it switches panes.
 - Pressing Escape and `l` by hand within 0.25 s (`KEYTIMEOUT=25`) counts as Cmd+l.
+
+## Launcher
+
+Type Space as the first character in the launcher to see this list; typing on searches as usual.
+
+| Key | Action |
+|---|---|
+| Space | this list |
+| Enter | open: app, `edit` for files and folders, calculator copies the result |
+| Tab | complete the app name, or a folder's path to search below it |
+| Cmd+Enter | show the file or folder in Finder |
+| Cmd+Y | copy the path (apps too) |
+| / + text | search the whole file tree |
+| = + expression | calculator |
+
+Details in `launcher.md`.
 
 ## OS layer (Hyper)
 
 | Key | Action | Backend |
 |---|---|---|
 | Cmd+Space | launcher: apps, places, files and folders, most used first; `/` searches all files, math calculates (`=` forces it); Tab completes, Cmd+Enter shows in Finder, Cmd+Y copies the path | `hammerspoon://launcher`, see `launcher.md` |
+| Cmd+Shift+Space | key help for the front app: Ghostty shows Shell, Finder shows Finder, Ableton shows Ableton Live. Only in these apps: VS Code, Arduino IDE and STM32CubeIDE use the key themselves | `hammerspoon://help`, topic picked by `appTopics` in `~/.hammerspoon/init.lua` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |
 | Hyper+r | reload Hammerspoon | `hammerspoon://reload` |
 | Hyper+i | show the name of the front app | `hammerspoon://appname` |

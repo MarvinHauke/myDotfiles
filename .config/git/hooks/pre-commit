@@ -3,6 +3,18 @@
 # Set up per machine with: dotfiles config core.hooksPath ~/.config/git/hooks (the install script does it)
 # A false alarm: add `gitleaks:allow` as a comment on that line, or skip once with `dotfiles commit --no-verify`.
 PATH="/opt/homebrew/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"
+
+# Docs reminder (warns, never blocks): config files staged, but nothing in ~/.config/docs/.
+# Files that need no doc: the docs themselves, other Markdown, lock files, the Brewfile.
+if [ -d "$HOME/.config/docs" ]; then
+	staged=$(git diff --cached --name-only --diff-filter=ACMRD)
+	config=$(printf '%s\n' "$staged" | grep -vE '^\.config/docs/|\.md$|lazy-lock\.json$|^\.config/brew/Brewfile$|automatic_backups/' | grep .)
+	if [ -n "$config" ] && ! printf '%s\n' "$staged" | grep -q '^\.config/docs/'; then
+		echo "pre-commit: config changed without a docs change in ~/.config/docs/ (see docs/README.md):" >&2
+		printf '  %s\n' $config >&2
+	fi
+fi
+
 if ! command -v gitleaks >/dev/null 2>&1; then
 	echo "pre-commit: gitleaks not installed, commit is not checked for secrets" >&2
 	exit 0

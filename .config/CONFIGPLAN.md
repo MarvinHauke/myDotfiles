@@ -5,45 +5,8 @@ Status: [ ] open, [x] done. Keep one line per item. Delete done items after a wh
 
 ## Docs
 
-This file: overview, state, open steps. Details live in `docs/`, one file per topic.
-New topic = new file there plus one line here.
-
-| Doc                 | Answers                                                                              |
-| ------------------- | ------------------------------------------------------------------------------------ |
-| `docs/keys.md`      | which key does what, which layer a new key belongs to                                |
-| `docs/capture.md`   | screenshots and recording: keys, commands, where files go                            |
-| `docs/launcher.md`  | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
-| `docs/clipboard.md` | what feeds the clipboard history, where it is stored, how to pick from it            |
-
-## Structure
-
-Who calls whom, and where it is configured.
-
-    Karabiner: all hotkeys             karabiner/karabiner.json      docs/keys.md
-      |- Hammerspoon                   ~/.hammerspoon/*.lua          launcher, windows, clipboard, help
-          |- launcher sources          ~/.hammerspoon/launcher/      apps, paths, calc, usage  docs/launcher.md
-          |- edit                      ~/.local/bin/edit             files into nvim/tmux    docs/launcher.md
-      |- Finder keys                   finder.lua (state), finder/add.lua  docs/keys.md
-      |- tmux pane zoom (Opt+m)        sends the tmux prefix and m           docs/keys.md
-      |- Ableton, cmdAbl               rules imported from karabiner/assets/complex_modifications/
-
-    Ghostty                            ghostty/config
-      |- zsh                           ~/.zshenv > ~/.zprofile > ~/.zshrc
-          |- starship                  starship/starship.toml
-          |- zap plugins, fzf, zoxide, direnv   (set up in ~/.zshrc)
-          |- tmux                      tmux/tmux.conf (tpm plugins)
-              |- nvim                  nvim/ (lazy.nvim), panes shared via vim-tmux-navigator
-                  |- zathura           zathura/zathurarc (PDFs opened from nvim)
-
-    macOS screenshot keys              defaults com.apple.screencapture   docs/capture.md
-      |- Hammerspoon capture.lua       watches /tmp/shots, path to clipboard
-
-    Homebrew installs all of it        brew/Brewfile (HOMEBREW_BUNDLE_FILE in ~/.zshrc)
-    dotfiles (~/.cfg, branch macos) tracks all of it
-
-Hotkeys live only in `karabiner.json`. Hammerspoon exposes actions (`hs.urlevent.bind` in `init.lua`);
-Karabiner calls `open -g hammerspoon://<action>`. Keys inside one app may live in that app's config (Ghostty).
-Secrets go in `~/.env` or `~/.zshrc.local` (both ignored by git), never in a tracked file.
+This file: state and open steps. How everything works lives in `docs/`, one file per topic;
+the index, the structure diagram and the doc rules are in `docs/README.md`.
 
 ## State
 

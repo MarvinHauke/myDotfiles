@@ -25,8 +25,11 @@ end)
 hs.urlevent.bind("add", function()
 	finderAdd.show()
 end)
+-- Help topic (a heading in keys.md) per front app, when the URL names none
+local appTopics = { ["com.mitchellh.ghostty"] = "Shell", ["com.apple.finder"] = "Finder", ["com.ableton.live"] = "Ableton" }
 hs.urlevent.bind("help", function(_, params)
-	help.toggle(params.topic)
+	local app = hs.application.frontmostApplication()
+	help.toggle(params.topic or appTopics[app and app:bundleID()] or "Window layer")
 end)
 hs.urlevent.bind("reload", function()
 	hs.reload()
