@@ -100,8 +100,25 @@
                         ]
                     },
                     {
-                        "description": "Help: Cmd+Shift+Space shows the keys of the front app, only in Ghostty, Finder and Ableton (VS Code, Arduino IDE and STM32CubeIDE use the key themselves)",
+                        "description": "Help: Cmd+Shift+Space shows the keys of the front app, only in Ghostty, Finder and Ableton; in Brave it types ? (Vimium help). VS Code, Arduino IDE and STM32CubeIDE use the key themselves",
                         "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": ["^com\\.brave\\.Browser$"],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": ["command", "shift"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [{ "key_code": "hyphen", "modifiers": ["left_shift"] }],
+                                "type": "basic"
+                            },
                             {
                                 "conditions": [
                                     {

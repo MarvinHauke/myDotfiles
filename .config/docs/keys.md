@@ -10,7 +10,7 @@ Everything here is implemented.
 
 | Layer | Modifier | Used for |
 |---|---|---|
-| App | Cmd, Cmd+Shift | left to the apps, never overridden. Exceptions: Cmd+Space (launcher) and Cmd+Shift+Space (key help, only in Ghostty, Finder, Ableton) |
+| App | Cmd, Cmd+Shift | left to the apps, never overridden. Exceptions: Cmd+Space (launcher) and Cmd+Shift+Space (key help, only in Ghostty, Finder, Ableton, Brave) |
 | Text | Caps held = Ctrl, tapped = Esc; Ctrl+hjkl = arrows (not in Ghostty: there tmux and nvim use them) | editing, vim, tmux |
 | Window | Opt+Shift | placing the focused window |
 | OS | Hyper (right Cmd held = Ctrl+Opt+Cmd+Shift) | clipboard, reload, app name |
@@ -173,7 +173,7 @@ Set in `~/.config/zathura/zathurarc`; zathura's other keys are its defaults.
 | Key | Action | Backend |
 |---|---|---|
 | Cmd+Space | launcher: apps, places, files and folders, most used first; `/` searches all files, math calculates (`=` forces it); Tab completes, Cmd+Enter shows in Finder, Cmd+Y copies the path | `hammerspoon://launcher`, see `launcher.md` |
-| Cmd+Shift+Space | key help for the front app: Ghostty shows Shell, Finder shows Finder, Ableton shows Ableton Live, the launcher its own keys. Only in these apps: VS Code, Arduino IDE and STM32CubeIDE use the key themselves | `hammerspoon://help`, topic picked by `appTopics` in `~/.hammerspoon/init.lua` |
+| Cmd+Shift+Space | key help for the front app: Ghostty shows Shell, Finder shows Finder, Ableton shows Ableton Live, the launcher its own keys, Brave types `?` for the Vimium help. Only in these apps: VS Code, Arduino IDE and STM32CubeIDE use the key themselves | `hammerspoon://help`, topic picked by `appTopics` in `~/.hammerspoon/init.lua` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |
 | Hyper+r | reload Hammerspoon | `hammerspoon://reload` |
 | Hyper+i | show the name of the front app | `hammerspoon://appname` |
