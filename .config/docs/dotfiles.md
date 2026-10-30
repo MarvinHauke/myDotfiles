@@ -17,7 +17,7 @@ dotfiles-lg                # lazygit on the repo
 
 ## Branches
 
-The install one-liner (`~/README.md`) checks out the branch that fits the system:
+The install scripts (one-liners in `README.md` on `main`) check out the branch that fits the system:
 
 | Branch | For | Picked when |
 |---|---|---|
@@ -25,7 +25,7 @@ The install one-liner (`~/README.md`) checks out the branch that fits the system
 | `linux` | Linux desktops | Linux on x86_64 |
 | `raspbian` | Raspberry Pi: stripped-down nvim, apt packages in `.config/apt/packages.txt` | Linux on aarch64 |
 | `linux-android` | Termux | Android |
-| `Windows_NT` | Windows | never: the script is bash, check this branch out by hand |
+| `Windows_NT` | Windows | Windows, by its own PowerShell installer (gist `5594644ca1f4dcd3122d705481ccccb2`, see `README.md` on `main`) |
 | `main` | the install script `.config/myDotfiles_install.sh` | any other system |
 
 ## Install on a new Mac
