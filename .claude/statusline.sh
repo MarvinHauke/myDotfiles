@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Claude Code status line -- pure bash, no external commands.
 #
-#   Opus 5 (1M) high │ session ██░░░░░░░░   7% ↻ 4h50m (20:00) │ ctx ██░░░░░░░░   7% 65k/1M │ wk 20% ↻ 5d18h
+#   Opus 5 (1M) high │ session ██░░░░░░░░   7% 󰚰 4h50m (20:00) │ ctx ██░░░░░░░░   7% 65k/1M │ wk 20% 󰚰 5d18h
 #
 # Reads the status-line JSON payload on stdin. Fields used (Claude Code >= 2.1):
 #   vim.mode (only with vim mode on), model.display_name, effort.level, fast_mode, thinking.enabled
@@ -16,9 +16,16 @@
 
 IFS= read -r -d '' JSON
 
+# ${#LINE} must count characters, not bytes (│ █ and the icons are 3-4 bytes each). Claude Code may
+# start this script without a UTF-8 locale, which made the bars vanish far too early.
+export LC_ALL=en_US.UTF-8
+
 # ------------------------------------------------------------------ appearance
 FULL='█'
 EMPTY='░'
+# Before reset countdowns. A Nerd Font icon (nf-md-update, U+F06B0): Ghostty's built-in font has it,
+# while ↻ showed up as two replacement characters in Claude Code's status line.
+RESET_ICON='󰚰'
 BAR_MIN=3  # below this the bars are dropped rather than shrunk further
 BAR_MAX=40 # never let a bar grow past this on a wide terminal
 
@@ -287,9 +294,11 @@ seg_window() {
             ((left <= 900)) && colour=$RED || colour=$GREY
         fi
         _until "$left"
-        out+=" $colour↻ $V$RESET"
-        _clock "$ts"
-        out+=" $GREY($V)$RESET"
+        out+=" $colour$RESET_ICON $V$RESET"
+        if ((!COMPACT)); then # the wall-clock time is the first thing to go when space is tight
+            _clock "$ts"
+            out+=" $GREY($V)$RESET"
+        fi
     fi
 
     add "$out"
@@ -308,7 +317,7 @@ seg_week() {
 
     if _num resets_at "$block"; then
         _until $((${V%%.*} - EPOCHSECONDS))
-        out+=" $GREY↻ $V$RESET"
+        out+=" $GREY$RESET_ICON $V$RESET"
     fi
 
     add "$out"
@@ -338,18 +347,22 @@ render() {
 
 # Pass 1: no colours and no bar cells, purely to measure the fixed text. With a
 # UTF-8 locale ${#LINE} counts characters, which is what we want here.
+# If the bars don't fit, measure again without the reset clock times (COMPACT) before giving them up.
 _palette off
 BAR_WIDTH=0
-render
-fixed=${#LINE}
-bars=$BARS
+for COMPACT in 0 1; do
+    render
+    fixed=${#LINE}
+    bars=$BARS
+    room=$((${COLUMNS:-100} - fixed - RIGHT_MARGIN - bars))
+    ((bars == 0 || room >= bars * BAR_MIN)) && break
+done
 
 # Split whatever is left between the bars. Each bar also costs a leading space,
 # so a bar occupies BAR_WIDTH + 1 columns. Too cramped for even BAR_MIN cells
 # means dropping the bars entirely rather than letting the line overflow.
 BAR_WIDTH=0
 if ((bars > 0)); then
-    room=$((${COLUMNS:-100} - fixed - RIGHT_MARGIN - bars))
     if ((room >= bars * BAR_MIN)); then
         BAR_WIDTH=$((room / bars))
         ((BAR_WIDTH > BAR_MAX)) && BAR_WIDTH=$BAR_MAX
@@ -361,14 +374,3 @@ _palette on
 render
 printf '%s' "$LINE"
 
-# Cursor shape for vim mode: Claude Code leaves the terminal cursor as the shell set it (a thin bar),
-# so normal mode looked like insert mode. Block in NORMAL/VISUAL, bar in INSERT. Written straight to
-# the terminal, since stdout is the status line text. Absent vim block: leave the cursor alone.
-if _obj vim "$JSON" && _str mode "$V"; then
-    case $V in
-    INSERT) shape=6 ;; # steady bar
-    *) shape=2 ;;      # steady block
-    esac
-    { printf '\033[%s q' "$shape" >/dev/tty; } 2>/dev/null
-fi
-exit 0 # a failed cursor write (no terminal) must not hide the status line
