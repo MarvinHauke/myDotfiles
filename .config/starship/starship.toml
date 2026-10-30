@@ -5,3 +5,14 @@ format = """$directory$character"""
 # palette = "catppuccin_mocha"
 # move the rest of the prompt to the right
 right_format = """$all"""
+
+# Prompt arrow: always ❯, green or red after a failed command. Starship would turn it into ❮ in vi
+# normal mode, but the zsh vim plugin replaces the hook that redraws it, so it changed only now and then.
+# The cursor shows the mode instead (block = normal, bar = insert).
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❯](bold green)"
+vimcmd_visual_symbol = "[❯](bold green)"
+vimcmd_replace_symbol = "[❯](bold green)"
+vimcmd_replace_one_symbol = "[❯](bold green)"

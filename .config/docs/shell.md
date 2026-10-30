@@ -69,6 +69,9 @@ A command starting with a space is not recorded (`HIST_IGNORE_SPACE`).
 ## Prompt
 
 starship, `starship/starship.toml`: folder and prompt character on the left, everything else on the right.
+The arrow is always `❯`: green, red after a failed command. The cursor shows the vi mode (block = normal,
+bar = insert, set by the zap vim plugin). Starship's own mode arrow (`❮`) is off: the vim plugin replaces
+`zle-keymap-select`, the hook starship redraws it from, so it only changed now and then.
 
 ## Known noise
 
