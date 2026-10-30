@@ -21,7 +21,8 @@ Read `~/.config/docs/README.md` first: index, "who calls whom" diagram, rules.
 | `nvim/` | `nvim.md` |
 | `~/.hammerspoon/` (new `hammerspoon://` action, module) | `hammerspoon.md`; launcher → `launcher.md`, clipboard → `clipboard.md`, capture → `capture.md` |
 | `karabiner/karabiner.json` | `keys.md` |
-| `brew/Brewfile`, repo, branches, install, git hooks, secrets | `dotfiles.md` |
+| `brew/Brewfile`, repo, branches, install, git hooks, secrets, `~/.claude/statusline.sh` | `dotfiles.md` |
+| `Code/User/`, `zathura/`, `~/.vimrc` | `apps.md` (zathura keys in `keys.md`) |
 | new topic | new file in `docs/` + one row in the table in `docs/README.md` |
 
 Open steps and state go in `~/.config/CONFIGPLAN.md`, not in the docs. `~/README.md` is the GitHub

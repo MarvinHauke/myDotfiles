@@ -152,6 +152,18 @@ local tabTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(eve
 	local row = chooser:selectedRowContents()
 	-- Enter on a key row (Space view): the keys as a panel at the bottom, the launcher stays open and empty.
 	-- Done here so the chooser never closes; reopening it while it closed left a window that could not be closed.
+	-- Cmd+Shift+Space: the launcher keys as a panel at the bottom, again to hide it. Karabiner's rule for
+	-- this key only fires in Ghostty, Finder and Ableton; while the launcher is open it reaches this tap.
+	if key == hs.keycodes.map.space and flags:containExactly({ "cmd", "shift" }) then
+		if helpShown then
+			helpShown = false
+			help.hide()
+		else
+			help.show("Launcher", true)
+			helpShown = true
+		end
+		return true
+	end
 	if key == hs.keycodes.map["return"] and not next(flags) and row and row.help then
 		help.show("Launcher", true)
 		helpShown = true

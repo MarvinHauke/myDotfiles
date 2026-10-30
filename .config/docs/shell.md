@@ -38,7 +38,7 @@ Ghostty turns Cmd keys into Esc + letter (`ghostty/config`), `.zshrc` binds thos
 
 | Widget | Key | Does |
 |---|---|---|
-| `tab-accept-or-complete` | Tab | whole suggestion when one is shown and the cursor is at the end, else completion (also on an empty line: `insert-tab false`) |
+| `tab-accept-or-complete` | Tab | a word that looks like a path (contains `/`, starts with `~` or `.`), or an empty word after a space (`cd `), always completes in fzf. Other words: whole suggestion when one is shown and the cursor is at the end, else completion; also on an empty line (`insert-tab false`) |
 | `complete-word-fzf` | Cmd+Shift+l | completion (fzf's `**` trigger, then fzf-tab), also while a suggestion is shown |
 | `accept-suggestion-word` | Cmd+l | next word of the suggestion, `/` ends a word |
 | `backward-kill-path-word` | Opt+Backspace | delete the word before the cursor, `/` ends a word |
@@ -53,6 +53,13 @@ binds alt-j / alt-k / alt-l, so Cmd+j/k/l move and accept. In history the newest
 Ctrl+R opens the same history list (`history-fzf`). Only history lists run on Enter: in Ctrl+T, `fkill` and `fbrew`
 Enter takes the pick and Tab marks several entries.
 fzf's own keys from `fzf --zsh`: Ctrl+T files. Its Alt+C can't be typed (Option is not Alt), Cmd+Shift+k replaces it.
+
+## cd completion
+
+`cd` is zoxide. Tab after `cd ` lists the folders here; `cd src` + Tab completes local folders first.
+When no local folder matches, `_cd_or_visited` offers the folders zoxide knows that match the text:
+`cd .config` + Tab in a project without `.config` offers `~/.config`.
+`cd foo` + Space + Tab opens zoxide's own interactive list (best matches anywhere, runs the cd).
 
 ## Places, functions, aliases
 

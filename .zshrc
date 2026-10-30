@@ -63,8 +63,18 @@ load_env() {
 # Quick directory navigation
 dev() { cd "$HOME/Development/$1" 2>/dev/null || cd "$HOME/Development" }
 
-# Zathura PDF viewer (fork and detach from terminal)
-zathura() { command zathura --fork "$@" >/dev/null 2>&1 }
+# Zathura PDF viewer (fork and detach from terminal). It is a plain binary without .app, so macOS does not
+# bring it to the front: raise the newest zathura process once it exists (like open_zathura in nvim's utils.lua).
+zathura() {
+  command zathura --fork "$@" >/dev/null 2>&1
+  {
+    local pid i
+    for i in {1..40}; do
+      pid=$(pgrep -nx zathura) && osascript -e "tell application \"System Events\" to set frontmost of (first process whose unix id is $pid) to true" >/dev/null 2>&1 && break
+      sleep 0.05
+    done
+  } &!
+}
 
 # Pick processes with fzf and kill them, e.g. fkill -9
 fkill() { ps -axo pid,user,%cpu,%mem,comm | fzf -m --header-lines=1 | awk '{print $1}' | xargs kill "$@" }
@@ -362,6 +372,8 @@ key-help() { help }
 
 # Tab: take the whole grey suggestion when one is shown and the cursor is at the end,
 # otherwise complete (fzf's ** trigger, which hands everything else to fzf-tab).
+# A word that looks like a path (contains "/", starts with ~ or .) always completes: paths are picked in fzf,
+# the suggestion for them stays on → / Cmd+l. After a space (empty word, e.g. `cd `) Tab completes too.
 # Cmd+Shift+l (Ghostty sends Esc L): always complete, also while a suggestion is shown.
 complete-word-fzf() {
   if (( $+widgets[fzf-completion] )); then zle fzf-completion
@@ -369,7 +381,8 @@ complete-word-fzf() {
   else zle expand-or-complete; fi
 }
 tab-accept-or-complete() {
-  if [[ -n $POSTDISPLAY && $CURSOR -eq ${#BUFFER} ]]; then zle autosuggest-accept
+  local word=${LBUFFER##*[[:space:]]}
+  if [[ -n $POSTDISPLAY && $CURSOR -eq ${#BUFFER} && -n $word && $word != */* && $word != [~.]* ]]; then zle autosuggest-accept
   else complete-word-fzf; fi
 }
 # like accept-suggestion-or-clear: only on this list does the widget see the suggestion
@@ -378,6 +391,17 @@ zle -N complete-word-fzf
 zle -N tab-accept-or-complete
 bindkey -M viins '^I' tab-accept-or-complete
 for keymap in viins vicmd; do bindkey -M $keymap '^[L' complete-word-fzf; done
+
+# cd completion: local folders first (zoxide's own completion); when none match, the folders zoxide
+# knows that match the typed text, e.g. `cd .config` + Tab in a project offers ~/.config
+_cd_or_visited() {
+  __zoxide_z_complete "$@"
+  (( compstate[nmatches] || CURRENT != 2 )) && return 0
+  local -a dirs=(${(f)"$(zoxide query -l -- ${${words[2]#./}%/} 2>/dev/null)"})
+  (( $#dirs )) || return 1
+  compadd -U -Q -V visited -X 'visited folders (zoxide)' -- ${dirs/#$HOME/\~}
+}
+(( $+functions[__zoxide_z_complete] )) && compdef _cd_or_visited cd
 
 zle -N history-fzf
 zle -N history-older
@@ -423,4 +447,5 @@ fi
 # =============================================================================
 
 # Source local customizations if they exist
-[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+# (an if, not &&: a missing file would leave status 1, so `src` turned the prompt arrow red)
+if [ -f "$HOME/.zshrc.local" ]; then source "$HOME/.zshrc.local"; fi

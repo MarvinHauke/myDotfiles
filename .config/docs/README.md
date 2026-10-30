@@ -15,7 +15,8 @@ Every config file is documented here, one file per topic. Open steps and state l
 | `launcher.md` | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
 | `clipboard.md` | what feeds the clipboard history, where it is stored, how to pick from it |
 | `capture.md` | screenshots and recording: keys, commands, where files go |
-| `dotfiles.md` | the bare repo, branches, install, Homebrew, secrets, commit hook |
+| `dotfiles.md` | the bare repo, branches, install, Homebrew, secrets, commit hook, Claude status line and skill |
+| `apps.md` | VS Code, zathura, plain vim |
 
 ## Structure
 

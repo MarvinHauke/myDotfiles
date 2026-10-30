@@ -113,7 +113,7 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Key | Action | How |
 |---|---|---|
 | Cmd+l | take the next word of the suggestion; `/` ends a word, so paths go folder by folder | Ghostty sends Esc l, `.zshrc` binds `accept-suggestion-word` |
-| Tab | take the whole suggestion when one is shown (cursor at the end); otherwise the completion list (fzf-tab) | `tab-accept-or-complete` |
+| Tab | path (word with `/`, or starting with `~` or `.`) or after a space: completion in fzf. Other words: take the whole suggestion when one is shown, otherwise the completion list | `tab-accept-or-complete` |
 | Cmd+Shift+l | completion list (fzf-tab), also while a suggestion is shown | Ghostty sends Esc L, `complete-word-fzf` |
 | Ctrl+Shift+l | clear the screen | |
 | Opt+Backspace | delete the word before the cursor; `/` ends a word | Ghostty sends Esc Backspace, `backward-kill-path-word` |
@@ -145,6 +145,7 @@ Enter on a row shows the list as a panel at the bottom and empties the launcher;
 | Key | Action |
 |---|---|
 | Space, ?, help | this list; Enter on a row keeps it at the bottom while you type |
+| Cmd+Shift+Space | show / hide this list as a panel at the bottom |
 | Enter | open: app, `edit` for files and folders, calculator copies the result |
 | Tab | complete the app name, or a folder's path to search below it |
 | Cmd+Enter | show the file or folder in Finder |
@@ -154,12 +155,25 @@ Enter on a row shows the list as a panel at the bottom and empties the launcher;
 
 Details in `launcher.md`.
 
+## Zathura
+
+| Key | Action |
+|---|---|
+| u / d | scroll half a page up / down |
+| D | single or double page |
+| r | reload the file |
+| R | rotate |
+| i | dark colors (recolor) |
+| p | print |
+
+Set in `~/.config/zathura/zathurarc`; zathura's other keys are its defaults.
+
 ## OS layer (Hyper)
 
 | Key | Action | Backend |
 |---|---|---|
 | Cmd+Space | launcher: apps, places, files and folders, most used first; `/` searches all files, math calculates (`=` forces it); Tab completes, Cmd+Enter shows in Finder, Cmd+Y copies the path | `hammerspoon://launcher`, see `launcher.md` |
-| Cmd+Shift+Space | key help for the front app: Ghostty shows Shell, Finder shows Finder, Ableton shows Ableton Live. Only in these apps: VS Code, Arduino IDE and STM32CubeIDE use the key themselves | `hammerspoon://help`, topic picked by `appTopics` in `~/.hammerspoon/init.lua` |
+| Cmd+Shift+Space | key help for the front app: Ghostty shows Shell, Finder shows Finder, Ableton shows Ableton Live, the launcher its own keys. Only in these apps: VS Code, Arduino IDE and STM32CubeIDE use the key themselves | `hammerspoon://help`, topic picked by `appTopics` in `~/.hammerspoon/init.lua` |
 | Hyper+v | clipboard history | `hammerspoon://clipboard` |
 | Hyper+r | reload Hammerspoon | `hammerspoon://reload` |
 | Hyper+i | show the name of the front app | `hammerspoon://appname` |

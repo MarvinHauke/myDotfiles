@@ -30,6 +30,7 @@ How each part is set up, which key does what and who calls whom: [`.config/docs/
 | [nvim](.config/docs/nvim.md) | neovim layout, plugins, LSP |
 | [hammerspoon](.config/docs/hammerspoon.md) | launcher, windows, clipboard, key help |
 | [dotfiles](.config/docs/dotfiles.md) | this repo, branches, Homebrew, secrets |
+| [apps](.config/docs/apps.md) | VS Code, zathura, plain vim |
 
 ## Package lists
 
