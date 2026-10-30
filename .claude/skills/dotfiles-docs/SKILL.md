@@ -21,9 +21,9 @@ Read `~/.config/docs/README.md` first: index, "who calls whom" diagram, rules.
 | `nvim/` | `nvim.md` |
 | `~/.hammerspoon/` (new `hammerspoon://` action, module) | `hammerspoon.md`; launcher → `launcher.md`, clipboard → `clipboard.md`, capture → `capture.md` |
 | `karabiner/karabiner.json` | `keys.md` |
-| `brew/Brewfile`, repo, branches, install, git hooks, secrets, `~/.claude/statusline.sh` | `dotfiles.md` |
+| `brew/Brewfile`, repo, branches, install, git hooks, secrets, `~/.claude/statusline.sh`, `~/.github/` (docs site) | `dotfiles.md` |
 | `Code/User/`, `zathura/`, `~/.vimrc` | `apps.md` (zathura keys in `keys.md`) |
-| new topic | new file in `docs/` + one row in the table in `docs/README.md` |
+| new topic | new file in `docs/` + one row in the table in `docs/README.md` + one line in `nav` in `~/.github/mkdocs.yml` |
 
 Open steps and state go in `~/.config/CONFIGPLAN.md`, not in the docs. `~/README.md` is the GitHub
 front page: install and links only.

@@ -17,13 +17,16 @@ dotfiles-lg                # lazygit on the repo
 
 ## Branches
 
-| Branch | For |
-|---|---|
-| `macos` | this machine |
-| `linux`, `linux-android` | Linux desktops, Termux |
-| `raspbian` | Raspberry Pi: stripped-down nvim, apt packages in `.config/apt/packages.txt` |
-| `Windows_NT` | Windows |
-| `main` | the install script `.config/myDotfiles_install.sh` |
+The install one-liner (`~/README.md`) checks out the branch that fits the system:
+
+| Branch | For | Picked when |
+|---|---|---|
+| `macos` | this machine | macOS |
+| `linux` | Linux desktops | Linux on x86_64 |
+| `raspbian` | Raspberry Pi: stripped-down nvim, apt packages in `.config/apt/packages.txt` | Linux on aarch64 |
+| `linux-android` | Termux | Android |
+| `Windows_NT` | Windows | never: the script is bash, check this branch out by hand |
+| `main` | the install script `.config/myDotfiles_install.sh` | any other system |
 
 ## Install on a new Mac
 
@@ -49,6 +52,22 @@ identical to `.config/myDotfiles_install.sh` on `main`): clone to `~/.cfg`, back
   (Markdown, `lazy-lock.json` and the Brewfile don't count as config).
   Enable per machine: `dotfiles config core.hooksPath ~/.config/git/hooks`.
 - Global git ignores: `~/.config/git/ignore`.
+
+## Docs site
+
+`.config/docs/` is published to https://marvinhauke.github.io/myDotfiles/ with MkDocs Material.
+
+| File | Does |
+|---|---|
+| `~/.github/mkdocs.yml` | site settings and `nav`, the page order. A new doc needs a line there |
+| `~/.github/workflows/docs.yml` | GitHub Action: builds the site and deploys it to Pages |
+
+It rebuilds on every push to `macos` that changes `.config/docs/` or `.github/`, or by hand under Actions.
+The build is `--strict`: a link to a missing page fails it. Pages source is "GitHub Actions", and the
+`github-pages` environment allows deploys from `macos` (the default branch is `main`).
+
+Preview locally: `uvx --with mkdocs-material mkdocs serve -f ~/.github/mkdocs.yml`, then http://127.0.0.1:8000.
+A local build writes `~/site/` (ignored by git).
 
 ## Claude
 

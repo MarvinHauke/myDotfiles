@@ -393,13 +393,14 @@ bindkey -M viins '^I' tab-accept-or-complete
 for keymap in viins vicmd; do bindkey -M $keymap '^[L' complete-word-fzf; done
 
 # cd completion: local folders first (zoxide's own completion); when none match, the folders zoxide
-# knows that match the typed text, e.g. `cd .config` + Tab in a project offers ~/.config
+# knows that match the typed text, e.g. `cd .config` + Tab in a project offers ~/.config.
+# No space after the pick (-S ''), so the path can be completed further.
 _cd_or_visited() {
   __zoxide_z_complete "$@"
   (( compstate[nmatches] || CURRENT != 2 )) && return 0
   local -a dirs=(${(f)"$(zoxide query -l -- ${${words[2]#./}%/} 2>/dev/null)"})
   (( $#dirs )) || return 1
-  compadd -U -Q -V visited -X 'visited folders (zoxide)' -- ${dirs/#$HOME/\~}
+  compadd -U -Q -S '' -V visited -X 'visited folders (zoxide)' -- ${dirs/#$HOME/\~}
 }
 (( $+functions[__zoxide_z_complete] )) && compdef _cd_or_visited cd
 

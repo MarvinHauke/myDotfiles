@@ -20,7 +20,8 @@ The script will:
 
 ## Docs
 
-How each part is set up, which key does what and who calls whom: [`.config/docs/`](.config/docs/README.md).
+How each part is set up, which key does what and who calls whom: [`.config/docs/`](.config/docs/README.md),
+also as a website: https://marvinhauke.github.io/myDotfiles/
 
 | Doc | Covers |
 |---|---|
@@ -29,6 +30,9 @@ How each part is set up, which key does what and who calls whom: [`.config/docs/
 | [terminal](.config/docs/terminal.md) | Ghostty, tmux |
 | [nvim](.config/docs/nvim.md) | neovim layout, plugins, LSP |
 | [hammerspoon](.config/docs/hammerspoon.md) | launcher, windows, clipboard, key help |
+| [launcher](.config/docs/launcher.md) | what the launcher finds, how it opens files and folders |
+| [clipboard](.config/docs/clipboard.md) | clipboard history |
+| [capture](.config/docs/capture.md) | screenshots and recording |
 | [dotfiles](.config/docs/dotfiles.md) | this repo, branches, Homebrew, secrets |
 | [apps](.config/docs/apps.md) | VS Code, zathura, plain vim |
 

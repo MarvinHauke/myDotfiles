@@ -1,22 +1,32 @@
 # Config docs (macOS)
 
+Dotfiles of [MarvinHauke/myDotfiles](https://github.com/MarvinHauke/myDotfiles), a bare git repo with
+`$HOME` as the work tree. One branch per system; these docs describe the `macos` branch. Install:
+
+```bash
+curl -fsSL https://gist.github.com/MarvinHauke/3cd5967bf33fee9350d1fc552138e08e/raw | bash
+```
+
+The script picks the branch for the system it runs on, see [branches](dotfiles.md#branches).
+
 Every config file is documented here, one file per topic. Open steps and state live in
 `~/.config/CONFIGPLAN.md`, install steps in `~/README.md`.
+The docs are also a website: https://marvinhauke.github.io/myDotfiles/ (see [dotfiles.md](dotfiles.md#docs-site)).
 
 ## Files
 
 | Doc | Answers |
 |---|---|
-| `keys.md` | which key does what, which layer a new key belongs to. Source of the key help panel |
-| `shell.md` | zsh: load order, plugins, shell keys and widgets, places, fzf / zoxide |
-| `terminal.md` | Ghostty and tmux: what is changed from the defaults, panes, copy mode, plugins |
-| `nvim.md` | neovim: layout of `nvim/`, plugins, LSP, filetype settings |
-| `hammerspoon.md` | Hammerspoon modules and the `hammerspoon://` actions Karabiner calls |
-| `launcher.md` | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
-| `clipboard.md` | what feeds the clipboard history, where it is stored, how to pick from it |
-| `capture.md` | screenshots and recording: keys, commands, where files go |
-| `dotfiles.md` | the bare repo, branches, install, Homebrew, secrets, commit hook, Claude status line and skill |
-| `apps.md` | VS Code, zathura, plain vim |
+| [keys.md](keys.md) | which key does what, which layer a new key belongs to. Source of the key help panel |
+| [shell.md](shell.md) | zsh: load order, plugins, shell keys and widgets, places, fzf / zoxide |
+| [terminal.md](terminal.md) | Ghostty and tmux: what is changed from the defaults, panes, copy mode, plugins |
+| [nvim.md](nvim.md) | neovim: layout of `nvim/`, plugins, LSP, filetype settings |
+| [hammerspoon.md](hammerspoon.md) | Hammerspoon modules and the `hammerspoon://` actions Karabiner calls |
+| [launcher.md](launcher.md) | what the launcher finds, how files and folders are opened in nvim, Finder or Ghostty |
+| [clipboard.md](clipboard.md) | what feeds the clipboard history, where it is stored, how to pick from it |
+| [capture.md](capture.md) | screenshots and recording: keys, commands, where files go |
+| [dotfiles.md](dotfiles.md) | the bare repo, branches, install, Homebrew, secrets, commit hook, docs site, Claude status line and skill |
+| [apps.md](apps.md) | VS Code, zathura, plain vim |
 
 ## Structure
 
@@ -54,6 +64,6 @@ Who calls whom, and where it is configured.
   first table under a heading, so that table holds the keys and the details go below it.
 - Other docs link to `keys.md` instead of repeating keys.
 - A config change and its doc change go into the same commit.
-- New topic: new file here plus one line in the table above.
+- New topic: new file here plus one line in the table above and one in `nav` in `~/.github/mkdocs.yml`.
 - Doc files start with a `# Title` and one line saying what the file covers and where the config lives.
 - Secrets go in `~/.env` or `~/.zshrc.local` (both ignored by git), never in a tracked file.

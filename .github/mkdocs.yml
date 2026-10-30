@@ -1,0 +1,44 @@
+# Docs site: https://marvinhauke.github.io/myDotfiles/ (built by workflows/docs.yml from the macos branch)
+# Lives outside docs_dir, which MkDocs requires. New doc: add it to nav.
+site_name: myDotfiles
+site_url: https://marvinhauke.github.io/myDotfiles/
+repo_url: https://github.com/MarvinHauke/myDotfiles
+repo_name: MarvinHauke/myDotfiles
+edit_uri: edit/macos/.config/docs/
+docs_dir: ../.config/docs
+site_dir: ../site
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: { icon: material/weather-sunny, name: Light mode }
+  features:
+    - navigation.sections
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - tables
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Overview: README.md
+  - Keys: keys.md
+  - Shell: shell.md
+  - Terminal: terminal.md
+  - Neovim: nvim.md
+  - Hammerspoon: hammerspoon.md
+  - Launcher: launcher.md
+  - Clipboard: clipboard.md
+  - Capture: capture.md
+  - Dotfiles: dotfiles.md
+  - Apps: apps.md

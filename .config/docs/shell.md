@@ -58,7 +58,7 @@ fzf's own keys from `fzf --zsh`: Ctrl+T files. Its Alt+C can't be typed (Option 
 
 `cd` is zoxide. Tab after `cd ` lists the folders here; `cd src` + Tab completes local folders first.
 When no local folder matches, `_cd_or_visited` offers the folders zoxide knows that match the text:
-`cd .config` + Tab in a project without `.config` offers `~/.config`.
+`cd .config` + Tab in a project without `.config` offers `~/.config`. The cursor stays right after the path (no space), so Tab completes further.
 `cd foo` + Space + Tab opens zoxide's own interactive list (best matches anywhere, runs the cd).
 
 ## Places, functions, aliases
