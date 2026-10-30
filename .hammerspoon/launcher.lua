@@ -4,7 +4,8 @@
 --   /text     file tree only; a path that exists as typed (/tmp, /etc/) comes first    launcher/paths.lua
 --   =expr     calculator; plain text that looks like math also gets it on top    launcher/calc.lua
 --             the result also shows as grey ghost text after the input            launcher/ghost.lua
---   Space     as the first character: the launcher keys (keys.md, Launcher); typing on searches
+--   Space     as the first character, or "?" or "help": the launcher keys (keys.md, Launcher); typing on searches.
+--             Enter on one of them: the keys as a panel at the bottom and an empty launcher again
 local M = {}
 
 local apps = require("launcher.apps")
@@ -17,8 +18,13 @@ local help = require("help")
 local maxTree = 10 -- rows from the file tree at the end of the plain list
 local typed -- the plain text in the input, lower case; nil while "/" or "=" is used
 
+local helpShown -- the key panel opened from the launcher, closed with it
+
 local chooser = hs.chooser.new(function(choice)
-	if not choice or choice.help then
+	if not choice then
+		return
+	end
+	if choice.help then -- Enter on these is handled by the key tap below
 		return
 	end
 	if choice.calc then
@@ -71,7 +77,7 @@ local function update(query)
 	end
 	typed = nil
 	ghost.show(query, nil)
-	if query == " " then
+	if query == " " or query == "?" or query:lower() == "help" then
 		local rows = {}
 		for _, row in ipairs(help.rows("Launcher")) do
 			rows[#rows + 1] = { text = row[1], subText = row[2], help = true }
@@ -144,6 +150,15 @@ chooser:queryChangedCallback(update)
 local tabTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
 	local key, flags = event:getKeyCode(), event:getFlags()
 	local row = chooser:selectedRowContents()
+	-- Enter on a key row (Space view): the keys as a panel at the bottom, the launcher stays open and empty.
+	-- Done here so the chooser never closes; reopening it while it closed left a window that could not be closed.
+	if key == hs.keycodes.map["return"] and not next(flags) and row and row.help then
+		help.show("Launcher", true)
+		helpShown = true
+		chooser:query("")
+		update("")
+		return true
+	end
 	if key == hs.keycodes.map["return"] and flags:containExactly({ "cmd" }) then
 		if row and row.file then
 			chooser:hide()
@@ -180,6 +195,10 @@ end)
 chooser:hideCallback(function()
 	tabTap:stop()
 	ghost.hide()
+	if helpShown then
+		helpShown = false
+		help.hide()
+	end
 end)
 
 -- query: text to start with, e.g. "/" for the file search (hammerspoon://launcher?q=/)

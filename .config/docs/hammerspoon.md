@@ -24,7 +24,11 @@ whether a Finder text field is being edited (variable `finder_editing`).
 ## Key help panel
 
 `help.lua` shows the first table under `## <topic>` in `~/.config/docs/keys.md`, at the bottom of the screen.
-Any key or click closes it. Changing a key means changing that table; nothing in the Lua.
+Any key or click closes it, except the screenshot keys (Cmd+Shift+3/4/5), so the panel can be captured.
+Long actions wrap onto more lines (up to 60 % of the screen height); keep the Key cells short.
+`help.show(topic, true)` opens it sticky: no key closes it, the caller calls `help.hide()`.
+The launcher does this for Enter on its key rows and closes the panel with itself.
+Changing a key means changing that table; nothing in the Lua.
 
 ## Adding an action
 

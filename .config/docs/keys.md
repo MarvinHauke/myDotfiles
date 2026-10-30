@@ -56,10 +56,10 @@ and `~/.hammerspoon/finder/add.lua` (`a`).
 | e | open the selected file in nvim, a folder in Ghostty | `hammerspoon://edit` runs `~/.local/bin/edit`, see `launcher.md` |
 | a | add here: asks for a name, `name` makes a file, `name/` a folder, `dir/name` both | `hammerspoon://add` runs `finder/add.lua` |
 | ? | show this table as a panel, any key closes it | `hammerspoon://help?topic=Finder` |
-| Ctrl+h in the leftmost column | go up to the parent folder (in other columns Ctrl+h stays Left) | Cmd+Up ("Enclosing Folder") |
-| Ctrl+j in the search field | jump to the search results and select the first one | Tab, Down |
-| Escape twice in the search results | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
-| Escape in an empty search field | leave the search and return to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
+| Ctrl+h | in the leftmost column: go up to the parent folder (in other columns it stays Left) | Cmd+Up ("Enclosing Folder") |
+| Ctrl+j | in the search field: jump to the results and select the first one | Tab, Down |
+| Esc Esc | in the search results: leave the search, back to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
+| Esc | in an empty search field: leave the search, back to the folder | Go > Back, done by `finder.lua` (no Karabiner rule) |
 
 How the keys know where you are:
 - `finder.lua` watches Finder's focus and sets two Karabiner variables.
@@ -121,8 +121,8 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Cmd+k / Cmd+j, Ctrl+R | history in fzf, the typed text is the query: Enter runs, Tab fills the prompt; without fzf: older / newer command containing the text | Esc k / Esc j, `history-older` / `history-newer` |
 | Cmd+Shift+k | jump to a folder visited before (zoxide list in fzf) | Esc K, `folder-jump` |
 | Cmd+Shift+j | dive into a folder below the current one (fd list in fzf) | Esc J, `folder-dive` |
-| Cmd+j / k / l in any fzf list | down / up / take the entry; in history and completion lists Tab takes it too | `FZF_DEFAULT_OPTS`, `fzf-bindings` zstyle for fzf-tab |
-| Space in normal mode (after Esc), `help`, `?` | this key help; `help finder` shows another topic | `key-help`, `help` |
+| Cmd+j / k / l | in any fzf list: down / up / take the entry; in history and completion lists Tab takes it too | `FZF_DEFAULT_OPTS`, `fzf-bindings` zstyle for fzf-tab |
+| Esc Space, `?` | this key help (Space in normal mode); `help` too, `help finder` shows another topic | `key-help`, `help` |
 
 Places and config shortcuts, defined in `.zshrc` and also listed by the launcher:
 
@@ -139,11 +139,12 @@ Places and config shortcuts, defined in `.zshrc` and also listed by the launcher
 
 ## Launcher
 
-Type Space as the first character in the launcher to see this list; typing on searches as usual.
+Type Space as the first character in the launcher, or `?` or `help`, to see this list; typing on searches as usual.
+Enter on a row shows the list as a panel at the bottom and empties the launcher; the panel closes with it.
 
 | Key | Action |
 |---|---|
-| Space | this list |
+| Space, ?, help | this list; Enter on a row keeps it at the bottom while you type |
 | Enter | open: app, `edit` for files and folders, calculator copies the result |
 | Tab | complete the app name, or a folder's path to search below it |
 | Cmd+Enter | show the file or folder in Finder |
