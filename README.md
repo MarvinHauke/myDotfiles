@@ -5,6 +5,8 @@
 Configured as a git bare repo for easy migration to new machines.
 For details on how to clone this repo take a look at: [git bare repo for dotfiles](https://www.atlassian.com/git/tutorials/dotfiles "go to the article")
 
+Docs for the macOS setup (keys, shell, terminal, nvim, Hammerspoon): https://marvinhauke.github.io/myDotfiles/
+
 ## Branches
 
 The install script auto-detects your OS/architecture and checks out the matching branch:
