@@ -1,16 +1,23 @@
 return {
-	-- Setup codeium for auto_suggestions
+	-- GitHub Copilot as AI completion source for nvim-cmp
+	-- Ghost text and the panel are off: suggestions only show up in the cmp menu.
+	-- First run: :Copilot auth
 	{
-		"Exafunction/windsurf.nvim",
-		dpendencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		opts = {
+			suggestion = { enabled = false },
+			panel = { enabled = false },
+			-- standalone server binary: node is only loaded lazily by nvm, nvim can't rely on it
+			server = { type = "binary" },
 		},
-		enabled = true,
-		config = function()
-			local codeium = require("codeium")
-			codeium.setup()
-		end,
+	},
+	{
+		"zbirenbaum/copilot-cmp",
+		dependencies = { "zbirenbaum/copilot.lua" },
+		event = "InsertEnter",
+		opts = {},
 	},
 	-- Set Claude as default provider for avante
 	{

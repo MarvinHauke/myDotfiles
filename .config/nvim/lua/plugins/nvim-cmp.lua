@@ -59,7 +59,7 @@ return {
 			Unit = " ",
 			Value = " ",
 			Variable = " ",
-			Codeium = "󱙺", -- my own icon added from nerdfonts TODO: color it
+			Copilot = "", -- kind set by copilot-cmp
 		}
 
 		-- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
@@ -311,7 +311,7 @@ return {
 						luasnip = "[LuaSnip]",
 						nvim_lua = "[Lua]",
 						latex_symbols = "[LaTeX]",
-						codeium = "[AI]",
+						copilot = "[AI]",
 						zsh = "[SHELL]",
 					})[entry.source.name]
 					return vim_item
@@ -408,7 +408,7 @@ return {
 				{ name = "nvim_lsp" }, -- lsp
 				{ name = "luasnip" }, -- snippets
 				{ name = "buffer" }, -- text within current buffer
-				{ name = "codeium" }, -- ai completion
+				{ name = "copilot" }, -- ai completion (copilot-cmp)
 				{ name = "path" }, -- file system paths
 				{ name = "neorg" }, -- neorg
 				{ name = "calc" }, -- math
