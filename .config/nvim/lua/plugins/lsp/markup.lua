@@ -18,12 +18,15 @@ vim.lsp.config("yamlls", {
 vim.lsp.enable("yamlls")
 
 -- Markdown LSP settings
-vim.lsp.config("marksman", {
-	capabilities = _G.lsp_common.lsp_capabilities,
+-- markdown-oxide wants dynamic file watching to see changes to other notes
+vim.lsp.config("markdown_oxide", {
+	capabilities = vim.tbl_deep_extend("force", _G.lsp_common.lsp_capabilities, {
+		workspace = { didChangeWatchedFiles = { dynamicRegistration = true } },
+	}),
 	on_attach = _G.lsp_common.lsp_attach,
 })
 
-vim.lsp.enable("marksman")
+vim.lsp.enable("markdown_oxide")
 
 -- XML LSP settings
 vim.lsp.config("lemminx", {

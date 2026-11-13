@@ -60,8 +60,6 @@ brew "lua"
 brew "lua-language-server"
 # Package manager for the Lua programming language
 brew "luarocks"
-# Language Server Protocol for Markdown
-brew "marksman"
 # Material Design theme for MkDocs
 brew "mkdocs-material"
 # Ambitious Vim-fork focused on extensibility and agility

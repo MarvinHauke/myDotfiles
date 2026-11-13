@@ -21,7 +21,7 @@ Config: `~/.config/nvim/`. Leader is Space (which-key shows what follows), local
 
 - Edit: `nvn` from the shell. lazy.nvim notices changed plugin files by itself.
 - Plugins: `:Lazy` (update, clean, profile).
-- LSP servers and tools: `:Mason`. Health: `:checkhealth`.
+- LSP servers and tools: `:Mason`. Health: `:checkhealth`. Markdown uses markdown-oxide (from Mason; config in `lsp/markup.lua`): links between files and to headings, `[[wikilinks]]`, backlinks, broken-link warnings.
 - AI completion: GitHub Copilot (`copilot.lua` + `copilot-cmp`, in `lua/plugins/ai.lua`), shown as `[AI]` in the cmp menu, no ghost text. It uses Copilot's standalone server binary, so it needs no node. Sign in once with `:Copilot auth`.
 - Files from the launcher or Finder `e` open through `~/.local/bin/edit` in a running nvim (see `launcher.md`).
 - Panes: Ctrl+h/j/k/l move between nvim splits and tmux panes (vim-tmux-navigator).
