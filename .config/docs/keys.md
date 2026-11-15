@@ -137,6 +137,16 @@ Places and config shortcuts, defined in `.zshrc` and also listed by the launcher
 - Caps+l (Ctrl+l) is not available for this: inside tmux it switches panes.
 - Pressing Escape and `l` by hand within 0.25 s (`KEYTIMEOUT=25`) counts as Cmd+l.
 
+## Neovim insert mode
+
+| Key | Action | How |
+|---|---|---|
+| Cmd+Backspace | delete back to the start of the sentence; again: the sentence before | Ghostty sends Ctrl+U (its default), `lua/core/keymaps.lua` maps it to `d(` |
+| Opt+Backspace | delete the word before the cursor | Ghostty sends Esc Backspace, mapped to Ctrl+W |
+
+- Each delete is its own undo step.
+- Ctrl+U no longer deletes to the start of the line in insert mode.
+
 ## Launcher
 
 Type Space as the first character in the launcher, or `?` or `help`, to see this list; typing on searches as usual.

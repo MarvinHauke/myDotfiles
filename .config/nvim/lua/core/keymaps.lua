@@ -22,6 +22,11 @@ keymap.set("n", "<leader>wq", ":wq<CR>", { desc = "save and quit" })
 keymap.set("n", "<leader>qq", ":BufDelAll<CR>", { desc = "quit all open buffers" })
 keymap.set("n", "<leader>ww", ":w<CR>", { desc = "save" })
 
+-- Insert-mode deletes. Ghostty sends <C-u> for Cmd+Backspace and Esc Backspace (<M-BS>) for Opt+Backspace.
+-- <C-g>u makes each delete its own undo step.
+keymap.set("i", "<C-u>", "<C-g>u<Cmd>normal! d(<CR>", { desc = "delete back to sentence start" })
+keymap.set("i", "<M-BS>", "<C-g>u<C-w>", { desc = "delete word before cursor" })
+
 -- Split window management
 keymap.set("n", "<leader>sp", "<C-w>v", { desc = "split window vertically" })
 keymap.set("n", "<leader>sh", "<C-w>s", { desc = "split window horizontally" })
