@@ -105,7 +105,9 @@
                             {
                                 "conditions": [
                                     {
-                                        "bundle_identifiers": ["^com\\.brave\\.Browser$"],
+                                        "bundle_identifiers": [
+                                            "^com\\.brave\\.Browser$"
+                                        ],
                                         "type": "frontmost_application_if"
                                     }
                                 ],
@@ -116,7 +118,12 @@
                                         "optional": ["caps_lock"]
                                     }
                                 },
-                                "to": [{ "key_code": "hyphen", "modifiers": ["left_shift"] }],
+                                "to": [
+                                    {
+                                        "key_code": "hyphen",
+                                        "modifiers": ["left_shift"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
