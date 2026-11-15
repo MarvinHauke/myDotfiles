@@ -113,15 +113,15 @@ The grey text after the cursor is a suggestion from your history (zsh-autosugges
 | Key | Action | How |
 |---|---|---|
 | Cmd+l | take the next word of the suggestion; `/` ends a word, so paths go folder by folder | Ghostty sends Esc l, `.zshrc` binds `accept-suggestion-word` |
-| Tab | path (word with `/`, or starting with `~` or `.`) or after a space: completion in fzf. Other words: take the whole suggestion when one is shown, otherwise the completion list | `tab-accept-or-complete` |
-| Cmd+Shift+l | completion list (fzf-tab), also while a suggestion is shown | Ghostty sends Esc L, `complete-word-fzf` |
+| Tab | completion list in fzf (fzf-tab), never the suggestion; `vim **` + Tab picks a file below the current folder | `fzf-completion`, then `fzf-tab-complete` |
+| Cmd+Shift+l | take the whole suggestion | Ghostty sends Esc L, `autosuggest-accept` |
 | Ctrl+Shift+l | clear the screen | |
 | Opt+Backspace | delete the word before the cursor; `/` ends a word | Ghostty sends Esc Backspace, `backward-kill-path-word` |
 | Right arrow | take the whole suggestion | plugin default |
 | Cmd+k / Cmd+j, Ctrl+R | history in fzf, the typed text is the query: Enter runs, Tab fills the prompt; without fzf: older / newer command containing the text | Esc k / Esc j, `history-older` / `history-newer` |
 | Cmd+Shift+k | jump to a folder visited before (zoxide list in fzf) | Esc K, `folder-jump` |
 | Cmd+Shift+j | dive into a folder below the current one (fd list in fzf) | Esc J, `folder-dive` |
-| Cmd+j / k / l | in any fzf list: down / up / take the entry; in history and completion lists Tab takes it too | `FZF_DEFAULT_OPTS`, `fzf-bindings` zstyle for fzf-tab |
+| Cmd+j / k / l | in any fzf list: down / up / take the entry (Ctrl+j/k, i.e. Caps+j/k, move too); in history and completion lists Tab takes it too, Right arrow steps into a folder | `FZF_DEFAULT_OPTS`, `fzf-bindings` zstyle for fzf-tab |
 | Esc Space, `?` | this key help (Space in normal mode); `help` too, `help finder` shows another topic | `key-help`, `help` |
 
 Places and config shortcuts, defined in `.zshrc` and also listed by the launcher:

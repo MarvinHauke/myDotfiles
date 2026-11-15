@@ -113,29 +113,26 @@ eval "$(starship init zsh)"
 # ZSH PLUGINS
 # =============================================================================
 
-# Essential plugins
-plug "zap-zsh/zsh-syntax-highlighting"        # adds syntax-highlighting to shell commands
-plug "zap-zsh/zsh-autosuggestions"            # adds autosuggestions to shell commands
+# Order matters (fzf-tab README): completion definitions, compinit, fzf-tab, then the plugins that
+# wrap widgets (syntax-highlighting, autosuggestions). supercharge runs compinit.
+plug "zsh-users/zsh-completions" # https://github.com/zsh-users/zsh-completions
+plug "zap-zsh/supercharge"       # compinit, colors for ls https://github.com/zap-zsh/supercharge
+plug "wintermi/zsh-lsd"          # makes everything colorfull https://github.com/wintermi/zsh-lsd
+(( $+functions[compdef] )) || { autoload -U compinit && compinit }
+plug "aloxaf/fzf-tab"            # Tab completion in fzf https://github.com/aloxaf/fzf-tab
+plug "Freed-Wu/fzf-tab-source"   # previews for fzf-tab https://github.com/Freed-Wu/fzf-tab-source
 plug "zap-zsh/vim"                            # simple vi-mode for zsh https://github.com/zap-zsh/vim
 plug "zsh-users/zsh-history-substring-search" # fish style substring search https://github.com/zsh-users/zsh-history-substring-search
-plug "zsh-users/zsh-completions"              # https://github.com/zsh-users/zsh-completions
-
-# Visual enhancements
-plug "zap-zsh/supercharge" # adds color to ls https://github.com/zap-zsh/supercharge
-plug "wintermi/zsh-lsd"    # makes everything colorfull https://github.com/wintermi/zsh-lsd
+plug "zap-zsh/zsh-syntax-highlighting"        # adds syntax-highlighting to shell commands
+plug "zap-zsh/zsh-autosuggestions"            # adds autosuggestions to shell commands
 
 # Productivity plugins
 plug "MichaelAquilina/zsh-you-should-use" # shows aliases you should use instead
 plug "kutsan/zsh-system-clipboard"        # https://github.com/kutsan/zsh-system-clipboard
-plug "aloxaf/fzf-tab"                     # Use fzf for tab completion https://github.com/aloxaf/zsh-fzf-tab
-plug "Freed-Wu/fzf-tab-source"            # Additional sources for fzf-tab https://github.com/Freed-Wu/fzf-tab-source
 
 # =============================================================================
 # COMPLETION SYSTEM
 # =============================================================================
-# Initialize completion system
-autoload -U compinit && compinit
-
 # Custom function to accept autosuggestion or clear screen
 accept-suggestion-or-clear() {
     if [[ -n $POSTDISPLAY ]]; then
@@ -178,15 +175,16 @@ bindkey -M viins '^[^?' backward-kill-path-word
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case-insensitive
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"     # Colored completions
-zstyle ':completion:*' menu select                        # Menu selection
+zstyle ':completion:*' menu no                            # no zsh menu: fzf-tab shows the list
 zstyle ':completion:*' insert-tab false                   # Tab on an empty line completes instead of typing a tab
 zstyle ':completion:*' group-name ''                      # Group completions
 zstyle ':completion:*:descriptions' format '[%d]'            # group names; fzf-tab can't show %F colors
+zstyle ':completion:*:git-checkout:*' sort false             # keep git's order (fzf-tab README)
 
 zstyle ':fzf-tab:*' fzf-flags --height=50% --reverse --border
-zstyle ':fzf-tab:*' continuous-trigger 'right'
-zstyle ':fzf-tab:*' switch-group '<' '>' # show one group at a time: < and > switch
-# fzf-tab ignores FZF_DEFAULT_OPTS: same keys as the history list. Cmd+j/k move, Tab or Cmd+l takes the pick.
+zstyle ':fzf-tab:*' continuous-trigger 'right'               # Right arrow: take the folder and complete inside it
+zstyle ':fzf-tab:*' switch-group '<' '>'                     # show one group at a time: < and > switch
+# fzf-tab ignores FZF_DEFAULT_OPTS. Cmd+j/k and Ctrl+j/k (Caps+j/k) move, Tab or Cmd+l takes the pick.
 zstyle ':fzf-tab:*' fzf-bindings 'alt-j:down' 'alt-k:up' 'alt-l:accept' 'tab:accept'
 
 # =============================================================================
@@ -370,27 +368,14 @@ help() { open -g "hammerspoon://help?topic=${${*:-Shell}// /%20}" }
 alias '?'=help
 key-help() { help }
 
-# Tab: take the whole grey suggestion when one is shown and the cursor is at the end,
-# otherwise complete (fzf's ** trigger, which hands everything else to fzf-tab).
-# A word that looks like a path (contains "/", starts with ~ or .) always completes: paths are picked in fzf,
-# the suggestion for them stays on → / Cmd+l. After a space (empty word, e.g. `cd `) Tab completes too.
-# Cmd+Shift+l (Ghostty sends Esc L): always complete, also while a suggestion is shown.
-complete-word-fzf() {
-  if (( $+widgets[fzf-completion] )); then zle fzf-completion
-  elif (( $+widgets[fzf-tab-complete] )); then zle fzf-tab-complete
-  else zle expand-or-complete; fi
-}
-tab-accept-or-complete() {
-  local word=${LBUFFER##*[[:space:]]}
-  if [[ -n $POSTDISPLAY && $CURSOR -eq ${#BUFFER} && -n $word && $word != */* && $word != [~.]* ]]; then zle autosuggest-accept
-  else complete-word-fzf; fi
-}
-# like accept-suggestion-or-clear: only on this list does the widget see the suggestion
-ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=(tab-accept-or-complete)
-zle -N complete-word-fzf
-zle -N tab-accept-or-complete
-bindkey -M viins '^I' tab-accept-or-complete
-for keymap in viins vicmd; do bindkey -M $keymap '^[L' complete-word-fzf; done
+# Tab: completion in fzf (fzf-tab), never the grey suggestion (that one comes from history and can name
+# files of other folders). fzf's own widget handles its ** trigger (`vim **` + Tab) and hands every other
+# word to fzf-tab ($fzf_default_completion is fzf-tab-complete, bound before `fzf --zsh` runs).
+# Cmd+Shift+l (Ghostty sends Esc L): take the whole suggestion.
+if (( $+widgets[fzf-completion] )); then bindkey -M viins '^I' fzf-completion
+elif (( $+widgets[fzf-tab-complete] )); then bindkey -M viins '^I' fzf-tab-complete
+else bindkey -M viins '^I' expand-or-complete; fi
+for keymap in viins vicmd; do bindkey -M $keymap '^[L' autosuggest-accept; done
 
 # cd completion: local folders first (zoxide's own completion); when none match, the folders zoxide
 # knows that match the typed text, e.g. `cd .config` + Tab in a project offers ~/.config.

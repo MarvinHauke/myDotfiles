@@ -21,14 +21,18 @@ The tmux block returns early when it attaches, so anything that must run in ever
 | Plugin | Does |
 |---|---|
 | zsh-syntax-highlighting | colors the command line |
-| zsh-autosuggestions | grey suggestion from history, taken with Tab (all), Cmd+l (word by word) or Right arrow |
+| zsh-autosuggestions | grey suggestion from history, taken with Cmd+Shift+l or Right arrow (all) or Cmd+l (word by word). Tab never takes it: history can name files of other folders |
 | zap-zsh/vim | vi mode; Esc switches to normal mode |
 | zsh-history-substring-search | Cmd+k / Cmd+j fallback when fzf is missing |
 | zsh-completions | extra completion definitions |
 | supercharge, zsh-lsd | colors, `ls`/`ll`/`la`/`tree` via lsd |
 | zsh-you-should-use | reminds of existing aliases |
 | zsh-system-clipboard | vi yanks go to the macOS clipboard |
-| fzf-tab, fzf-tab-source | Tab completion in fzf, with previews for files and folders. Opens with Tab when no suggestion is shown, with Cmd+Shift+l always. Cmd+j/k move, Tab or Cmd+l takes the pick (`fzf-bindings`; fzf-tab ignores `FZF_DEFAULT_OPTS`). `<` / `>` switch between groups (commands, functions, ...). Group names use the plain `[%d]` format: fzf-tab prints `%F` color codes as text |
+| fzf-tab, fzf-tab-source | Tab completion in fzf, with previews for files and folders. Cmd+j/k or Ctrl+j/k (Caps+j/k) move, Tab or Cmd+l takes the pick, Right arrow takes a folder and completes inside it (`fzf-bindings`, `continuous-trigger`; fzf-tab ignores `FZF_DEFAULT_OPTS`). `<` / `>` switch between groups. Group names use the plain `[%d]` format: fzf-tab prints `%F` color codes as text |
+
+Load order (fzf-tab README): zsh-completions, then supercharge (runs `compinit`), then fzf-tab, then the
+plugins that wrap widgets (syntax-highlighting, autosuggestions). `menu no`, so zsh's own menu stays out of fzf-tab's way.
+Ctrl+j/k reach fzf inside tmux because vim-tmux-navigator passes Ctrl+h/j/k/l on to panes running fzf or vim.
 
 Update: `zap update`. Startup time: `time zsh -i -c exit` (0.12 s at last check).
 
@@ -38,8 +42,8 @@ Ghostty turns Cmd keys into Esc + letter (`ghostty/config`), `.zshrc` binds thos
 
 | Widget | Key | Does |
 |---|---|---|
-| `tab-accept-or-complete` | Tab | a word that looks like a path (contains `/`, starts with `~` or `.`), or an empty word after a space (`cd `), always completes in fzf. Other words: whole suggestion when one is shown and the cursor is at the end, else completion; also on an empty line (`insert-tab false`) |
-| `complete-word-fzf` | Cmd+Shift+l | completion (fzf's `**` trigger, then fzf-tab), also while a suggestion is shown |
+| `fzf-completion` | Tab | completion in fzf: `**` + Tab picks files (fzf's trigger), every other word goes to fzf-tab. Also on an empty line (`insert-tab false`). Never takes the suggestion |
+| `autosuggest-accept` | Cmd+Shift+l | the whole suggestion |
 | `accept-suggestion-word` | Cmd+l | next word of the suggestion, `/` ends a word |
 | `backward-kill-path-word` | Opt+Backspace | delete the word before the cursor, `/` ends a word |
 | `history-older` / `history-newer` | Cmd+k / Cmd+j | fzf history with the typed text as query: Enter runs the command, Tab or Cmd+l only fills the prompt (`history-fzf`). Without fzf: substring search |
